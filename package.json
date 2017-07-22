@@ -1,0 +1,16 @@
+{
+  "name": "object-bee",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha --recursive test/**/*.spec.js",
+    "debug": "node --inspect-brk node_modules/mocha/bin/_mocha --recursive test/**/*.spec.js --no-timeouts"
+  },
+  "keywords": [],
+  "author": "lxjwlt",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^3.4.2"
+  }
+}
