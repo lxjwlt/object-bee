@@ -88,6 +88,56 @@ describe('object-bee', () => {
         });
     });
 
+    it('queue actions', () => {
+        let ori = {
+            name: null,
+            age: 12,
+            privacy: {
+                location: 'china',
+                occupation: 'front-end'
+            },
+            detail: null
+        };
+
+        let beeOptions = {
+            privacy: bee.queue(bee.rename('list'), () => {
+                return 11;
+            })
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            name: null,
+            age: 12,
+            list: 11,
+            detail: null
+        });
+    });
+
+    it('queue actions', () => {
+        let ori = {
+            name: null,
+            age: 12,
+            privacy: {
+                location: 'china',
+                occupation: 'front-end'
+            },
+            detail: null
+        };
+
+        let beeOptions = {
+            privacy: bee.queue(bee.rename('list'), bee.rename('info'), () => {
+                return 11;
+            })
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            name: null,
+            age: 12,
+            info: 11,
+            detail: null
+        });
+    });
+
 });
 
 function equalAndNotModify (data, format, expect) {

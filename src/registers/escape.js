@@ -15,7 +15,9 @@ module.exports = {
         return beeItem instanceof EscapeRegister;
     },
     apply (beeItem) {
-        return beeItem.value;
+        return {
+            value: beeItem.value
+        };
     },
     namespace: {
         escape: function (value) {

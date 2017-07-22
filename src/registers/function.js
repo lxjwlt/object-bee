@@ -7,6 +7,8 @@ module.exports = {
         return typeof beeItem === 'function';
     },
     apply (beeItem, dataItem, key) {
-        return beeItem(dataItem, key);
+        return {
+            value: beeItem(dataItem, key)
+        };
     }
 };

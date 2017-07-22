@@ -12,10 +12,10 @@ module.exports = {
     check (beeItem) {
         return beeItem instanceof RenameRegister;
     },
-    apply (beeItem, dataItem, key, data, bee, noModify) {
-        delete data[key];
-        data[beeItem.name] = dataItem;
-        return noModify;
+    apply (beeItem) {
+        return {
+            key: beeItem.name
+        };
     },
     namespace: {
         rename (name) {
