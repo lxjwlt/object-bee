@@ -1,3 +1,7 @@
+/**
+ * @file bee accepts function process
+ */
+
 module.exports = {
     check (beeItem) {
         return typeof beeItem === 'function';

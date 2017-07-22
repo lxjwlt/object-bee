@@ -7,12 +7,12 @@ function bee (data, bee) {
     debugger;
     data = copy(data);
 
-    loop(data, bee, function (dataItem, beeItem, key) {
+    loop(data, bee, function (dataItem, beeItem, key, currentData, currentBee) {
         let register = registers.filter((register) => {
             return register.check(beeItem, dataItem);
         })[0];
 
-        return register ? register.apply(beeItem, dataItem, key) : loop.noModify;
+        return register ? register.apply(beeItem, dataItem, key, currentData, currentBee, loop.noModify) : loop.noModify;
     });
 
     return data;
@@ -54,6 +54,7 @@ bee.register = function (config) {
 
 bee.register(require('./registers/function'));
 bee.register(require('./registers/escape'));
+bee.register(require('./registers/remove'));
 
 function loop (data, bee, func) {
 
@@ -61,7 +62,7 @@ function loop (data, bee, func) {
 
         for (let i = bee.length - 1; i >= 0; i--) {
 
-            let result = func(data[i], bee[i], i, 'array');
+            let result = func(data[i], bee[i], i, data, bee, 'array');
 
             if (result !== loop.noModify) {
                 data[i] = result;
@@ -73,7 +74,7 @@ function loop (data, bee, func) {
     } else if (isObject(bee) && isObject(data)) {
 
         Object.keys(bee).forEach(function (key) {
-            let result = func(data[key], bee[key], key, 'object');
+            let result = func(data[key], bee[key], key, data, bee, 'object');
 
             if (result !== loop.noModify) {
                 data[key] = result;

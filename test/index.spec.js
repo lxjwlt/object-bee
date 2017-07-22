@@ -37,6 +37,31 @@ describe('object-bee', () => {
         });
     });
 
+    it('delete key', () => {
+        let ori = {
+            name: null,
+            age: 12,
+            privacy: {
+                location: 'china',
+                occupation: 'front-end'
+            },
+            detail: null
+        };
+
+        let beeOptions = {
+            detail: bee.remove
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            name: null,
+            age: 12,
+            privacy: {
+                location: 'china',
+                occupation: 'front-end'
+            }
+        });
+    });
+
 });
 
 function equalAndNotModify (data, format, expect) {
