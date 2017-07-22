@@ -55,6 +55,7 @@ bee.register = function (config) {
 bee.register(require('./registers/function'));
 bee.register(require('./registers/escape'));
 bee.register(require('./registers/remove'));
+bee.register(require('./registers/rename'));
 
 function loop (data, bee, func) {
 

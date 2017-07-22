@@ -62,6 +62,32 @@ describe('object-bee', () => {
         });
     });
 
+    it('rename key', () => {
+        let ori = {
+            name: null,
+            age: 12,
+            privacy: {
+                location: 'china',
+                occupation: 'front-end'
+            },
+            detail: null
+        };
+
+        let beeOptions = {
+            privacy: bee.rename('info')
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            name: null,
+            age: 12,
+            info: {
+                location: 'china',
+                occupation: 'front-end'
+            },
+            detail: null
+        });
+    });
+
 });
 
 function equalAndNotModify (data, format, expect) {
