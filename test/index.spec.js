@@ -138,6 +138,30 @@ describe('object-bee', () => {
         });
     });
 
+    it.only('computed value', () => {
+        let ori = {
+            a: 1,
+            b: 2,
+            c: 5
+        };
+
+        let beeOptions = {
+            a () {
+                return 4;
+            },
+            b: bee.rename('d'),
+            c () {
+                return this.a + this.b;
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            a: 4,
+            d: 2,
+            c: 6
+        });
+    });
+
 });
 
 function equalAndNotModify (data, format, expect) {

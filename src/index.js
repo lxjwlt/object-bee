@@ -9,16 +9,30 @@ function bee (data, beeConfig) {
     debugger;
     data = util.copy(data);
 
-    loop(data, beeConfig, function (dataItem, beeItem, key, currentData, currentBee) {
+    registers.forEach((register) => {
+        if (util.isFunction(register.before)) {
+            register.before.call(null, data, beeConfig);
+        }
+    });
+
+    processLoop(data, beeConfig, function (dataItem, beeItem, key, currentData, currentBee) {
         let register = bee.getRegister(beeItem, dataItem);
 
         return register ?
             register.apply(beeItem, dataItem, key, currentData, currentBee) :
-            loop.noModify;
+            processLoop.noModify;
     });
 
-    return data;
+    return util.copy(data);
 }
+
+bee.execute = function (dataItem, beeItem, key, currentData, currentBee) {
+    let register = bee.getRegister(beeItem, dataItem);
+
+    return register ?
+        register.apply(beeItem, dataItem, key, currentData, currentBee) :
+        processLoop.noModify;
+};
 
 bee.getRegister = function (beeItem, dataItem) {
     return registers.filter((register) => {
@@ -59,6 +73,7 @@ bee.register = function (config) {
     }
 
     registers.push({
+        before: config.before,
         check: config.check,
         apply: config.apply
     });
@@ -70,36 +85,17 @@ bee.register(require('./registers/remove'));
 bee.register(require('./registers/rename'));
 bee.register(require('./registers/queue'));
 
-function loop (data, bee, func) {
+function processLoop (data, bee, func) {
+    util.loop(data, bee, ([dataItem], beeItem, key, [currentData], currentBee, type) => {
+        let result = func(dataItem, beeItem, key, currentData, currentBee, type);
 
-    if (util.isArray(bee) && util.isArray(data)) {
-
-        for (let i = bee.length - 1; i >= 0; i--) {
-
-            let result = func(data[i], bee[i], i, data, bee, 'array');
-
-            if (result !== loop.noModify) {
-                processData(data, i, result);
-            }
-
-            loop(data[i], bee[i], func);
+        if (result !== processLoop.noModify) {
+            processData(currentData, key, result);
         }
-
-    } else if (util.isObject(bee) && util.isObject(data)) {
-
-        Object.keys(bee).forEach(function (key) {
-            let result = func(data[key], bee[key], key, data, bee, 'object');
-
-            if (result !== loop.noModify) {
-                processData(data, key, result);
-            }
-
-            loop(data[key], bee[key], func);
-        });
-
-    }
-
+    });
 }
+
+processLoop.noModify = util.beeSymbol('loop no modify');
 
 function processData (data, key, config) {
 
@@ -117,7 +113,5 @@ function processData (data, key, config) {
         delete data[key];
     }
 }
-
-loop.noModify = util.beeSymbol('loop no modify');
 
 module.exports = bee;
