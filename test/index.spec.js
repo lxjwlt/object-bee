@@ -335,6 +335,36 @@ describe('object-bee', () => {
         });
     });
 
+    it('path of data', function () {
+        let ori = {
+            info: {
+                name: ''
+            },
+            data: {
+                person: {
+                    name: 'object-bee'
+                }
+            }
+        };
+
+        let beeOptions = {
+            info: {
+                name: bee.path('data.person.name')
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            info: {
+                name: 'object-bee'
+            },
+            data: {
+                person: {
+                    name: 'object-bee'
+                }
+            }
+        });
+    });
+
 });
 
 function equalAndNotModify (data, format, expect) {

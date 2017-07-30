@@ -80,6 +80,19 @@ const util = {
         util.nestLoop.apply(null, args.slice(0, -1).concat(function () {
             return innerFunc;
         }));
+    },
+
+    path (data, path) {
+        let paths = path.split('.');
+
+        for (let path of paths) {
+            data = data[path];
+            if (!data) {
+                return null;
+            }
+        }
+
+        return data;
     }
 
 };
