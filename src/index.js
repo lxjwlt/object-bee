@@ -149,6 +149,7 @@ bee.register(require('./registers/remove'));
 bee.register(require('./registers/rename'));
 bee.register(require('./registers/queue'));
 bee.register(require('./registers/match'));
+bee.register(require('./registers/glob'));
 
 function processLoop (data, beeConfig, func) {
     util.nestLoop(data, beeConfig, (currentData, currentBee) => {

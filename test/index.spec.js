@@ -317,6 +317,24 @@ describe('object-bee', () => {
         });
     });
 
+    it('glob match', function () {
+        let ori = {
+            abc: 1,
+            cabc: 2
+        };
+
+        let beeOptions = {
+            [bee.glob('ab**')]: (value) => {
+                return value + 2;
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            abc: 3,
+            cabc: 2
+        });
+    });
+
 });
 
 function equalAndNotModify (data, format, expect) {
