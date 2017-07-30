@@ -20,14 +20,39 @@ describe('object-bee', () => {
             age: 4,
             name () {
                 return 1;
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            name: 1,
+            age: 12,
+            privacy: {
+                location: 'china',
+                occupation: 'front-end'
             },
+            detail: null
+        });
+    });
+
+    it('escape value', () => {
+        let ori = {
+            name: null,
+            age: 12,
+            privacy: {
+                location: 'china',
+                occupation: 'front-end'
+            },
+            detail: null
+        };
+
+        let beeOptions = {
             privacy: {
                 location: bee.escape('us')
             }
         };
 
         equalAndNotModify(ori, beeOptions, {
-            name: 1,
+            name: null,
             age: 12,
             privacy: {
                 location: 'us',
@@ -138,7 +163,7 @@ describe('object-bee', () => {
         });
     });
 
-    it.only('computed value', () => {
+    it('computed value', () => {
         let ori = {
             a: 1,
             b: 2,
@@ -159,6 +184,72 @@ describe('object-bee', () => {
             a: 4,
             d: 2,
             c: 6
+        });
+    });
+
+    it('match specific name', function () {
+        let ori = {
+            a: 1,
+            b: 2,
+            c: 5
+        };
+
+        let beeOptions = {
+            [bee.match(/a|b/)] () {
+                return 4;
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            a: 4,
+            b: 4,
+            c: 5
+        });
+    });
+
+    it('match specific name in deep', function () {
+        let ori = {
+            info: {
+                age: 26,
+                career: 'front-end'
+            }
+        };
+
+        let beeOptions = {
+            info: {
+                [bee.match(/^(age|career)$/)]: bee.remove
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            info: {}
+        });
+    });
+
+    it('match specific name with origin bee', function () {
+        let ori = {
+            info: {
+                name: 'bee',
+                career: 'front-end'
+            }
+        };
+
+        let beeOptions = {
+            info: {
+                name: (value) => {
+                    return value + '!!';
+                },
+                [bee.match(/^(name|career)$/)]: (value) => {
+                    return value + '!!';
+                }
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            info: {
+                name: 'bee!!!!',
+                career: 'front-end!!'
+            }
         });
     });
 
