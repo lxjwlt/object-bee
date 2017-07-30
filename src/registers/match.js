@@ -13,8 +13,15 @@ module.exports = {
 
     match (key, info) {
         return info.data.some((reg) => {
-            reg = new RegExp(reg.replace(/^\/|\/$/g, ''));
-            return reg.test(key);
+            let match = reg.match(/^([^(]+)\((\S+)\)$/);
+            let type = match[1];
+            let value = match[2];
+
+            if (type === 'RegExp') {
+                return (new RegExp(value.replace(/^\/|\/$/g, ''))).test(key);
+            } else {
+                return key === value;
+            }
         });
     },
 
@@ -23,7 +30,8 @@ module.exports = {
             return {
                 id: MATCH_ID,
                 data: matches.map((item) => {
-                    return item.toString();
+                    let type = item instanceof RegExp ? 'RegExp' : 'String';
+                    return `${type}(${item.toString()})`;
                 })
             };
         }

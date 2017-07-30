@@ -253,6 +253,70 @@ describe('object-bee', () => {
         });
     });
 
+    it('multi reg match', function () {
+        let ori = {
+            info: {
+                name: 'bee',
+                career: 'front-end'
+            }
+        };
+
+        let beeOptions = {
+            info: {
+                [bee.match(/^name$/, /^career$/)]: (value) => {
+                    return value + '!!';
+                }
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            info: {
+                name: 'bee!!',
+                career: 'front-end!!'
+            }
+        });
+    });
+
+    it('multi string match', function () {
+        let ori = {
+            a: 1,
+            b: 2,
+            c: 3
+        };
+
+        let beeOptions = {
+            [bee.match('a', 'b')]: (value) => {
+                return value + 1;
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            a: 2,
+            b: 3,
+            c: 3
+        });
+    });
+
+    it('multi type match', function () {
+        let ori = {
+            a: 1,
+            b: 2,
+            1: 3
+        };
+
+        let beeOptions = {
+            [bee.match(/a/, 1, 'b')]: (value) => {
+                return String(value) + '!?';
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            a: '1!?',
+            b: '2!?',
+            1: '3!?'
+        });
+    });
+
 });
 
 function equalAndNotModify (data, format, expect) {
