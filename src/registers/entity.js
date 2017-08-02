@@ -1,8 +1,8 @@
 /**
- * @file escape value from any other process
+ * @file entity value no need to transform
  */
 
-class EscapeRegister {
+class EntityRegister {
 
     constructor (value) {
         this.value = value;
@@ -12,7 +12,7 @@ class EscapeRegister {
 
 module.exports = {
     check (beeItem) {
-        return beeItem instanceof EscapeRegister;
+        return beeItem instanceof EntityRegister;
     },
     apply (beeItem) {
         return {
@@ -20,8 +20,8 @@ module.exports = {
         };
     },
     bee: {
-        escape: function (value) {
-            return new EscapeRegister(value);
+        entity: function (value) {
+            return new EntityRegister(value);
         }
     }
 };

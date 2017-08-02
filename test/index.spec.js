@@ -34,7 +34,7 @@ describe('object-bee', () => {
         });
     });
 
-    it('escape value', () => {
+    it('entity value', () => {
         let ori = {
             name: null,
             age: 12,
@@ -47,7 +47,7 @@ describe('object-bee', () => {
 
         let beeOptions = {
             privacy: {
-                location: bee.escape('us')
+                location: bee.entity('us')
             }
         };
 
