@@ -31,6 +31,14 @@ function bee (data, beeConfig) {
             register.apply(beeItem, dataItem, key, currentData, currentBee) : {};
     });
 
+    registers.forEach((register) => {
+        if (util.isFunction(register.after)) {
+            register.after.call(null, data, beeConfig);
+        }
+    });
+
+    matcherIndex = 0;
+
     return util.copy(data);
 }
 
