@@ -163,6 +163,31 @@ describe('object-bee', () => {
         });
     });
 
+    it('queue actions', () => {
+        let ori = {
+            name: null,
+            age: 12,
+            privacy: {
+                location: 'china',
+                occupation: 'front-end'
+            },
+            detail: null
+        };
+
+        let beeOptions = {
+            privacy: [bee.rename('list'), () => {
+                return 13;
+            }]
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            name: null,
+            age: 12,
+            list: 13,
+            detail: null
+        });
+    });
+
     it('computed value', () => {
         let ori = {
             a: 1,
