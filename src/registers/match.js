@@ -25,7 +25,7 @@ module.exports = {
         });
     },
 
-    keyMethods: {
+    keyBee: {
         match (...matches) {
             return {
                 id: MATCH_ID,

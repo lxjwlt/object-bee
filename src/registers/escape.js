@@ -19,7 +19,7 @@ module.exports = {
             value: beeItem.value
         };
     },
-    namespace: {
+    bee: {
         escape: function (value) {
             return new EscapeRegister(value);
         }

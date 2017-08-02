@@ -14,7 +14,7 @@ module.exports = {
             remove: true
         };
     },
-    namespace: {
+    bee: {
         remove: removeSymbol
     }
 };

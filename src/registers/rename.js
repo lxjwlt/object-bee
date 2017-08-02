@@ -17,7 +17,7 @@ module.exports = {
             key: beeItem.name
         };
     },
-    namespace: {
+    bee: {
         rename (name) {
             return new RenameRegister(name);
         }

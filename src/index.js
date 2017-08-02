@@ -107,28 +107,28 @@ bee.register = function (config) {
         throw(new Error('Expect config.match to be Function'));
     }
 
-    if (config.namespace && !util.isObject(config.namespace)) {
-        throw(new Error('Expect config.namespace to be Object'));
+    if (config.bee && !util.isObject(config.bee)) {
+        throw(new Error('Expect config.bee to be Object'));
     }
 
-    if (util.isObject(config.namespace)) {
-        Object.keys(config.namespace).forEach((key) => {
+    if (util.isObject(config.bee)) {
+        Object.keys(config.bee).forEach((key) => {
             if (bee[key]) {
-                throw(new Error(`${key} namespace has been registered`));
+                throw(new Error(`"${key}" has been registered`));
             }
 
-            bee[key] = config.namespace[key];
+            bee[key] = config.bee[key];
         });
     }
 
-    if (util.isObject(config.keyMethods)) {
-        Object.keys(config.keyMethods).forEach((key) => {
+    if (util.isObject(config.keyBee)) {
+        Object.keys(config.keyBee).forEach((key) => {
             if (bee[key]) {
-                throw(new Error(`${key} method has been registered`));
+                throw(new Error(`"${key}" has been registered`));
             }
 
             bee[key] = function () {
-                let info = config.keyMethods[key].apply(null, arguments);
+                let info = config.keyBee[key].apply(null, arguments);
                 return MATCHER_ID + JSON.stringify({
                     index: matcherIndex++,
                     info: info

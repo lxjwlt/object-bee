@@ -33,7 +33,7 @@ module.exports = function (bee) {
                 value: beeItem.call(tempData, dataItem, key)
             };
         },
-        namespace: {
+        bee: {
             path (path) {
                 return function () {
                     return util.path(this, path);

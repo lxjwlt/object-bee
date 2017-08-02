@@ -16,7 +16,7 @@ module.exports = {
         return multimatch([key], info.data).length;
     },
 
-    keyMethods: {
+    keyBee: {
         glob (...matches) {
             return {
                 id: MATCH_ID,

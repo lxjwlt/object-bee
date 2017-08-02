@@ -37,7 +37,7 @@ module.exports = function (bee) {
 
             return result;
         },
-        namespace: {
+        bee: {
             queue (...actions) {
                 return new QueueRegister(actions);
             }
