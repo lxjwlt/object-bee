@@ -75,7 +75,10 @@ bee.isCustomKey = function (key) {
 };
 
 bee.parseKeyInfo = function (key) {
-    return JSON.parse(key.replace(MATCHER_ID, ''));
+    if (key.indexOf(MATCHER_ID) !== 0) {
+        throw(new Error(`${key} isn't a custom key of object-bee.`));
+    }
+    return JSON.parse(key.slice(MATCHER_ID.length));
 };
 
 bee.register = function (config) {
