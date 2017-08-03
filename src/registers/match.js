@@ -2,6 +2,8 @@
  * @file match key by regular expression
  */
 
+'use strict';
+
 const util = require('../util');
 const MATCH_ID = 'key-match';
 

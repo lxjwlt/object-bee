@@ -2,6 +2,8 @@
  * @file glob match for key
  */
 
+'use strict';
+
 const multimatch = require('multimatch');
 const util = require('../util');
 const MATCH_ID = 'glob-match';

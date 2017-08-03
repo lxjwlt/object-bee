@@ -2,6 +2,8 @@
  * @file queue all actions
  */
 
+'use strict';
+
 const util = require('../util');
 
 class QueueRegister {

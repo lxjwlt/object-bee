@@ -2,6 +2,8 @@
  * @file bee accepts function process
  */
 
+'use strict';
+
 const util = require('../util');
 
 let tempData = null;

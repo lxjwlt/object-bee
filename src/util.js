@@ -2,6 +2,8 @@
  * @file utility
  */
 
+'use strict';
+
 const util = {
 
     copy (data) {

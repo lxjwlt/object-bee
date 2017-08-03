@@ -1,3 +1,7 @@
+/**
+ * @file object-hive entry file
+ */
+
 'use strict';
 
 const util = require('./util');

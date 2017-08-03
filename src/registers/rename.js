@@ -2,6 +2,8 @@
  * @file rename specific key of object
  */
 
+'use strict';
+
 class RenameRegister {
     constructor (name) {
         this.name = name;

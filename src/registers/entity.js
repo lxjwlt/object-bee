@@ -2,6 +2,8 @@
  * @file entity value no need to transform
  */
 
+'use strict';
+
 const util = require('../util');
 
 class EntityRegister {
