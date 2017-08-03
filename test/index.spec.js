@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('assert');
+const cloneDeep = require('lodash.clonedeep');
 const bee = require('../src/index');
 
 describe('object-bee', () => {
@@ -390,12 +391,75 @@ describe('object-bee', () => {
         });
     });
 
+    it('entity all values', function () {
+        let ori = {
+            a: 1,
+            info: {
+                b: 2,
+                c: 3
+            }
+        };
+
+        let func = () => {
+            return 4;
+        };
+
+        let beeOptions = {
+            a: [1,2,3],
+            info: {
+                c: func
+            }
+        };
+
+        equalAndNotModify(bee.entityAll, ori, beeOptions, {
+            a: [1,2,3],
+            info: {
+                b: 2,
+                c: func
+            }
+        });
+    });
+
+    it('entity all values with escape', function () {
+        let ori = {
+            a: 1,
+            info: {
+                b: 2,
+                c: 3
+            }
+        };
+
+        let beeOptions = {
+            info: {
+                c: bee.escape(() => {
+                    return 4;
+                })
+            }
+        };
+
+        equalAndNotModify(bee.entityAll, ori, beeOptions, {
+            a: 1,
+            info: {
+                b: 2,
+                c: 4
+            }
+        });
+    });
+
 });
 
-function equalAndNotModify (data, format, expect) {
-    let clone = JSON.parse(JSON.stringify(data));
+function equalAndNotModify (methods, data, format, expect) {
 
-    let result = bee(data, format);
+    if (typeof methods !== 'function') {
+        expect = format;
+        format = data;
+        data = methods;
+        methods = bee;
+    }
+
+    let clone = cloneDeep(data);
+
+    let result = methods(data, format);
 
     assert.deepEqual(result, expect);
 

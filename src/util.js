@@ -5,7 +5,7 @@
 const util = {
 
     copy (data) {
-        return JSON.parse(JSON.stringify(data));
+        return require('lodash.clonedeep')(data);
     },
 
     isRegExp (data) {
@@ -17,7 +17,8 @@ const util = {
     },
 
     isObject (data) {
-        return typeof data === 'object' && data;
+        return data && Object.prototype.toString.call(data) === '[object Object]' &&
+            Object.getPrototypeOf(data) === Object.prototype;
     },
 
     isArray (data) {
@@ -50,18 +51,7 @@ const util = {
             dataList = args.slice(0, -2);
         }
 
-        if (util.isArray(bee) && dataList.every((data) => util.isArray(data))) {
-            let func = outerFunc(...dataList, bee);
-
-            for (let i = bee.length - 1; i >= 0; i--) {
-                let dataValueList = dataList.map((data) => data[i]);
-
-                func(dataValueList, bee[i], i, dataList, bee, 'array');
-
-                util.nestLoop(...dataValueList, bee[i], outerFunc);
-            }
-
-        } else if (util.isObject(bee) && dataList.every((data) => util.isObject(data))) {
+        if (util.isObject(bee) && dataList.every((data) => util.isObject(data))) {
             let func = outerFunc(...dataList, bee);
 
             Object.keys(bee).forEach(function (key) {
