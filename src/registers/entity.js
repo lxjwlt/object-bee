@@ -43,7 +43,7 @@ module.exports = function (bee) {
                 let actualConfig = util.copy(config);
 
                 util.loop(actualConfig, config, ([actualConfigItem], configItem, key, [currentActualConfig]) => {
-                    if (util.isObject(configItem)) {
+                    if (util.isPlainObject(configItem)) {
                         return;
                     }
 

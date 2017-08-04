@@ -11,7 +11,7 @@ const MATCH_ID = 'glob-match';
 module.exports = {
 
     keyCheck (info) {
-        return util.isObject(info) && info.id === MATCH_ID;
+        return util.isPlainObject(info) && info.id === MATCH_ID;
     },
 
     match (key, info) {

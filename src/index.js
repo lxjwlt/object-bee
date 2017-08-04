@@ -47,7 +47,7 @@ function bee (data, beeConfig) {
 }
 
 function getAllMatchKeys (data) {
-    if (!util.isObject(data)) {
+    if (!util.isPlainObject(data)) {
         return [];
     }
 
@@ -99,7 +99,7 @@ bee.register = function (config) {
         config = config(bee);
     }
 
-    if (!util.isObject(config)) {
+    if (!util.isPlainObject(config)) {
         throw(new Error('Expect config of register to be Object'));
     }
 
@@ -119,11 +119,11 @@ bee.register = function (config) {
         throw(new Error('Expect config.match to be Function'));
     }
 
-    if (config.bee && !util.isObject(config.bee)) {
+    if (config.bee && !util.isPlainObject(config.bee)) {
         throw(new Error('Expect config.bee to be Object'));
     }
 
-    if (util.isObject(config.bee)) {
+    if (util.isPlainObject(config.bee)) {
         Object.keys(config.bee).forEach((key) => {
             if (bee[key]) {
                 throw(new Error(`"${key}" has been registered`));
@@ -133,7 +133,7 @@ bee.register = function (config) {
         });
     }
 
-    if (util.isObject(config.keyBee)) {
+    if (util.isPlainObject(config.keyBee)) {
         Object.keys(config.keyBee).forEach((key) => {
             if (bee[key]) {
                 throw(new Error(`"${key}" has been registered`));
@@ -210,7 +210,7 @@ function processLoop (data, beeConfig, func) {
 
 function processData (data, key, config) {
 
-    if (!util.isObject(config)) {
+    if (!util.isPlainObject(config)) {
         return;
     }
 

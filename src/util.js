@@ -18,7 +18,7 @@ const util = {
         return typeof data === 'function';
     },
 
-    isObject (data) {
+    isPlainObject (data) {
         return data && Object.prototype.toString.call(data) === '[object Object]' &&
             Object.getPrototypeOf(data) === Object.prototype;
     },
@@ -36,7 +36,7 @@ const util = {
             data.forEach(function (item, i) {
                 func.apply(this, arguments);
             });
-        } else if (util.isObject(data)) {
+        } else if (util.isPlainObject(data)) {
             Object.keys(data).forEach(function (key) {
                 func.call(this, data[key], key);
             });
@@ -53,7 +53,7 @@ const util = {
             dataList = args.slice(0, -2);
         }
 
-        if (util.isObject(bee) && dataList.every((data) => util.isObject(data))) {
+        if (util.isPlainObject(bee) && dataList.every((data) => util.isPlainObject(data))) {
             let func = outerFunc(...dataList, bee);
 
             Object.keys(bee).forEach(function (key) {
