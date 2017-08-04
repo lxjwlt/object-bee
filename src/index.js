@@ -158,6 +158,7 @@ bee.register = function (config) {
     });
 };
 
+bee.register(require('./registers/object'));
 bee.register(require('./registers/function'));
 bee.register(require('./registers/entity'));
 bee.register(require('./registers/remove'));
@@ -190,7 +191,7 @@ function processLoop (data, beeConfig, func) {
             if (currentBee.hasOwnProperty(key)) {
                 beforeResult[key] = result;
             } else {
-                processData(currentData, key, result);
+                processData(currentData, currentBee, key, result);
             }
         });
 
@@ -203,29 +204,35 @@ function processLoop (data, beeConfig, func) {
 
             let result = func(value, beeItem, key, currentData, currentBee, type);
 
-            processData(currentData, key, Object.assign({}, currentBeforeResult, result));
+            processData(currentData, currentBee, key, Object.assign({}, currentBeforeResult, result));
         };
     });
 }
 
-function processData (data, key, config) {
+function processData (data, beeConfig, key, action) {
 
-    if (!util.isPlainObject(config)) {
+    if (!util.isPlainObject(action)) {
         return;
     }
 
-    if (config.hasOwnProperty('key') && config.key !== key) {
-        data[config.key] = data[key];
+    let currentKey = key;
+
+    if (action.hasOwnProperty('key') && action.key !== key) {
+        data[action.key] = data[key];
         delete data[key];
-        key = config.key;
+        currentKey = action.key;
     }
 
-    if (config.hasOwnProperty('value')) {
-        data[key] = config.value;
+    if (action.hasOwnProperty('value')) {
+        data[currentKey] = action.value;
     }
 
-    if (config.remove) {
-        delete data[key];
+    if (action.hasOwnProperty('beeValue')) {
+        beeConfig[key] = action.beeValue;
+    }
+
+    if (action.remove) {
+        delete data[currentKey];
     }
 }
 

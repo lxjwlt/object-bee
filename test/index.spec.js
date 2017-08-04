@@ -65,12 +65,6 @@ describe('object-bee', () => {
 
     it('delete key', () => {
         let ori = {
-            name: null,
-            age: 12,
-            privacy: {
-                location: 'china',
-                occupation: 'front-end'
-            },
             detail: null
         };
 
@@ -79,12 +73,6 @@ describe('object-bee', () => {
         };
 
         equalAndNotModify(ori, beeOptions, {
-            name: null,
-            age: 12,
-            privacy: {
-                location: 'china',
-                occupation: 'front-end'
-            }
         });
     });
 
@@ -442,6 +430,28 @@ describe('object-bee', () => {
             info: {
                 b: 2,
                 c: 4
+            }
+        });
+    });
+
+    it('object in queue', function () {
+        let ori = {
+            info: {
+                name: 'foo'
+            }
+        };
+
+        let beeOptions = {
+            info: [bee.rename('person'), {
+                name: () => {
+                    return 'bee';
+                }
+            }]
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            person: {
+                name: 'bee'
             }
         });
     });
