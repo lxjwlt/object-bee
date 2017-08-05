@@ -456,6 +456,22 @@ describe('object-bee', () => {
         });
     });
 
+    it('object in queue', function () {
+        let ori = {
+            info: 1
+        };
+
+        let beeOptions = {
+            info: [bee.rename('num'), (value) => {
+                return value + 2;
+            }]
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            num: 3
+        });
+    });
+
 });
 
 function equalAndNotModify (methods, data, format, expect) {

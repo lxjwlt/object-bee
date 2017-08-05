@@ -18,22 +18,21 @@ module.exports = function (bee) {
             return beeItem instanceof QueueRegister || util.isArray(beeItem);
         },
         apply (beeItem, dataItem, key) {
-            let result = {};
-            let currentKey = key;
-            let currentValue = dataItem;
+            let result = {
+                key: key,
+                value: dataItem
+            };
+
             let queue = beeItem instanceof QueueRegister ? beeItem.queue : beeItem;
 
             for (let queueBeeItem of queue) {
-                let register = bee.getRegister(queueBeeItem, currentValue);
+                let register = bee.getRegister(queueBeeItem, result.value);
 
                 if (register) {
                     result = Object.assign(
                         {}, result,
-                        register.apply.call(register, queueBeeItem, currentValue, currentKey)
+                        register.apply.call(register, queueBeeItem, result.value, result.key)
                     );
-
-                    currentKey = result.key;
-                    currentValue = result.value;
                 }
             }
 
