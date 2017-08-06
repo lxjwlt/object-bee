@@ -484,6 +484,20 @@ describe('object-bee', () => {
         });
     });
 
+    it('no operation', function () {
+        let ori = {
+            num: 1
+        };
+
+        let beeOptions = {
+            num: bee.noop
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            num: 1
+        });
+    });
+
 });
 
 function equalAndNotModify (methods, data, format, expect) {
