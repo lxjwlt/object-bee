@@ -6,6 +6,7 @@
 
 const util = require('../util');
 const ENSURE_SYMBOL = util.beeSymbol('ensure symbol');
+const MATCH_ID = '_ensure_key_';
 
 module.exports = {
     check (beeItem) {
@@ -18,5 +19,24 @@ module.exports = {
     },
     bee: {
         ensure: ENSURE_SYMBOL
+    },
+    keyCheck (info) {
+        return util.isPlainObject(info) && info.id === MATCH_ID;
+    },
+    match (key, info) {
+        return key === info.key;
+    },
+    keyApply (info) {
+        return {
+            key: info.key
+        };
+    },
+    keyBee: {
+        keep (key) {
+            return {
+                id: MATCH_ID,
+                key: key
+            };
+        }
     }
 };

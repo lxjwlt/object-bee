@@ -55,13 +55,20 @@ function getAllMatchKeys (data) {
         .filter((key) => bee.isCustomKey(key))
         .map((key) => {
             let info = bee.parseKeyInfo(key);
+            let keyRegisters = registers.filter((register) => {
+                return register.keyCheck && register.keyCheck(info.info);
+            });
 
             return {
                 index: info.index,
-                keyRegisters: registers.filter((register) => {
-                    return register.keyCheck && register.keyCheck(info.info);
-                }),
+                keyRegisters: keyRegisters,
                 bee: data[key],
+                defaultAction: keyRegisters.reduce((result, register) => {
+                    return Object.assign(
+                        result,
+                        register.keyApply && register.keyApply(info.info)
+                    );
+                }, {}),
                 info: info.info
             };
         })
@@ -115,6 +122,10 @@ bee.register = function (config) {
         throw(new Error('Expect config.keyCheck to be Function'));
     }
 
+    if (config.hasOwnProperty('keyApply') && !util.isFunction(config.keyApply)) {
+        throw(new Error('Expect config.keyApply to be Function'));
+    }
+
     if (config.hasOwnProperty('match') && !util.isFunction(config.match)) {
         throw(new Error('Expect config.match to be Function'));
     }
@@ -154,6 +165,7 @@ bee.register = function (config) {
         check: config.check,
         apply: config.apply,
         keyCheck: config.keyCheck,
+        keyApply: config.keyApply,
         match: config.match
     });
 };
@@ -163,10 +175,24 @@ function processLoop (data, beeConfig, func) {
         let allMatchKeys = getAllMatchKeys(currentBee);
         let beforeResult = {};
 
+        for (let matcher of allMatchKeys) {
+            let key = matcher.defaultAction.key;
+
+            if (!matcher.defaultAction.hasOwnProperty('key')) {
+                continue;
+            }
+
+            if (currentBee.hasOwnProperty(key)) {
+                beforeResult[key] = matcher.defaultAction;
+            } else {
+                processData(currentData, currentBee, key, matcher.defaultAction);
+            }
+        }
+
         util.forEach(currentData, (item, key) => {
             let matchers = allMatchKeys.filter((item) => {
                 return item.keyRegisters.some((register) => {
-                    return register.match(key, item.info);
+                    return register.match && register.match(key, item.info);
                 });
             });
 
@@ -180,7 +206,7 @@ function processLoop (data, beeConfig, func) {
             }, {});
 
             if (currentBee.hasOwnProperty(key)) {
-                beforeResult[key] = result;
+                beforeResult[key] = Object.assign({}, beforeResult[key], result);
             } else {
                 processData(currentData, currentBee, key, result);
             }

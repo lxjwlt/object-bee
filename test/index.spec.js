@@ -512,6 +512,47 @@ describe('object-bee', () => {
         });
     });
 
+    it('ensure key with keep method', function () {
+        let ori = {};
+
+        let beeOptions = {
+            [bee.keep('newKey')]: []
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            newKey: undefined
+        });
+    });
+
+    it('ensure key with keep method', function () {
+        let ori = {};
+
+        let beeOptions = {
+            [bee.keep('newKey')]: () => {
+                return 123;
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            newKey: 123
+        });
+    });
+
+    it('ensure key with keep method and assign value', function () {
+        let ori = {};
+
+        let beeOptions = {
+            [bee.keep('newKey')]: bee.noop,
+            newKey: () => {
+                return 123;
+            }
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            newKey: 123
+        });
+    });
+
 });
 
 function equalAndNotModify (methods, data, format, expect) {
