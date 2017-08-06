@@ -484,6 +484,20 @@ describe('object-bee', () => {
         });
     });
 
+    it('ensure key and assign value', function () {
+        let ori = {};
+
+        let beeOptions = {
+            newKey: [bee.ensure, () => {
+                return 12;
+            }]
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            newKey: 12
+        });
+    });
+
     it('no operation', function () {
         let ori = {
             num: 1
