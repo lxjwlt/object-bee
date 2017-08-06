@@ -472,6 +472,18 @@ describe('object-bee', () => {
         });
     });
 
+    it('ensure key', function () {
+        let ori = {};
+
+        let beeOptions = {
+            newKey: bee.ensure
+        };
+
+        equalAndNotModify(ori, beeOptions, {
+            newKey: undefined
+        });
+    });
+
 });
 
 function equalAndNotModify (methods, data, format, expect) {

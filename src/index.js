@@ -166,6 +166,7 @@ bee.register(require('./registers/rename'));
 bee.register(require('./registers/queue'));
 bee.register(require('./registers/match'));
 bee.register(require('./registers/glob'));
+bee.register(require('./registers/ensure'));
 
 function processLoop (data, beeConfig, func) {
     util.nestLoop(data, beeConfig, (currentData, currentBee) => {
@@ -217,9 +218,17 @@ function processData (data, beeConfig, key, action) {
 
     let currentKey = key;
 
-    if (action.hasOwnProperty('key') && action.key !== key) {
+    if (action.hasOwnProperty('key')) {
         data[action.key] = data[key];
-        delete data[key];
+
+        /**
+         * it mean to be "rename" when the action.key is
+         * different from original key.
+         */
+        if (action.key !== key) {
+            delete data[key];
+        }
+
         currentKey = action.key;
     }
 
