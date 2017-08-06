@@ -27,6 +27,10 @@ const util = {
         return Object.prototype.toString.apply(data) === '[object Array]';
     },
 
+    isUndefined (data) {
+        return typeof data === 'undefined';
+    },
+
     beeSymbol (desc) {
         return Symbol(`[object-bee] ${desc}`);
     },

@@ -6,6 +6,7 @@
 
 const hive = require('./hive');
 
+hive.register(require('./registers/create'));
 hive.register(require('./registers/ensure'));
 hive.register(require('./registers/entity'));
 hive.register(require('./registers/function'));

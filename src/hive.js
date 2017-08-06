@@ -16,7 +16,7 @@ function bee (data, beeConfig) {
 
     debugger;
 
-    data = util.copy(data);
+    beeConfig = util.copy(beeConfig);
 
     registers.forEach((register) => {
         if (util.isFunction(register.before)) {
@@ -43,7 +43,7 @@ function bee (data, beeConfig) {
 
     matcherIndex = 0;
 
-    return util.copy(data);
+    return data;
 }
 
 function getAllMatchKeys (data) {
@@ -132,6 +132,16 @@ bee.register = function (config) {
 
     if (config.bee && !util.isPlainObject(config.bee)) {
         throw(new Error('Expect config.bee to be Object'));
+    }
+
+    if (util.isPlainObject(config.methods)) {
+        Object.keys(config.methods).forEach((key) => {
+            if (bee[key]) {
+                throw(new Error(`"${key}" has been registered`));
+            }
+
+            bee[key] = config.methods[key];
+        });
     }
 
     if (util.isPlainObject(config.bee)) {

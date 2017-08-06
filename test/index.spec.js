@@ -24,7 +24,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             name: 1,
             age: 12,
             privacy: {
@@ -52,7 +52,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             name: null,
             age: 12,
             privacy: {
@@ -72,7 +72,7 @@ describe('object-bee', () => {
             detail: bee.remove
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
         });
     });
 
@@ -91,7 +91,7 @@ describe('object-bee', () => {
             privacy: bee.rename('info')
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             name: null,
             age: 12,
             info: {
@@ -119,7 +119,7 @@ describe('object-bee', () => {
             })
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             name: null,
             age: 12,
             list: 11,
@@ -144,7 +144,7 @@ describe('object-bee', () => {
             })
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             name: null,
             age: 12,
             info: 11,
@@ -169,7 +169,7 @@ describe('object-bee', () => {
             }]
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             name: null,
             age: 12,
             list: 13,
@@ -194,7 +194,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             a: 4,
             d: 2,
             c: 6
@@ -214,7 +214,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             a: 4,
             b: 4,
             c: 5
@@ -235,7 +235,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             info: {}
         });
     });
@@ -259,7 +259,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             info: {
                 name: 'bee!!!!',
                 career: 'front-end!!'
@@ -283,7 +283,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             info: {
                 name: 'bee!!',
                 career: 'front-end!!'
@@ -304,7 +304,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             a: 2,
             b: 3,
             c: 3
@@ -324,7 +324,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             a: '1!?',
             b: '2!?',
             1: '3!?'
@@ -343,7 +343,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             abc: 3,
             cabc: 2
         });
@@ -367,7 +367,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             info: {
                 name: 'object-bee'
             },
@@ -399,7 +399,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(bee.entityAll, ori, beeOptions, {
+        check(bee.entityAll, ori, beeOptions, {
             a: [1,2,3],
             info: {
                 b: 2,
@@ -425,7 +425,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(bee.entityAll, ori, beeOptions, {
+        check(bee.entityAll, ori, beeOptions, {
             a: 1,
             info: {
                 b: 2,
@@ -449,7 +449,7 @@ describe('object-bee', () => {
             }]
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             person: {
                 name: 'bee'
             }
@@ -467,7 +467,7 @@ describe('object-bee', () => {
             }]
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             num: 3
         });
     });
@@ -479,7 +479,7 @@ describe('object-bee', () => {
             newKey: bee.ensure
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             newKey: undefined
         });
     });
@@ -493,7 +493,7 @@ describe('object-bee', () => {
             }]
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             newKey: 12
         });
     });
@@ -507,7 +507,7 @@ describe('object-bee', () => {
             num: bee.noop
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             num: 1
         });
     });
@@ -519,7 +519,7 @@ describe('object-bee', () => {
             [bee.keep('newKey')]: []
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             newKey: undefined
         });
     });
@@ -533,7 +533,7 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             newKey: 123
         });
     });
@@ -548,15 +548,14 @@ describe('object-bee', () => {
             }
         };
 
-        equalAndNotModify(ori, beeOptions, {
+        check(ori, beeOptions, {
             newKey: 123
         });
     });
 
 });
 
-function equalAndNotModify (methods, data, format, expect) {
-
+function check (methods, data, format, expect) {
     if (typeof methods !== 'function') {
         expect = format;
         format = data;
@@ -564,11 +563,18 @@ function equalAndNotModify (methods, data, format, expect) {
         methods = bee;
     }
 
-    let clone = cloneDeep(data);
+    let result;
+    debugger;
 
-    let result = methods(data, format);
+    if (methods === bee) {
+        let clone = cloneDeep(data);
+        result = methods.create(data, format);
+        assert.deepEqual(result, expect);
+        assert.deepEqual(data, clone, 'can not change origin object');
+    }
 
+    result = methods(data, format);
+
+    assert.equal(result, data);
     assert.deepEqual(result, expect);
-
-    assert.deepEqual(data, clone, 'can not change origin object');
 }
