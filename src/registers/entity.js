@@ -58,8 +58,11 @@ module.exports = function (bee) {
             },
             {
                 methods: {
-                    escape (value) {
-                        return new EscapeRegister(value);
+                    escape: {
+                        chain: false,
+                        handler (value) {
+                            return new EscapeRegister(value);
+                        }
                     }
                 }
             }

@@ -69,11 +69,10 @@ describe('object-bee', () => {
         };
 
         let beeOptions = {
-            detail: bee.remove
+            detail: bee.remove()
         };
 
-        check(ori, beeOptions, {
-        });
+        check(ori, beeOptions, {});
     });
 
     it('rename key', () => {
@@ -104,13 +103,10 @@ describe('object-bee', () => {
 
     it('queue actions', () => {
         let ori = {
-            name: null,
-            age: 12,
             privacy: {
                 location: 'china',
                 occupation: 'front-end'
-            },
-            detail: null
+            }
         };
 
         let beeOptions = {
@@ -120,10 +116,7 @@ describe('object-bee', () => {
         };
 
         check(ori, beeOptions, {
-            name: null,
-            age: 12,
-            list: 11,
-            detail: null
+            list: 11
         });
     });
 
@@ -231,7 +224,7 @@ describe('object-bee', () => {
 
         let beeOptions = {
             info: {
-                [bee.match(/^(age|career)$/)]: bee.remove
+                [bee.match(/^(age|career)$/)]: bee.remove()
             }
         };
 
@@ -476,7 +469,7 @@ describe('object-bee', () => {
         let ori = {};
 
         let beeOptions = {
-            newKey: bee.ensure
+            newKey: bee.ensure()
         };
 
         check(ori, beeOptions, {
@@ -488,7 +481,7 @@ describe('object-bee', () => {
         let ori = {};
 
         let beeOptions = {
-            newKey: [bee.ensure, () => {
+            newKey: [bee.ensure(), () => {
                 return 12;
             }]
         };
@@ -504,7 +497,7 @@ describe('object-bee', () => {
         };
 
         let beeOptions = {
-            num: bee.noop
+            num: bee.noop()
         };
 
         check(ori, beeOptions, {
@@ -553,6 +546,20 @@ describe('object-bee', () => {
         });
     });
 
+    it('chaining call', function () {
+        let ori = {
+            a: 1
+        };
+
+        let beeOptions = {
+            a: bee.rename('b').rename('cc')
+        };
+
+        check(ori, beeOptions, {
+            cc: 1
+        });
+    });
+
 });
 
 function check (methods, data, format, expect) {
@@ -564,17 +571,16 @@ function check (methods, data, format, expect) {
     }
 
     let result;
-    debugger;
 
     if (methods === bee) {
         let clone = cloneDeep(data);
         result = methods.create(data, format);
-        assert.deepEqual(result, expect);
-        assert.deepEqual(data, clone, 'can not change origin object');
+        assert.deepEqual(result, expect, '[clone] expect deep equal');
+        assert.deepEqual(data, clone, '[clone] can not change origin object');
     }
 
     result = methods(data, format);
 
-    assert.equal(result, data);
-    assert.deepEqual(result, expect);
+    assert.equal(result, data, '[normal] expect return original data');
+    assert.deepEqual(result, expect, '[normal] expect deep equal');
 }

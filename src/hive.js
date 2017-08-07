@@ -29,7 +29,7 @@ function bee (data, beeConfig) {
             return;
         }
 
-        return bee.execute(beeItem, dataItem, key, currentData, currentBee);
+        return bee.execute(beeItem, dataItem, key, currentBee, currentData);
     });
 
     bee.emit('after', data, beeConfig);
@@ -40,12 +40,9 @@ function bee (data, beeConfig) {
 }
 
 bee.execute = function (beeItem, dataItem, key, currentBee, currentData) {
-    let register = valueSceneRegisters.filter((register) => {
-        return register.check && register.check(beeItem, dataItem);
-    })[0];
-
-    return register ?
-        register.apply(beeItem, dataItem, key, currentBee, currentData) : {};
+    return beeItem instanceof Chain ?
+        beeItem.execute(dataItem, key, currentData, currentBee) :
+        executeValueScene(beeItem, dataItem, key, currentBee, currentData);
 };
 
 bee.install = function (config) {
@@ -102,6 +99,43 @@ bee.installMethods = function (methods) {
     );
 };
 
+class Chain {
+
+    constructor (item) {
+        this.beeItems = [item];
+    }
+
+    execute (dataItem, key, currentBee, currentData) {
+        return this.beeItems.reduce((action, beeItem) => {
+            return Object.assign(
+                action,
+                executeValueScene(beeItem, action.value, action.key, currentBee, currentData)
+            );
+        }, {
+            key: key,
+            value: dataItem
+        });
+    }
+
+}
+
+Chain.setMethods = function (name, method) {
+    Chain.prototype[name] = function () {
+
+        this.beeItems.push(
+            util.isFunction(method) ? method.apply(null, arguments) : method
+        );
+
+        return this;
+    };
+};
+
+Chain.clone = function (instance) {
+    let newInstance = new Chain();
+    newInstance.beeItems = [...instance];
+    return newInstance;
+};
+
 bee.installValueScene = function (config) {
 
     if (!util.isPlainObject(config)) {
@@ -120,9 +154,23 @@ bee.installValueScene = function (config) {
         throw(new Error('Expect config.methods to be Object'));
     }
 
-    Object.keys(config.methods || {}).forEach((key) =>
-        setMethod(key, config.methods[key])
-    );
+    Object.keys(config.methods || {}).forEach((key) => {
+        let method = config.methods[key];
+        let canChain = true;
+
+        if (util.isPlainObject(method)) {
+            canChain = method.hasOwnProperty('chain') ? method.chain : canChain;
+            method = method.handler;
+        }
+
+        setMethod(key, !canChain ? method : function () {
+            return new Chain(
+                util.isFunction(method) ? method.apply(null, arguments) : method
+            );
+        });
+
+        Chain.setMethods(key, config.methods[key]);
+    });
 
     valueSceneRegisters.push(config);
 };
@@ -161,6 +209,14 @@ bee.installKeyScene = function (config) {
     keySceneRegisters.push(config);
 };
 
+function executeValueScene (beeItem, dataItem, key, currentBee, currentData) {
+    let register = valueSceneRegisters.filter((register) => {
+        return register.check && register.check(beeItem, dataItem);
+    })[0];
+
+    return register ?
+        register.apply(beeItem, dataItem, key, currentBee, currentData) : {};
+}
 
 function getAllMatchKeys (data) {
     if (!util.isPlainObject(data)) {

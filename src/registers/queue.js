@@ -33,11 +33,10 @@ module.exports = function (bee) {
                 let queue = beeItem instanceof QueueRegister ? beeItem.queue : beeItem;
 
                 for (let queueBeeItem of queue) {
-                    Object.assign(result,
-                        bee.execute.call(
-                            bee, queueBeeItem, result.value, result.key, currentBee, currentData
-                        )
-                    );
+                    Object.assign(result, bee.execute(
+                        queueBeeItem, result.value, result.key,
+                        currentBee, currentData
+                    ));
                 }
 
                 return result;
