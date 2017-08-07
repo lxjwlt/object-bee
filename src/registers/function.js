@@ -9,44 +9,43 @@ const util = require('../util');
 let tempData = null;
 
 module.exports = function (bee) {
-    return {
-        before (data, beeConfig) {
-            tempData = util.copy(data);
 
-            util.loop(tempData, data, beeConfig, ([dataItem], beeItem, key, [currentTempData, currentData], currentBee) => {
-                Object.defineProperty(currentTempData, key, {
-                    get () {
-                        let result = bee.execute(beeItem, dataItem, key, currentBee, currentTempData);
+    bee.on('before', (data, beeConfig) => {
+        tempData = util.copy(data);
 
-                        if (result.hasOwnProperty('value')) {
-                            return result.value;
-                        }
+        util.loop(tempData, data, beeConfig, ([dataItem], beeItem, key, [currentTempData, currentData], currentBee) => {
+            Object.defineProperty(currentTempData, key, {
+                get () {
+                    let result = bee.execute(beeItem, dataItem, key, currentBee, currentTempData);
 
-                        return dataItem;
+                    if (result.hasOwnProperty('value')) {
+                        return result.value;
                     }
-                });
-            });
-        },
-        valueScenes: [
-            {
-                check (beeItem) {
-                    return typeof beeItem === 'function';
-                },
-                apply (beeItem, dataItem, key) {
-                    return {
-                        value: beeItem.call(tempData, dataItem, key)
-                    };
+
+                    return dataItem;
                 }
-            },
-            {
-                methods: {
-                    path (path) {
-                        return function () {
-                            return util.path(this, path);
-                        }
-                    }
+            });
+        });
+    });
+
+    bee.installValueScene({
+        check (beeItem) {
+            return typeof beeItem === 'function';
+        },
+        apply (beeItem, dataItem, key) {
+            return {
+                value: beeItem.call(tempData, dataItem, key)
+            };
+        }
+    });
+
+    bee.installValueScene({
+        methods: {
+            path (path) {
+                return function () {
+                    return util.path(this, path);
                 }
             }
-        ]
-    };
+        }
+    });
 };

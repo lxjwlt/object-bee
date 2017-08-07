@@ -6,7 +6,7 @@
 
 const util = require('./util');
 
-const hooks = [];
+const hooks = {};
 
 const valueSceneRegisters = [];
 
@@ -22,11 +22,7 @@ function bee (data, beeConfig) {
 
     beeConfig = util.copy(beeConfig);
 
-    hooks.forEach((hook) => {
-        if (util.isFunction(hook.before)) {
-            hook.before.call(null, data, beeConfig);
-        }
-    });
+    bee.emit('before', data, beeConfig);
 
     processLoop(data, beeConfig, function (dataItem, beeItem, key, currentData, currentBee) {
         if (isCustomKey(key)) {
@@ -36,11 +32,7 @@ function bee (data, beeConfig) {
         return bee.execute(beeItem, dataItem, key, currentData, currentBee);
     });
 
-    hooks.forEach((hook) => {
-        if (util.isFunction(hook.after)) {
-            hook.after.call(null, data, beeConfig);
-        }
-    });
+    bee.emit('after', data, beeConfig);
 
     matcherIndex = 0;
 
@@ -56,46 +48,64 @@ bee.execute = function (beeItem, dataItem, key, currentBee, currentData) {
         register.apply(beeItem, dataItem, key, currentBee, currentData) : {};
 };
 
-bee.register = function (config) {
+bee.install = function (config) {
 
     if (typeof config === 'function') {
         config = config(bee);
     }
 
+    if (!config) {
+        return;
+    }
+
     if (!util.isPlainObject(config)) {
         throw(new Error('Expect config of register to be Object'));
     }
 
-    if (config.hasOwnProperty('before') && !util.isFunction(config.before)) {
-        throw(new Error('Expect config.before to be Function'));
+    if (config.hasOwnProperty('before')) {
+        bee.on('before', config.before);
     }
 
-    if (config.hasOwnProperty('after') && !util.isFunction(config.after)) {
-        throw(new Error('Expect config.after to be Function'));
+    if (config.hasOwnProperty('after')) {
+        bee.on('after', config.after);
     }
 
-    if (config.hasOwnProperty('methods') && !util.isPlainObject(config.methods)) {
-        throw(new Error('Expect config.methods to be Object'));
+    if (config.hasOwnProperty('methods')) {
+        bee.installMethods(config.methods);
     }
 
-    Object.keys(config.methods || {}).forEach((key) =>
-        setMethod(key, config.methods[key])
-    );
+    util.makeArray(config.valueScenes).forEach((item) => bee.installValueScene(item));
 
-    util.makeArray(config.valueScenes).forEach((item) => bee.registerValueScene(item));
-
-    util.makeArray(config.keyScenes).forEach((item) => bee.registerKeyScene(item));
-
-    hooks.push({
-        before: config.before,
-        after: config.after
-    });
+    util.makeArray(config.keyScenes).forEach((item) => bee.installKeyScene(item));
 };
 
-bee.registerValueScene = function (config) {
+bee.on = function (hookName, func) {
+    if (!util.isFunction(func)) {
+        throw(new Error(`Expect handler of "${hookName}" listener to be Function`));
+    }
+    hooks[hookName] = util.makeArray(hooks[hookName]);
+    hooks[hookName].push(func);
+};
+
+bee.emit = function (name) {
+    let args = [...arguments].slice(1);
+    util.makeArray(hooks[name]).forEach((func) => func.apply(null, args));
+};
+
+bee.installMethods = function (methods) {
+    if (!util.isPlainObject(methods)) {
+        throw(new Error('Expect arguments to be Object'));
+    }
+
+    Object.keys(methods).forEach((key) =>
+        setMethod(key, methods[key])
+    );
+};
+
+bee.installValueScene = function (config) {
 
     if (!util.isPlainObject(config)) {
-        throw(new Error('Expect config of register to be Object'));
+        throw(new Error('Expect config for "valueScene" to be Object'));
     }
 
     if (config.hasOwnProperty('check') && !util.isFunction(config.check)) {
@@ -117,10 +127,10 @@ bee.registerValueScene = function (config) {
     valueSceneRegisters.push(config);
 };
 
-bee.registerKeyScene = function (config) {
+bee.installKeyScene = function (config) {
 
     if (!util.isPlainObject(config)) {
-        throw(new Error('Expect config of register to be Object'));
+        throw(new Error('Expect config for "keyScene" to be Object'));
     }
 
     if (config.hasOwnProperty('check') && !util.isFunction(config.check)) {
