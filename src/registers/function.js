@@ -16,7 +16,7 @@ module.exports = function (bee) {
             util.loop(tempData, data, beeConfig, ([dataItem], beeItem, key, [currentTempData, currentData], currentBee) => {
                 Object.defineProperty(currentTempData, key, {
                     get () {
-                        let result = bee.execute(dataItem, beeItem, key, currentTempData, currentBee);
+                        let result = bee.execute(beeItem, dataItem, key, currentBee, currentTempData);
 
                         if (result.hasOwnProperty('value')) {
                             return result.value;

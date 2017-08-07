@@ -29,14 +29,11 @@ function bee (data, beeConfig) {
     });
 
     processLoop(data, beeConfig, function (dataItem, beeItem, key, currentData, currentBee) {
-        if (bee.isCustomKey(key)) {
+        if (isCustomKey(key)) {
             return;
         }
 
-        let register = bee.getRegister(beeItem, dataItem);
-
-        return register ?
-            register.apply(beeItem, dataItem, key, currentData, currentBee) : {};
+        return bee.execute(beeItem, dataItem, key, currentData, currentBee);
     });
 
     hooks.forEach((hook) => {
@@ -50,58 +47,13 @@ function bee (data, beeConfig) {
     return data;
 }
 
-function getAllMatchKeys (data) {
-    if (!util.isPlainObject(data)) {
-        return [];
-    }
-
-    return Object.keys(data)
-        .filter((key) => bee.isCustomKey(key))
-        .map((key) => {
-            let info = bee.parseKeyInfo(key);
-            let keyRegisters = keySceneRegisters.filter((register) => {
-                return register.check && register.check(info.info);
-            });
-
-            return {
-                index: info.index,
-                keyRegisters: keyRegisters,
-                bee: data[key],
-                defaultAction: keyRegisters.reduce((result, register) => {
-                    return Object.assign(
-                        result,
-                        register.apply && register.apply(info.info)
-                    );
-                }, {}),
-                info: info.info
-            };
-        })
-        .sort((a, b) => a.index - b.index);
-}
-
-bee.execute = function (dataItem, beeItem, key, currentData, currentBee) {
-    let register = bee.getRegister(beeItem, dataItem);
-
-    return register ?
-        register.apply(beeItem, dataItem, key, currentData, currentBee) :
-        {};
-};
-
-bee.getRegister = function (beeItem, dataItem) {
-    return valueSceneRegisters.filter((register) => {
+bee.execute = function (beeItem, dataItem, key, currentBee, currentData) {
+    let register = valueSceneRegisters.filter((register) => {
         return register.check && register.check(beeItem, dataItem);
     })[0];
-};
 
-bee.isCustomKey = function (key) {
-    return key.indexOf(MATCHER_ID) === 0;
-};
-
-bee.parseKeyInfo = function (key) {
-    if (key.indexOf(MATCHER_ID) !== 0) {
-        throw(new Error(`${key} isn't a custom key of object-bee.`));
-    }
-    return JSON.parse(key.slice(MATCHER_ID.length));
+    return register ?
+        register.apply(beeItem, dataItem, key, currentBee, currentData) : {};
 };
 
 bee.register = function (config) {
@@ -199,6 +151,47 @@ bee.registerKeyScene = function (config) {
     keySceneRegisters.push(config);
 };
 
+
+function getAllMatchKeys (data) {
+    if (!util.isPlainObject(data)) {
+        return [];
+    }
+
+    return Object.keys(data)
+        .filter((key) => isCustomKey(key))
+        .map((key) => {
+            let info = parseKeyInfo(key);
+            let keyRegisters = keySceneRegisters.filter((register) => {
+                return register.check && register.check(info.info);
+            });
+
+            return {
+                index: info.index,
+                keyRegisters: keyRegisters,
+                bee: data[key],
+                defaultAction: keyRegisters.reduce((result, register) => {
+                    return Object.assign(
+                        result,
+                        register.apply && register.apply(info.info)
+                    );
+                }, {}),
+                info: info.info
+            };
+        })
+        .sort((a, b) => a.index - b.index);
+}
+
+function isCustomKey (key) {
+    return key.indexOf(MATCHER_ID) === 0;
+}
+
+function parseKeyInfo (key) {
+    if (key.indexOf(MATCHER_ID) !== 0) {
+        throw(new Error(`${key} isn't a custom key of object-bee.`));
+    }
+    return JSON.parse(key.slice(MATCHER_ID.length));
+}
+
 function setMethod (name, method) {
     if (bee[name]) {
         throw(new Error(`"${name}" has been registered`));
@@ -239,7 +232,7 @@ function processLoop (data, beeConfig, func) {
 
             let result = allBee.reduce((result, beeValue) => {
                 return Object.assign({}, result,
-                    bee.execute(item, beeValue, key, currentData, currentBee));
+                    bee.execute(beeValue, item, key, currentBee, currentData));
             }, {});
 
             if (currentBee.hasOwnProperty(key)) {
