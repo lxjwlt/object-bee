@@ -24,21 +24,7 @@ class EscapeRegister {
 
 module.exports = function (bee) {
     return {
-        check (beeItem) {
-            return beeItem instanceof EntityRegister;
-        },
-        apply (beeItem) {
-            return {
-                value: beeItem.value
-            };
-        },
-        bee: {
-            entity (value) {
-                return new EntityRegister(value);
-            },
-            escape (value) {
-                return new EscapeRegister(value);
-            },
+        methods: {
             entityAll (data, config) {
                 let actualConfig = util.copy(config);
 
@@ -53,6 +39,30 @@ module.exports = function (bee) {
 
                 return bee(data, actualConfig);
             }
-        }
+        },
+        valueScenes: [
+            {
+                check (beeItem) {
+                    return beeItem instanceof EntityRegister;
+                },
+                apply (beeItem) {
+                    return {
+                        value: beeItem.value
+                    };
+                },
+                methods: {
+                    entity (value) {
+                        return new EntityRegister(value);
+                    }
+                }
+            },
+            {
+                methods: {
+                    escape (value) {
+                        return new EscapeRegister(value);
+                    }
+                }
+            }
+        ]
     };
 };

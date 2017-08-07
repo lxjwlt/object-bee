@@ -11,17 +11,19 @@ class RenameRegister {
 }
 
 module.exports = {
-    check (beeItem) {
-        return beeItem instanceof RenameRegister;
-    },
-    apply (beeItem) {
-        return {
-            key: beeItem.name
-        };
-    },
-    bee: {
-        rename (name) {
-            return new RenameRegister(name);
+    valueScenes: {
+        check (beeItem) {
+            return beeItem instanceof RenameRegister;
+        },
+        apply (beeItem) {
+            return {
+                key: beeItem.name
+            };
+        },
+        methods: {
+            rename (name) {
+                return new RenameRegister(name);
+            }
         }
     }
 };

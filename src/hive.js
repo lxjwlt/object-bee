@@ -6,7 +6,11 @@
 
 const util = require('./util');
 
-const registers = [];
+const hooks = [];
+
+const valueSceneRegisters = [];
+
+const keySceneRegisters = [];
 
 const MATCHER_ID = 'bee-' + String(Math.random()).replace(/\D/, '');
 
@@ -18,9 +22,9 @@ function bee (data, beeConfig) {
 
     beeConfig = util.copy(beeConfig);
 
-    registers.forEach((register) => {
-        if (util.isFunction(register.before)) {
-            register.before.call(null, data, beeConfig);
+    hooks.forEach((hook) => {
+        if (util.isFunction(hook.before)) {
+            hook.before.call(null, data, beeConfig);
         }
     });
 
@@ -35,9 +39,9 @@ function bee (data, beeConfig) {
             register.apply(beeItem, dataItem, key, currentData, currentBee) : {};
     });
 
-    registers.forEach((register) => {
-        if (util.isFunction(register.after)) {
-            register.after.call(null, data, beeConfig);
+    hooks.forEach((hook) => {
+        if (util.isFunction(hook.after)) {
+            hook.after.call(null, data, beeConfig);
         }
     });
 
@@ -55,8 +59,8 @@ function getAllMatchKeys (data) {
         .filter((key) => bee.isCustomKey(key))
         .map((key) => {
             let info = bee.parseKeyInfo(key);
-            let keyRegisters = registers.filter((register) => {
-                return register.keyCheck && register.keyCheck(info.info);
+            let keyRegisters = keySceneRegisters.filter((register) => {
+                return register.check && register.check(info.info);
             });
 
             return {
@@ -66,7 +70,7 @@ function getAllMatchKeys (data) {
                 defaultAction: keyRegisters.reduce((result, register) => {
                     return Object.assign(
                         result,
-                        register.keyApply && register.keyApply(info.info)
+                        register.apply && register.apply(info.info)
                     );
                 }, {}),
                 info: info.info
@@ -84,7 +88,7 @@ bee.execute = function (dataItem, beeItem, key, currentData, currentBee) {
 };
 
 bee.getRegister = function (beeItem, dataItem) {
-    return registers.filter((register) => {
+    return valueSceneRegisters.filter((register) => {
         return register.check && register.check(beeItem, dataItem);
     })[0];
 };
@@ -110,6 +114,38 @@ bee.register = function (config) {
         throw(new Error('Expect config of register to be Object'));
     }
 
+    if (config.hasOwnProperty('before') && !util.isFunction(config.before)) {
+        throw(new Error('Expect config.before to be Function'));
+    }
+
+    if (config.hasOwnProperty('after') && !util.isFunction(config.after)) {
+        throw(new Error('Expect config.after to be Function'));
+    }
+
+    if (config.hasOwnProperty('methods') && !util.isPlainObject(config.methods)) {
+        throw(new Error('Expect config.methods to be Object'));
+    }
+
+    Object.keys(config.methods || {}).forEach((key) =>
+        setMethod(key, config.methods[key])
+    );
+
+    util.makeArray(config.valueScenes).forEach((item) => bee.registerValueScene(item));
+
+    util.makeArray(config.keyScenes).forEach((item) => bee.registerKeyScene(item));
+
+    hooks.push({
+        before: config.before,
+        after: config.after
+    });
+};
+
+bee.registerValueScene = function (config) {
+
+    if (!util.isPlainObject(config)) {
+        throw(new Error('Expect config of register to be Object'));
+    }
+
     if (config.hasOwnProperty('check') && !util.isFunction(config.check)) {
         throw(new Error('Expect config.check to be Function'));
     }
@@ -118,67 +154,58 @@ bee.register = function (config) {
         throw(new Error('Expect config.apply to be Function'));
     }
 
-    if (config.hasOwnProperty('keyCheck') && !util.isFunction(config.keyCheck)) {
-        throw(new Error('Expect config.keyCheck to be Function'));
+    if (config.hasOwnProperty('methods') && !util.isPlainObject(config.methods)) {
+        throw(new Error('Expect config.methods to be Object'));
     }
 
-    if (config.hasOwnProperty('keyApply') && !util.isFunction(config.keyApply)) {
-        throw(new Error('Expect config.keyApply to be Function'));
+    Object.keys(config.methods || {}).forEach((key) =>
+        setMethod(key, config.methods[key])
+    );
+
+    valueSceneRegisters.push(config);
+};
+
+bee.registerKeyScene = function (config) {
+
+    if (!util.isPlainObject(config)) {
+        throw(new Error('Expect config of register to be Object'));
+    }
+
+    if (config.hasOwnProperty('check') && !util.isFunction(config.check)) {
+        throw(new Error('Expect config.check to be Function'));
+    }
+
+    if (config.hasOwnProperty('apply') && !util.isFunction(config.apply)) {
+        throw(new Error('Expect config.apply to be Function'));
     }
 
     if (config.hasOwnProperty('match') && !util.isFunction(config.match)) {
         throw(new Error('Expect config.match to be Function'));
     }
 
-    if (config.bee && !util.isPlainObject(config.bee)) {
-        throw(new Error('Expect config.bee to be Object'));
+    if (config.hasOwnProperty('methods') && !util.isPlainObject(config.methods)) {
+        throw(new Error('Expect config.methods to be Object'));
     }
 
-    if (util.isPlainObject(config.methods)) {
-        Object.keys(config.methods).forEach((key) => {
-            if (bee[key]) {
-                throw(new Error(`"${key}" has been registered`));
-            }
-
-            bee[key] = config.methods[key];
+    for (let key of Object.keys(config.methods || {})) {
+        setMethod(key, function () {
+            return MATCHER_ID + JSON.stringify({
+                index: matcherIndex++,
+                info: config.methods[key].apply(null, arguments)
+            });
         });
     }
 
-    if (util.isPlainObject(config.bee)) {
-        Object.keys(config.bee).forEach((key) => {
-            if (bee[key]) {
-                throw(new Error(`"${key}" has been registered`));
-            }
-
-            bee[key] = config.bee[key];
-        });
-    }
-
-    if (util.isPlainObject(config.keyBee)) {
-        Object.keys(config.keyBee).forEach((key) => {
-            if (bee[key]) {
-                throw(new Error(`"${key}" has been registered`));
-            }
-
-            bee[key] = function () {
-                let info = config.keyBee[key].apply(null, arguments);
-                return MATCHER_ID + JSON.stringify({
-                    index: matcherIndex++,
-                    info: info
-                });
-            };
-        });
-    }
-
-    registers.push({
-        before: config.before,
-        check: config.check,
-        apply: config.apply,
-        keyCheck: config.keyCheck,
-        keyApply: config.keyApply,
-        match: config.match
-    });
+    keySceneRegisters.push(config);
 };
+
+function setMethod (name, method) {
+    if (bee[name]) {
+        throw(new Error(`"${name}" has been registered`));
+    }
+
+    bee[name] = method;
+}
 
 function processLoop (data, beeConfig, func) {
     util.nestLoop(data, beeConfig, (currentData, currentBee) => {

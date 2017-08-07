@@ -10,20 +10,22 @@ const MATCH_ID = 'glob-match';
 
 module.exports = {
 
-    keyCheck (info) {
-        return util.isPlainObject(info) && info.id === MATCH_ID;
-    },
+    keyScenes: {
+        check (info) {
+            return util.isPlainObject(info) && info.id === MATCH_ID;
+        },
 
-    match (key, info) {
-        return multimatch([key], info.data).length;
-    },
+        match (key, info) {
+            return multimatch([key], info.data).length;
+        },
 
-    keyBee: {
-        glob (...matches) {
-            return {
-                id: MATCH_ID,
-                data: matches
-            };
+        methods: {
+            glob (...matches) {
+                return {
+                    id: MATCH_ID,
+                    data: matches
+                };
+            }
         }
     }
 

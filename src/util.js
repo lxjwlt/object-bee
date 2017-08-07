@@ -89,6 +89,23 @@ const util = {
         }
 
         return data;
+    },
+
+    makeArray (data) {
+
+        if (util.isArray(data)) {
+            return data;
+        }
+
+        if (data === null || util.isUndefined(data)) {
+            return [];
+        }
+
+        if (typeof data === 'object' && data.length) {
+            return Array.prototype.slice.call(data);
+        }
+
+        return [data];
     }
 
 };

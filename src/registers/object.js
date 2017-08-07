@@ -7,12 +7,14 @@
 const util = require('../util');
 
 module.exports = {
-    check (beeItem) {
-        return util.isPlainObject(beeItem);
-    },
-    apply (beeItem) {
-        return {
-            beeValue: beeItem
-        };
+    valueScenes: {
+        check (beeItem) {
+            return util.isPlainObject(beeItem);
+        },
+        apply (beeItem) {
+            return {
+                beeValue: beeItem
+            };
+        }
     }
 };

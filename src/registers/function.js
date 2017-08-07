@@ -27,20 +27,26 @@ module.exports = function (bee) {
                 });
             });
         },
-        check (beeItem) {
-            return typeof beeItem === 'function';
-        },
-        apply (beeItem, dataItem, key) {
-            return {
-                value: beeItem.call(tempData, dataItem, key)
-            };
-        },
-        bee: {
-            path (path) {
-                return function () {
-                    return util.path(this, path);
+        valueScenes: [
+            {
+                check (beeItem) {
+                    return typeof beeItem === 'function';
+                },
+                apply (beeItem, dataItem, key) {
+                    return {
+                        value: beeItem.call(tempData, dataItem, key)
+                    };
+                }
+            },
+            {
+                methods: {
+                    path (path) {
+                        return function () {
+                            return util.path(this, path);
+                        }
+                    }
                 }
             }
-        }
+        ]
     };
 };
