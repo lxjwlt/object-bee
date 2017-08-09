@@ -79,16 +79,13 @@ const util = {
     },
 
     path (data, path) {
-        let paths = path.split('.');
+        let func = new Function('data', `
+            try {
+                return data.${path}
+            } catch (e) {}
+        `);
 
-        for (let path of paths) {
-            data = data[path];
-            if (!data) {
-                return null;
-            }
-        }
-
-        return data;
+        return func(data);
     },
 
     makeArray (data) {

@@ -41,11 +41,16 @@ module.exports = function (bee) {
 
     bee.installValueScene({
         methods: {
-            path (path) {
+            root (path) {
                 return function () {
                     return util.path(this, path);
-                }
-            }
+                };
+            },
+
+            /**
+             * todo computed value in current data
+             */
+            data () {}
         }
     });
 };

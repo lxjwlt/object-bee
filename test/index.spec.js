@@ -356,7 +356,7 @@ describe('object-bee', () => {
 
         let beeOptions = {
             info: {
-                name: bee.path('data.person.name')
+                name: bee.root('data.person.name')
             }
         };
 
@@ -369,6 +369,76 @@ describe('object-bee', () => {
                     name: 'object-bee'
                 }
             }
+        });
+    });
+
+    it('path of undefined data', function () {
+        let ori = {
+            info: {
+                name: ''
+            },
+            data: {
+                person: {
+                    name: 'object-bee'
+                }
+            }
+        };
+
+        let beeOptions = {
+            info: {
+                name: bee.root('data.xx.xx')
+            }
+        };
+
+        check(ori, beeOptions, {
+            info: {
+                name: undefined
+            },
+            data: {
+                person: {
+                    name: 'object-bee'
+                }
+            }
+        });
+    });
+
+    it('path of array', function () {
+        let ori = {
+            info: {
+                list: [1,2,3]
+            },
+            name: ''
+        };
+
+        let beeOptions = {
+            name: bee.root('info.list[2]')
+        };
+
+        check(ori, beeOptions, {
+            info: {
+                list: [1,2,3]
+            },
+            name: 3
+        });
+    });
+
+    it('path of object', function () {
+        let ori = {
+            info: {
+                'test-name': 'test name'
+            },
+            name: ''
+        };
+
+        let beeOptions = {
+            name: bee.root('info["test-name"]')
+        };
+
+        check(ori, beeOptions, {
+            info: {
+                'test-name': 'test name'
+            },
+            name: 'test name'
         });
     });
 
