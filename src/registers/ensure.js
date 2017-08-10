@@ -15,6 +15,7 @@ module.exports = {
         },
         apply (beeItem, dataItem, key) {
             return {
+                create: true,
                 key: key
             };
         },
@@ -31,6 +32,7 @@ module.exports = {
         },
         apply (info) {
             return {
+                create: true,
                 key: info.key
             };
         },

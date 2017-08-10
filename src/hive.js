@@ -328,6 +328,10 @@ function processData (data, beeConfig, key, action) {
         return;
     }
 
+    if (!action.create && (!data || !data.hasOwnProperty(key))) {
+        return;
+    }
+
     let currentKey = key;
 
     if (action.hasOwnProperty('key')) {
