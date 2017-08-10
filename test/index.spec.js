@@ -1,7 +1,6 @@
 'use strict';
 
-const assert = require('assert');
-const cloneDeep = require('lodash.clonedeep');
+const {check} = require('./util');
 const bee = require('../src/index');
 
 describe('object-bee', () => {
@@ -73,32 +72,6 @@ describe('object-bee', () => {
         };
 
         check(ori, beeOptions, {});
-    });
-
-    it('rename key', () => {
-        let ori = {
-            name: null,
-            age: 12,
-            privacy: {
-                location: 'china',
-                occupation: 'front-end'
-            },
-            detail: null
-        };
-
-        let beeOptions = {
-            privacy: bee.rename('info')
-        };
-
-        check(ori, beeOptions, {
-            name: null,
-            age: 12,
-            info: {
-                location: 'china',
-                occupation: 'front-end'
-            },
-            detail: null
-        });
     });
 
     it('queue actions', () => {
@@ -631,26 +604,3 @@ describe('object-bee', () => {
     });
 
 });
-
-function check (methods, data, format, expect) {
-    if (typeof methods !== 'function') {
-        expect = format;
-        format = data;
-        data = methods;
-        methods = bee;
-    }
-
-    let result;
-
-    if (methods === bee) {
-        let clone = cloneDeep(data);
-        result = methods.create(data, format);
-        assert.deepEqual(result, expect, '[clone] expect deep equal');
-        assert.deepEqual(data, clone, '[clone] can not change origin object');
-    }
-
-    result = methods(data, format);
-
-    assert.equal(result, data, '[normal] expect return original data');
-    assert.deepEqual(result, expect, '[normal] expect deep equal');
-}

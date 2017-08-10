@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha --recursive test/**/*.spec.js",
+    "test": "mocha \"test/**/*.spec.js\"",
     "debug": "node --inspect-brk node_modules/mocha/bin/_mocha --recursive test/**/*.spec.js --no-timeouts"
   },
   "keywords": [],
