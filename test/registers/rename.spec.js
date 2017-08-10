@@ -73,4 +73,44 @@ describe('[register] rename', () => {
         check(ori, beeOptions, {});
     });
 
+    it('multi apply', () => {
+        let ori = {
+            name: []
+        };
+
+        let beeOptions = {
+            name: [bee.rename('a'), bee.rename('b'), bee.rename('c')]
+        };
+
+        check(ori, beeOptions, {
+            c: []
+        });
+    });
+
+    it('chaining call', () => {
+        let ori = {
+            num: 1
+        };
+
+        let beeOptions = {
+            num: bee.rename('a').rename('b')
+        };
+
+        check(ori, beeOptions, {
+            b: 1
+        });
+    });
+
+    it('removed key', () => {
+        let ori = {
+            num: 1
+        };
+
+        let beeOptions = {
+            num: [bee.remove(), bee.rename('b')]
+        };
+
+        check(ori, beeOptions, {});
+    });
+
 });
