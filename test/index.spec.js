@@ -470,29 +470,19 @@ describe('object-bee', () => {
         });
     });
 
-    it('object in queue', function () {
-        let ori = {
-            info: {
-                name: 'foo'
-            }
-        };
+    it('ensure key', function () {
+        let ori = {};
 
         let beeOptions = {
-            info: [bee.rename('person'), {
-                name: () => {
-                    return 'bee';
-                }
-            }]
+            newKey: bee.ensure()
         };
 
         check(ori, beeOptions, {
-            person: {
-                name: 'bee'
-            }
+            newKey: undefined
         });
     });
 
-    it('object in queue', function () {
+    it('function in queue', function () {
         let ori = {
             info: 1
         };
@@ -508,18 +498,6 @@ describe('object-bee', () => {
         });
     });
 
-    it('ensure key', function () {
-        let ori = {};
-
-        let beeOptions = {
-            newKey: bee.ensure()
-        };
-
-        check(ori, beeOptions, {
-            newKey: undefined
-        });
-    });
-
     it('ensure key and assign value', function () {
         let ori = {};
 
@@ -531,20 +509,6 @@ describe('object-bee', () => {
 
         check(ori, beeOptions, {
             newKey: 12
-        });
-    });
-
-    it('no operation', function () {
-        let ori = {
-            num: 1
-        };
-
-        let beeOptions = {
-            num: bee.noop()
-        };
-
-        check(ori, beeOptions, {
-            num: 1
         });
     });
 
