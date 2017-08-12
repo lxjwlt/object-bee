@@ -106,15 +106,20 @@ class Chain {
     }
 
     execute (dataItem, key, currentBee, currentData) {
+        let result = {
+            key: key
+        };
+
+        if (currentData.hasOwnProperty(key)) {
+            result.value = dataItem;
+        }
+
         return this.beeItems.reduce((action, beeItem) => {
             return Object.assign(
                 action,
                 executeValueScene(beeItem, action.value, action.key, currentBee, currentData)
             );
-        }, {
-            key: key,
-            value: dataItem
-        });
+        }, result);
     }
 
 }
@@ -278,10 +283,15 @@ function processLoop (data, beeConfig, func) {
                 continue;
             }
 
+            let defaultAction = Object.assign(
+                {}, matcher.defaultAction,
+                bee.execute(matcher.bee, currentBee[key], key, currentBee, currentData)
+            );
+
             if (currentBee.hasOwnProperty(key)) {
-                beforeResult[key] = matcher.defaultAction;
+                beforeResult[key] = defaultAction;
             } else {
-                processData(currentData, currentBee, key, matcher.defaultAction);
+                processData(currentData, currentBee, key, defaultAction);
             }
         }
 
@@ -356,7 +366,7 @@ function processData (data, beeConfig, key, action) {
         beeConfig[key] = action.beeValue;
     }
 
-    if (action.remove) {
+    if (action.remove && !action.create) {
         delete data[currentKey];
     }
 }

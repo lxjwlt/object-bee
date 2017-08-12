@@ -154,7 +154,7 @@ describe('[register] ensure', () => {
             });
         });
 
-        it.skip('ensure removed key and assign value', function () {
+        it('ensure removed key', function () {
             let ori = {};
 
             let beeOptions = {
@@ -170,7 +170,7 @@ describe('[register] ensure', () => {
 
     describe('keep method', function () {
 
-        it('ensure key with keep method', function () {
+        it('normal', function () {
             let ori = {};
 
             let beeOptions = {
@@ -182,7 +182,19 @@ describe('[register] ensure', () => {
             });
         });
 
-        it('ensure key with keep method', function () {
+        it('keep method with noop', function () {
+            let ori = {};
+
+            let beeOptions = {
+                [bee.keep('newKey')]: bee.noop()
+            };
+
+            check(ori, beeOptions, {
+                newKey: undefined
+            });
+        });
+
+        it('keep and assign value', function () {
             let ori = {};
 
             let beeOptions = {
@@ -196,18 +208,46 @@ describe('[register] ensure', () => {
             });
         });
 
-        it('ensure key with keep method and assign value', function () {
+        it('keep and assign value', function () {
             let ori = {};
 
             let beeOptions = {
-                [bee.keep('newKey')]: bee.noop,
+                [bee.keep('newKey')]: bee.rename('foo'),
                 newKey: () => {
                     return 123;
                 }
             };
 
             check(ori, beeOptions, {
-                newKey: 123
+                foo: 123
+            });
+        });
+
+        it('exist name', function () {
+            let ori = {
+                foo: 1
+            };
+
+            let beeOptions = {
+                [bee.keep('foo')]: bee.noop()
+            };
+
+            check(ori, beeOptions, {
+                foo: 1
+            });
+        });
+
+        it('exist name and other operation', function () {
+            let ori = {
+                foo: 1
+            };
+
+            let beeOptions = {
+                [bee.keep('foo')]: bee.rename('bar')
+            };
+
+            check(ori, beeOptions, {
+                bar: 1
             });
         });
 

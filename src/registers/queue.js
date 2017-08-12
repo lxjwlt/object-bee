@@ -26,9 +26,12 @@ module.exports = function (bee) {
             },
             apply (beeItem, dataItem, key, currentBee, currentData) {
                 let result = {
-                    key: key,
-                    value: dataItem
+                    key: key
                 };
+
+                if (currentData.hasOwnProperty(key)) {
+                    result.value = dataItem;
+                }
 
                 let queue = beeItem instanceof QueueRegister ? beeItem.queue : beeItem;
 
