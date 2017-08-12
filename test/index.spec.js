@@ -62,18 +62,6 @@ describe('object-bee', () => {
         });
     });
 
-    it('delete key', () => {
-        let ori = {
-            detail: null
-        };
-
-        let beeOptions = {
-            detail: bee.remove()
-        };
-
-        check(ori, beeOptions, {});
-    });
-
     it('queue actions', () => {
         let ori = {
             privacy: {
