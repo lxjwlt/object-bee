@@ -458,18 +458,6 @@ describe('object-bee', () => {
         });
     });
 
-    it('ensure key', function () {
-        let ori = {};
-
-        let beeOptions = {
-            newKey: bee.ensure()
-        };
-
-        check(ori, beeOptions, {
-            newKey: undefined
-        });
-    });
-
     it('function in queue', function () {
         let ori = {
             info: 1
@@ -483,61 +471,6 @@ describe('object-bee', () => {
 
         check(ori, beeOptions, {
             num: 3
-        });
-    });
-
-    it('ensure key and assign value', function () {
-        let ori = {};
-
-        let beeOptions = {
-            newKey: [bee.ensure(), () => {
-                return 12;
-            }]
-        };
-
-        check(ori, beeOptions, {
-            newKey: 12
-        });
-    });
-
-    it('ensure key with keep method', function () {
-        let ori = {};
-
-        let beeOptions = {
-            [bee.keep('newKey')]: []
-        };
-
-        check(ori, beeOptions, {
-            newKey: undefined
-        });
-    });
-
-    it('ensure key with keep method', function () {
-        let ori = {};
-
-        let beeOptions = {
-            [bee.keep('newKey')]: () => {
-                return 123;
-            }
-        };
-
-        check(ori, beeOptions, {
-            newKey: 123
-        });
-    });
-
-    it('ensure key with keep method and assign value', function () {
-        let ori = {};
-
-        let beeOptions = {
-            [bee.keep('newKey')]: bee.noop,
-            newKey: () => {
-                return 123;
-            }
-        };
-
-        check(ori, beeOptions, {
-            newKey: 123
         });
     });
 
