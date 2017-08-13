@@ -15,10 +15,9 @@ module.exports = {
         },
 
         match (key, info) {
-            return info.data.some((reg) => {
-                let match = reg.match(/^([^(]+)\((\S+)\)$/);
-                let type = match[1];
-                let value = match[2];
+            return info.data.some((item) => {
+                let type = item.type;
+                let value = item.value;
 
                 if (type === 'RegExp') {
                     return (new RegExp(value.replace(/^\/|\/$/g, ''))).test(key);
@@ -33,8 +32,10 @@ module.exports = {
                 return {
                     id: MATCH_ID,
                     data: matches.map((item) => {
-                        let type = item instanceof RegExp ? 'RegExp' : 'String';
-                        return `${type}(${item.toString()})`;
+                        return {
+                            type: item instanceof RegExp ? 'RegExp' : 'String',
+                            value: item.toString()
+                        };
                     })
                 };
             }
