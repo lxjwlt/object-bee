@@ -323,9 +323,9 @@ function processLoop (data, beeConfig, func) {
 
             let value = currentBeforeResult.hasOwnProperty('value') ? currentBeforeResult.value : dataItem;
 
-            key = currentBeforeResult.hasOwnProperty('key') ? currentBeforeResult.key : key;
+            let currentKey = currentBeforeResult.hasOwnProperty('key') ? currentBeforeResult.key : key;
 
-            let result = func(value, beeItem, key, currentData, currentBee, type);
+            let result = func(value, beeItem, currentKey, currentData, currentBee, type);
 
             processData(currentData, currentBee, key, Object.assign({}, currentBeforeResult, result));
         };

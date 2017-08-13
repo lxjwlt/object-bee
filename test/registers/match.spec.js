@@ -289,26 +289,20 @@ describe('[register] match', () => {
             });
         });
 
-        it.skip('origin bee and rename', function () {
+        it('origin bee and rename', function () {
             let ori = {
-                info: {
-                    name: 'bee'
-                }
+                name: 'bee'
             };
 
             let beeOptions = {
-                info: {
-                    [bee.match(/name/)]: bee.rename('foo'),
-                    name: [bee.rename('bar'), () => {
-                        return 123;
-                    }]
-                }
+                [bee.match(/name/)]: bee.rename('foo'),
+                name: [bee.rename('bar'), () => {
+                    return 123;
+                }]
             };
 
             check(ori, beeOptions, {
-                info: {
-                    bar: 123
-                }
+                bar: 123
             });
         });
 
