@@ -127,24 +127,6 @@ describe('object-bee', () => {
         });
     });
 
-    it('glob match', function () {
-        let ori = {
-            abc: 1,
-            cabc: 2
-        };
-
-        let beeOptions = {
-            [bee.glob('ab**')]: (value) => {
-                return value + 2;
-            }
-        };
-
-        check(ori, beeOptions, {
-            abc: 3,
-            cabc: 2
-        });
-    });
-
     it('path of data', function () {
         let ori = {
             info: {
