@@ -3,7 +3,7 @@
 const {check} = require('../util');
 const bee = require('../../src/index');
 
-describe('[register] noop', () => {
+describe('[noop register]', () => {
 
     it('normal', () => {
         let ori = {

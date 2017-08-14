@@ -3,7 +3,7 @@
 const {check} = require('../util');
 const bee = require('../../src/index');
 
-describe.only('[register] rename', () => {
+describe('[queue register]', () => {
 
     it('queue method', () => {
         let ori = {

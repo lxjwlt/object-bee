@@ -27,9 +27,6 @@ module.exports = {
         check (info) {
             return util.isPlainObject(info) && info.id === MATCH_ID;
         },
-        match (key, info) {
-            return key === info.key;
-        },
         apply (info) {
             return {
                 create: true,

@@ -41,7 +41,7 @@ function bee (data, beeConfig) {
 
 bee.execute = function (beeItem, dataItem, key, currentBee, currentData) {
     return beeItem instanceof Chain ?
-        beeItem.execute(dataItem, key, currentData, currentBee) :
+        beeItem.execute(dataItem, key, currentBee, currentData) :
         executeValueScene(beeItem, dataItem, key, currentBee, currentData);
 };
 
@@ -285,7 +285,7 @@ function processLoop (data, beeConfig, func) {
 
             let defaultAction = Object.assign(
                 {}, matcher.defaultAction,
-                bee.execute(matcher.bee, currentBee[key], key, currentBee, currentData)
+                bee.execute(matcher.bee, currentData[key], key, currentBee, currentData)
             );
 
             if (currentBee.hasOwnProperty(key)) {

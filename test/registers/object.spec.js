@@ -3,7 +3,7 @@
 const {check} = require('../util');
 const bee = require('../../src/index');
 
-describe('[register] object', () => {
+describe('[object register]', () => {
 
     it('object in queue', function () {
         let ori = {

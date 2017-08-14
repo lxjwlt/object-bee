@@ -3,7 +3,7 @@
 const {check} = require('../util');
 const bee = require('../../src/index');
 
-describe('[register] entity', () => {
+describe('[entity register]', () => {
 
     describe('entity method', function () {
 

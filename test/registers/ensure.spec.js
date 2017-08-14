@@ -251,5 +251,22 @@ describe('[register] ensure', () => {
             });
         });
 
+        it('exist name and exist bee', function () {
+            let ori = {
+                foo: 1
+            };
+
+            let beeOptions = {
+                [bee.keep('foo')]: bee.rename('bar'),
+                foo () {
+                    return 3;
+                }
+            };
+
+            check(ori, beeOptions, {
+                bar: 3
+            });
+        });
+
     });
 });

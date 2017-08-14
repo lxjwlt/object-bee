@@ -3,7 +3,7 @@
 const {check} = require('../util');
 const bee = require('../../src/index');
 
-describe('[register] match', () => {
+describe('[match register]', () => {
 
     it('multi type match', function () {
         let ori = {
