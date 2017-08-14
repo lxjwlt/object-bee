@@ -34,75 +34,6 @@ describe('object-bee', () => {
         });
     });
 
-    it('queue actions', () => {
-        let ori = {
-            privacy: {
-                location: 'china',
-                occupation: 'front-end'
-            }
-        };
-
-        let beeOptions = {
-            privacy: bee.queue(bee.rename('list'), () => {
-                return 11;
-            })
-        };
-
-        check(ori, beeOptions, {
-            list: 11
-        });
-    });
-
-    it('queue actions', () => {
-        let ori = {
-            name: null,
-            age: 12,
-            privacy: {
-                location: 'china',
-                occupation: 'front-end'
-            },
-            detail: null
-        };
-
-        let beeOptions = {
-            privacy: bee.queue(bee.rename('list'), bee.rename('info'), () => {
-                return 11;
-            })
-        };
-
-        check(ori, beeOptions, {
-            name: null,
-            age: 12,
-            info: 11,
-            detail: null
-        });
-    });
-
-    it('queue actions', () => {
-        let ori = {
-            name: null,
-            age: 12,
-            privacy: {
-                location: 'china',
-                occupation: 'front-end'
-            },
-            detail: null
-        };
-
-        let beeOptions = {
-            privacy: [bee.rename('list'), () => {
-                return 13;
-            }]
-        };
-
-        check(ori, beeOptions, {
-            name: null,
-            age: 12,
-            list: 13,
-            detail: null
-        });
-    });
-
     it('computed value', () => {
         let ori = {
             a: 1,
@@ -224,22 +155,6 @@ describe('object-bee', () => {
                 'test-name': 'test name'
             },
             name: 'test name'
-        });
-    });
-
-    it('function in queue', function () {
-        let ori = {
-            info: 1
-        };
-
-        let beeOptions = {
-            info: [bee.rename('num'), (value) => {
-                return value + 2;
-            }]
-        };
-
-        check(ori, beeOptions, {
-            num: 3
         });
     });
 
