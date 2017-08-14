@@ -57,6 +57,14 @@ module.exports = function (bee) {
                 }
             },
             {
+                check (beeItem) {
+                    return beeItem instanceof EscapeRegister;
+                },
+                apply (beeItem) {
+                    return {
+                        beeValue: beeItem.value
+                    };
+                },
                 methods: {
                     escape: {
                         chain: false,

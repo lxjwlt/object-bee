@@ -318,16 +318,21 @@ function processLoop (data, beeConfig, func) {
             }
         });
 
-        return function ([dataItem], beeItem, key, [currentData], currentBee, type) {
-            let currentBeforeResult = beforeResult[key] || {};
+        return function ([dataItem], beeItem, key, [currentData], currentBee) {
+            let result = beforeResult[key] || {};
+            let processResult;
 
-            let value = currentBeforeResult.hasOwnProperty('value') ? currentBeforeResult.value : dataItem;
+            do {
+                let currentValue = result.hasOwnProperty('value') ? result.value : dataItem;
 
-            let currentKey = currentBeforeResult.hasOwnProperty('key') ? currentBeforeResult.key : key;
+                let currentBeeValue = result.hasOwnProperty('beeValue') ? result.beeValue : beeItem;
 
-            let result = func(value, beeItem, currentKey, currentData, currentBee, type);
+                result = Object.assign({}, result,
+                    func(currentValue, currentBeeValue, key, currentData, currentBee));
 
-            processData(currentData, currentBee, key, Object.assign({}, currentBeforeResult, result));
+                processResult = processData(currentData, currentBee, key, result);
+
+            } while (processResult === true);
         };
     });
 }
@@ -336,6 +341,11 @@ function processData (data, beeConfig, key, action) {
 
     if (!util.isPlainObject(action)) {
         return;
+    }
+
+    if (action.hasOwnProperty('beeValue') && action.beeValue !== beeConfig[key]) {
+        beeConfig[key] = action.beeValue;
+        return true;
     }
 
     if (!action.create && (!data || !data.hasOwnProperty(key))) {
@@ -360,10 +370,6 @@ function processData (data, beeConfig, key, action) {
 
     if (action.hasOwnProperty('value')) {
         data[currentKey] = action.value;
-    }
-
-    if (action.hasOwnProperty('beeValue')) {
-        beeConfig[key] = action.beeValue;
     }
 
     if (action.remove && !action.create) {

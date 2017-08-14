@@ -34,34 +34,6 @@ describe('object-bee', () => {
         });
     });
 
-    it('entity value', () => {
-        let ori = {
-            name: null,
-            age: 12,
-            privacy: {
-                location: 'china',
-                occupation: 'front-end'
-            },
-            detail: null
-        };
-
-        let beeOptions = {
-            privacy: {
-                location: bee.entity('us')
-            }
-        };
-
-        check(ori, beeOptions, {
-            name: null,
-            age: 12,
-            privacy: {
-                location: 'us',
-                occupation: 'front-end'
-            },
-            detail: null
-        });
-    });
-
     it('queue actions', () => {
         let ori = {
             privacy: {
@@ -270,61 +242,6 @@ describe('object-bee', () => {
                 'test-name': 'test name'
             },
             name: 'test name'
-        });
-    });
-
-    it('entity all values', function () {
-        let ori = {
-            a: 1,
-            info: {
-                b: 2,
-                c: 3
-            }
-        };
-
-        let func = () => {
-            return 4;
-        };
-
-        let beeOptions = {
-            a: [1,2,3],
-            info: {
-                c: func
-            }
-        };
-
-        check(bee.entityAll, ori, beeOptions, {
-            a: [1,2,3],
-            info: {
-                b: 2,
-                c: func
-            }
-        });
-    });
-
-    it('entity all values with escape', function () {
-        let ori = {
-            a: 1,
-            info: {
-                b: 2,
-                c: 3
-            }
-        };
-
-        let beeOptions = {
-            info: {
-                c: bee.escape(() => {
-                    return 4;
-                })
-            }
-        };
-
-        check(bee.entityAll, ori, beeOptions, {
-            a: 1,
-            info: {
-                b: 2,
-                c: 4
-            }
         });
     });
 
