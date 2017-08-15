@@ -58,12 +58,14 @@ const util = {
         }
 
         if (util.isPlainObject(bee) && dataList.every((data) => util.isPlainObject(data))) {
-            let func = outerFunc(...dataList, bee);
+            let func = outerFunc && outerFunc(...dataList, bee);
 
             Object.keys(bee).forEach(function (key) {
                 let dataValueList = dataList.map((data) => data[key]);
 
-                func(dataValueList, bee[key], key, dataList, bee, 'object');
+                if (func) {
+                    func(dataValueList, bee[key], key, dataList, bee, 'object');
+                }
 
                 util.nestLoop(...dataValueList, bee[key], outerFunc);
             });
@@ -72,10 +74,16 @@ const util = {
 
     loop () {
         let args = [...arguments];
-        let innerFunc = args[args.length - 1];
-        util.nestLoop.apply(null, args.slice(0, -1).concat(function () {
-            return innerFunc;
-        }));
+        let innerFunc;
+
+        if (util.isFunction(args[args.length - 1])) {
+            innerFunc = args[args.length - 1];
+            args = args.slice(0, -1).concat(function () {
+                return innerFunc;
+            });
+        }
+
+        util.nestLoop.apply(null, args);
     },
 
     path (data, path) {

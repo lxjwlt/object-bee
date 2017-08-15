@@ -24,13 +24,7 @@ function bee (data, beeConfig) {
 
     bee.emit('before', data, beeConfig);
 
-    processLoop(data, beeConfig, function (dataItem, beeItem, key, currentData, currentBee) {
-        if (isCustomKey(key)) {
-            return;
-        }
-
-        return bee.execute(beeItem, dataItem, key, currentBee, currentData);
-    });
+    processLoop(data, beeConfig);
 
     bee.emit('after', data, beeConfig);
 
@@ -40,6 +34,9 @@ function bee (data, beeConfig) {
 }
 
 bee.execute = function (beeItem, dataItem, key, currentBee, currentData) {
+    if (isCustomKey(key)) {
+        return {};
+    }
     return beeItem instanceof Chain ?
         beeItem.execute(dataItem, key, currentBee, currentData) :
         executeValueScene(beeItem, dataItem, key, currentBee, currentData);
@@ -271,8 +268,12 @@ function setMethod (name, method) {
     bee[name] = method;
 }
 
-function processLoop (data, beeConfig, func) {
-    util.nestLoop(data, beeConfig, (currentData, currentBee) => {
+function processLoop (data, beeConfig) {
+    let triggerData = util.copy(data);
+
+    debugger;
+
+    util.nestLoop(data, triggerData, beeConfig, (currentData, currentTriggerData, currentBee) => {
         let allMatchKeys = getAllMatchKeys(currentBee);
         let beforeResult = {};
 
@@ -318,23 +319,45 @@ function processLoop (data, beeConfig, func) {
             }
         });
 
-        return function ([dataItem], beeItem, key, [currentData], currentBee) {
-            let result = beforeResult[key] || {};
-            let processResult;
+        return function ([dataItem, triggerDataItem], beeItem, key, [currentData, currentTriggerData], currentBee) {
+            let isComputed = false;
+            let value;
 
-            do {
-                let currentValue = result.hasOwnProperty('value') ? result.value : dataItem;
+            Object.defineProperty(currentTriggerData, key, {
+                get () {
 
-                let currentBeeValue = result.hasOwnProperty('beeValue') ? result.beeValue : beeItem;
+                    if (isComputed) {
+                        return value;
+                    }
 
-                result = Object.assign({}, result,
-                    func(currentValue, currentBeeValue, key, currentData, currentBee));
+                    isComputed = true;
 
-                processResult = processData(currentData, currentBee, key, result);
+                    let result = beforeResult[key] || {};
+                    let processResult;
+                    let currentValue;
+                    let currentBeeValue;
 
-            } while (processResult === true);
+                    do {
+                        currentValue = result.hasOwnProperty('value') ? result.value : triggerDataItem;
+
+                        currentBeeValue = result.hasOwnProperty('beeValue') ? result.beeValue : beeItem;
+
+                        result = Object.assign({}, result,
+                            bee.execute(currentBeeValue, currentValue, key, currentBee, currentTriggerData, triggerData));
+
+                        processResult = processData(currentData, currentBee, key, result);
+
+                    } while (processResult === true);
+
+                    value = result.hasOwnProperty('value') ? result.value : triggerDataItem;
+
+                    return currentValue;
+                }
+            });
         };
     });
+
+    util.loop(triggerData, triggerData);
 }
 
 function processData (data, beeConfig, key, action) {

@@ -34,6 +34,22 @@ describe('object-bee', () => {
         });
     });
 
+    it.only('function', () => {
+        let ori = {
+            foo: 1
+        };
+
+        let beeOptions = {
+            foo (value) {
+                return value + 1;
+            }
+        };
+
+        check(ori, beeOptions, {
+            foo: 2
+        });
+    });
+
     it('computed value', () => {
         let ori = {
             a: 1,

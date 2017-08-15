@@ -6,35 +6,15 @@
 
 const util = require('../util');
 
-let tempData = null;
-
 module.exports = function (bee) {
-
-    bee.on('before', (data, beeConfig) => {
-        tempData = util.copy(data);
-
-        util.loop(tempData, data, beeConfig, ([dataItem], beeItem, key, [currentTempData, currentData], currentBee) => {
-            Object.defineProperty(currentTempData, key, {
-                get () {
-                    let result = bee.execute(beeItem, dataItem, key, currentBee, currentTempData);
-
-                    if (result.hasOwnProperty('value')) {
-                        return result.value;
-                    }
-
-                    return dataItem;
-                }
-            });
-        });
-    });
 
     bee.installValueScene({
         check (beeItem) {
             return typeof beeItem === 'function';
         },
-        apply (beeItem, dataItem, key) {
+        apply (beeItem, dataItem, key, currentBee, currentData) {
             return {
-                value: beeItem.call(tempData, dataItem, key)
+                value: beeItem.call(currentData, dataItem, key)
             };
         }
     });
