@@ -3,7 +3,7 @@
 const {check} = require('./util');
 const bee = require('../src/index');
 
-describe('object-bee', () => {
+describe.only('object-bee', () => {
 
     it('normal use', () => {
         let ori = {
@@ -34,7 +34,7 @@ describe('object-bee', () => {
         });
     });
 
-    it.only('function', () => {
+    it('function', () => {
         let ori = {
             foo: 1
         };

@@ -33,13 +33,13 @@ function bee (data, beeConfig) {
     return data;
 }
 
-bee.execute = function (beeItem, dataItem, key, currentBee, currentData) {
+bee.execute = function (beeItem, dataItem, key, currentBee, currentData, data) {
     if (isCustomKey(key)) {
         return {};
     }
     return beeItem instanceof Chain ?
-        beeItem.execute(dataItem, key, currentBee, currentData) :
-        executeValueScene(beeItem, dataItem, key, currentBee, currentData);
+        beeItem.execute(dataItem, key, currentBee, currentData, data) :
+        executeValueScene(beeItem, dataItem, key, currentBee, currentData, data);
 };
 
 bee.install = function (config) {
@@ -102,7 +102,7 @@ class Chain {
         this.beeItems = [item];
     }
 
-    execute (dataItem, key, currentBee, currentData) {
+    execute (dataItem, key, currentBee, currentData, data) {
         let result = {
             key: key
         };
@@ -114,7 +114,7 @@ class Chain {
         return this.beeItems.reduce((action, beeItem) => {
             return Object.assign(
                 action,
-                executeValueScene(beeItem, action.value, action.key, currentBee, currentData)
+                executeValueScene(beeItem, action.value, action.key, currentBee, currentData, data)
             );
         }, result);
     }
@@ -211,13 +211,13 @@ bee.installKeyScene = function (config) {
     keySceneRegisters.push(config);
 };
 
-function executeValueScene (beeItem, dataItem, key, currentBee, currentData) {
+function executeValueScene (beeItem, dataItem, key, currentBee, currentData, data) {
     let register = valueSceneRegisters.filter((register) => {
         return register.check && register.check(beeItem, dataItem);
     })[0];
 
     return register ?
-        register.apply(beeItem, dataItem, key, currentBee, currentData) : {};
+        register.apply(beeItem, dataItem, key, currentBee, currentData, data) : {};
 }
 
 function getAllMatchKeys (data) {

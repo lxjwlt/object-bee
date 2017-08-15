@@ -12,25 +12,43 @@ module.exports = function (bee) {
         check (beeItem) {
             return typeof beeItem === 'function';
         },
-        apply (beeItem, dataItem, key, currentBee, currentData) {
+        apply (beeItem, dataItem, key, currentBee, currentData, data) {
+
+            let hasOldData = data.hasOwnProperty('$data');
+            let oldData = data.$data;
+
+            data.$data = currentData;
+
+            let value = beeItem.call(data, dataItem, key);
+
+            if (hasOldData) {
+                data.$data = oldData;
+            }
+
             return {
-                value: beeItem.call(currentData, dataItem, key)
+                value: value
             };
         }
     });
 
     bee.installValueScene({
         methods: {
-            root (path) {
-                return function () {
-                    return util.path(this, path);
-                };
+            root: {
+                chain: false,
+                handler (path) {
+                    return function () {
+                        return util.path(this, path);
+                    };
+                }
             },
-
-            /**
-             * todo computed value in current data
-             */
-            data () {}
+            data: {
+                chain: false,
+                handler (path) {
+                    return function () {
+                        return util.path(this.$data, path);
+                    };
+                }
+            }
         }
     });
 };
