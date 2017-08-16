@@ -325,6 +325,7 @@ function processLoop (data, beeConfig) {
             let oldBeeItem = currentBee[key];
 
             Object.defineProperty(currentTriggerData, key, {
+                enumerable: true,
                 get () {
 
                     if (isComputed) {
