@@ -24,7 +24,7 @@ module.exports = function (bee) {
             check (beeItem) {
                 return beeItem instanceof QueueRegister || util.isArray(beeItem);
             },
-            apply (beeItem, dataItem, key, currentBee, currentData) {
+            apply (beeItem, dataItem, key, currentBee, currentData, data) {
                 let result = {
                     key: key
                 };
@@ -38,7 +38,7 @@ module.exports = function (bee) {
                 for (let queueBeeItem of queue) {
                     Object.assign(result, bee.execute(
                         queueBeeItem, result.value, result.key,
-                        currentBee, currentData
+                        currentBee, currentData, data
                     ));
                 }
 

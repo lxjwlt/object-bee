@@ -322,6 +322,7 @@ function processLoop (data, beeConfig) {
         return function ([dataItem, triggerDataItem], beeItem, key, [currentData, currentTriggerData], currentBee) {
             let isComputed = false;
             let value;
+            let oldBeeItem = currentBee[key];
 
             Object.defineProperty(currentTriggerData, key, {
                 get () {
@@ -350,6 +351,15 @@ function processLoop (data, beeConfig) {
                     } while (processResult === true);
 
                     value = result.hasOwnProperty('value') ? result.value : triggerDataItem;
+
+                    /**
+                     * If value or config of data has been modified,
+                     * we should update the detecting process.
+                     */
+                    if (result.hasOwnProperty('value') && result.value !== triggerDataItem ||
+                        result.hasOwnProperty('beeValue') && result.beeValue !== oldBeeItem) {
+                        processLoop(value, result.beeValue);
+                    }
 
                     return currentValue;
                 }
