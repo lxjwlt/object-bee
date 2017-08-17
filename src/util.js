@@ -59,8 +59,11 @@ const util = {
 
         if (util.isPlainObject(bee) && dataList.every((data) => util.isPlainObject(data))) {
             let func = outerFunc && outerFunc(...dataList, bee);
+            let keySet = new Set(dataList.reduce((result, data) => {
+                return result.concat(Object.keys(data));
+            }, []).concat(Object.keys(bee)));
 
-            Object.keys(bee).forEach(function (key) {
+            [...keySet].forEach(function (key) {
                 let dataValueList = dataList.map((data) => data[key]);
 
                 if (func) {

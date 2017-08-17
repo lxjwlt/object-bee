@@ -8,28 +8,13 @@ describe('[register] ensure', () => {
     describe('ensure method', function () {
 
         it('normal', () => {
-            let ori = {
-                name: null,
-                age: 12,
-                privacy: {
-                    location: 'china',
-                    occupation: 'front-end'
-                },
-                detail: null
-            };
+            let ori = {};
 
             let beeOptions = {
                 foo: bee.ensure()
             };
 
             check(ori, beeOptions, {
-                name: null,
-                age: 12,
-                privacy: {
-                    location: 'china',
-                    occupation: 'front-end'
-                },
-                detail: null,
                 foo: undefined
             });
         });
@@ -208,7 +193,7 @@ describe('[register] ensure', () => {
             });
         });
 
-        it('keep and assign value', function () {
+        it.only('keep, rename and assign value', function () {
             let ori = {};
 
             let beeOptions = {

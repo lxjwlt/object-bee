@@ -278,51 +278,28 @@ function processLoop (data, beeConfig) {
         let beforeResult = {};
 
         for (let matcher of allMatchKeys) {
-            let key = matcher.defaultAction.key;
 
             if (!matcher.defaultAction.hasOwnProperty('key')) {
                 continue;
             }
 
-            let defaultAction = Object.assign(
-                {}, matcher.defaultAction,
-                bee.execute(matcher.bee, currentData[key], key, currentBee, currentData)
-            );
+            let key = matcher.defaultAction.key;
 
             if (currentBee.hasOwnProperty(key)) {
-                beforeResult[key] = defaultAction;
+                beforeResult[key] = matcher.defaultAction;
             } else {
-                processData(currentData, currentBee, key, defaultAction);
+                processData(currentData, currentBee, key, matcher.defaultAction);
             }
         }
-
-        util.forEach(currentData, (item, key) => {
-            let matchers = allMatchKeys.filter((item) => {
-                return item.keyRegisters.some((register) => {
-                    return register.match && register.match(key, item.info);
-                });
-            });
-
-            let allBee = matchers.reduce((result, matcher) => {
-                return result.concat(matcher.bee);
-            }, []);
-
-            let result = allBee.reduce((result, beeValue) => {
-                return Object.assign({}, result,
-                    bee.execute(beeValue, item, key, currentBee, currentData));
-            }, {});
-
-            if (currentBee.hasOwnProperty(key)) {
-                beforeResult[key] = Object.assign({}, beforeResult[key], result);
-            } else {
-                processData(currentData, currentBee, key, result);
-            }
-        });
 
         return function ([dataItem, triggerDataItem], beeItem, key, [currentData, currentTriggerData], currentBee) {
             let isComputed = false;
             let value;
             let oldBeeItem = currentBee[key];
+
+            if (isCustomKey(key)) {
+                return;
+            }
 
             Object.defineProperty(currentTriggerData, key, {
                 enumerable: true,
@@ -344,8 +321,24 @@ function processLoop (data, beeConfig) {
 
                         currentBeeValue = result.hasOwnProperty('beeValue') ? result.beeValue : beeItem;
 
-                        result = Object.assign({}, result,
-                            bee.execute(currentBeeValue, currentValue, key, currentBee, currentTriggerData, triggerData));
+                        let matchers = allMatchKeys.filter((item) => {
+                            return item.keyRegisters.some((register) => {
+                                return register.match && register.match(key, item.info);
+                            });
+                        });
+
+                        let allBee = matchers.reduce((result, matcher) => {
+                            return result.concat(matcher.bee);
+                        }, []);
+
+                        if (currentBeeValue) {
+                            allBee.push(currentBeeValue);
+                        }
+
+                        result = allBee.reduce((result, beeValue) => {
+                            return Object.assign({}, result,
+                                bee.execute(beeValue, currentValue, key, currentBee, currentTriggerData, triggerData));
+                        }, {});
 
                         processResult = processData(currentData, currentBee, key, result);
 

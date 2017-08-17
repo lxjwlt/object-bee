@@ -33,6 +33,9 @@ module.exports = {
                 key: info.key
             };
         },
+        match (key, info) {
+            return key === info.key;
+        },
         methods: {
             keep (key) {
                 return {
