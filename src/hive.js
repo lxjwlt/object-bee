@@ -338,7 +338,7 @@ function processLoop (data, beeConfig) {
                         result = allBee.reduce((result, beeValue) => {
                             return Object.assign({}, result,
                                 bee.execute(beeValue, currentValue, key, currentBee, currentTriggerData, triggerData));
-                        }, {});
+                        }, result);
 
                         processResult = processData(currentData, currentBee, key, result);
 

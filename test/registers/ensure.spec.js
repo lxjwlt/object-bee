@@ -193,7 +193,7 @@ describe('[register] ensure', () => {
             });
         });
 
-        it.only('keep, rename and assign value', function () {
+        it('keep, rename and assign value', function () {
             let ori = {};
 
             let beeOptions = {
