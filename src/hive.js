@@ -317,8 +317,6 @@ function processLoop (data, beeConfig) {
                     let currentBeeValue;
 
                     do {
-                        currentValue = result.hasOwnProperty('value') ? result.value : triggerDataItem;
-
                         currentBeeValue = result.hasOwnProperty('beeValue') ? result.beeValue : beeItem;
 
                         let matchers = allMatchKeys.filter((item) => {
@@ -336,6 +334,8 @@ function processLoop (data, beeConfig) {
                         }
 
                         result = allBee.reduce((result, beeValue) => {
+                            currentValue = result.hasOwnProperty('value') ? result.value : triggerDataItem;
+
                             return Object.assign({}, result,
                                 bee.execute(beeValue, currentValue, key, currentBee, currentTriggerData, triggerData));
                         }, result);

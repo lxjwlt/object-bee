@@ -125,10 +125,10 @@ describe('[match register]', () => {
 
             let beeOptions = {
                 info: {
-                    name: (value) => {
+                    [bee.match('name', 'career')]: (value) => {
                         return value + '!!';
                     },
-                    [bee.match('name', 'career')]: (value) => {
+                    name: (value) => {
                         return value + '!!';
                     }
                 }
