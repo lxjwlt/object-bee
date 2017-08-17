@@ -23,6 +23,8 @@ module.exports = function (bee) {
 
             if (hasOldData) {
                 data.$data = oldData;
+            } else {
+                delete data.$data;
             }
 
             return {

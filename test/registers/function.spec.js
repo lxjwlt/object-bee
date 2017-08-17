@@ -5,6 +5,7 @@ const bee = require('../../src/index');
 
 describe('[function register]', () => {
 
+    // todo
     describe('normal function', function () {
 
         it('function', () => {
@@ -22,6 +23,11 @@ describe('[function register]', () => {
                 foo: 2
             });
         });
+
+    });
+
+    // todo
+    describe('computed value', function () {
 
         it('computed value', () => {
             let ori = {
@@ -153,6 +159,7 @@ describe('[function register]', () => {
 
     });
 
+    // todo
     describe('data method', function () {});
 
 });

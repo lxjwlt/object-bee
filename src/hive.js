@@ -313,11 +313,9 @@ function processLoop (data, beeConfig) {
 
                     let result = beforeResult[key] || {};
                     let processResult;
-                    let currentValue;
-                    let currentBeeValue;
 
                     do {
-                        currentBeeValue = result.hasOwnProperty('beeValue') ? result.beeValue : beeItem;
+                        let currentBeeValue = result.hasOwnProperty('beeValue') ? result.beeValue : beeItem;
 
                         let matchers = allMatchKeys.filter((item) => {
                             return item.keyRegisters.some((register) => {
@@ -334,7 +332,7 @@ function processLoop (data, beeConfig) {
                         }
 
                         result = allBee.reduce((result, beeValue) => {
-                            currentValue = result.hasOwnProperty('value') ? result.value : triggerDataItem;
+                            let currentValue = result.hasOwnProperty('value') ? result.value : triggerDataItem;
 
                             return Object.assign({}, result,
                                 bee.execute(beeValue, currentValue, key, currentBee, currentTriggerData, triggerData));
@@ -355,7 +353,7 @@ function processLoop (data, beeConfig) {
                         processLoop(value, result.beeValue);
                     }
 
-                    return currentValue;
+                    return value;
                 }
             });
         };
