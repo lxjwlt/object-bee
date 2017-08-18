@@ -33,6 +33,8 @@ function bee (data, beeConfig) {
     return data;
 }
 
+bee.valueSceneRegisters = valueSceneRegisters;
+
 bee.execute = function (beeItem, dataItem, key, currentBee, currentData, data) {
     if (isCustomKey(key)) {
         return {};

@@ -55,6 +55,46 @@ describe('[function register]', () => {
 
     });
 
+    // todo
+    describe('inner method', function () {
+
+        it('rename', () => {
+            let ori = {
+                foo: 'bar'
+            };
+
+            let beeOptions = {
+                foo (value, key) {
+                    this.$rename(value);
+                    return key;
+                }
+            };
+
+            check(ori, beeOptions, {
+                bar: 'foo'
+            });
+        });
+
+        it('remove', () => {
+            let ori = {
+                bar: 1,
+                foo: 2
+            };
+
+            let beeOptions = {
+                foo () {
+                    this.$remove();
+                    return 3;
+                }
+            };
+
+            check(ori, beeOptions, {
+                bar: 1
+            });
+        });
+
+    });
+
     describe('root method', function () {
 
         it('path of data', function () {

@@ -12,6 +12,7 @@ class RenameRegister {
 
 module.exports = {
     valueScenes: {
+        name: 'rename',
         check (beeItem) {
             return beeItem instanceof RenameRegister;
         },
