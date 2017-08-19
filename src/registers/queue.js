@@ -24,24 +24,10 @@ module.exports = function (bee) {
                 return beeItem instanceof QueueRegister || util.isArray(beeItem);
             },
             apply (beeItem, dataItem, key, currentBee, currentData, data) {
-                let result = {
-                    key: key
-                };
-
-                if (currentData.hasOwnProperty(key)) {
-                    result.value = dataItem;
-                }
 
                 let queue = beeItem instanceof QueueRegister ? beeItem.queue : beeItem;
 
-                for (let queueBeeItem of queue) {
-                    Object.assign(result, bee.execute(
-                        queueBeeItem, result.value, result.key,
-                        currentBee, currentData, data
-                    ));
-                }
-
-                return result;
+                return bee.multiExecute(queue, dataItem, key, currentBee, currentData, data);
             }
         }
     };

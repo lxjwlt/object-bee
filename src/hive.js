@@ -5,8 +5,8 @@
 'use strict';
 
 const util = require('./util');
-
-const hooks = {};
+const Chain = require('./chain');
+const event = new (require('./event'))();
 
 const valueSceneRegisters = [];
 
@@ -39,9 +39,32 @@ bee.execute = function (beeItem, dataItem, key, currentBee, currentData, data) {
     if (isCustomKey(key)) {
         return {};
     }
-    return beeItem instanceof Chain ?
-        beeItem.execute(dataItem, key, currentBee, currentData, data) :
-        executeValueScene(beeItem, dataItem, key, currentBee, currentData, data);
+
+    if (!(beeItem instanceof Chain)) {
+        let register = valueSceneRegisters.filter((register) => {
+            return register.check && register.check(beeItem, dataItem);
+        })[0];
+
+        return register ?
+            register.apply(beeItem, dataItem, key, currentBee, currentData, data) : {};
+    }
+
+    return bee.multiExecute(beeItem.results, dataItem, key, currentBee, currentData, data);
+};
+
+bee.multiExecute = function (beeItems, dataItem, key, currentBee, currentData, data, defaultAction) {
+    return beeItems.reduce((action, beeItem) => {
+        key = action.hasOwnProperty('key') ? action.key : key;
+
+        dataItem = action.hasOwnProperty('value') ? action.value : dataItem;
+
+        currentBee = action.hasOwnProperty('beeValue') ? action.beeValue : currentBee;
+
+        return Object.assign(
+            action,
+            bee.execute(beeItem, dataItem, key, currentBee, currentData, data)
+        );
+    }, defaultAction || {});
 };
 
 bee.install = function (config) {
@@ -75,17 +98,12 @@ bee.install = function (config) {
     util.makeArray(config.keyScenes).forEach((item) => bee.installKeyScene(item));
 };
 
-bee.on = function (hookName, func) {
-    if (!util.isFunction(func)) {
-        throw(new Error(`Expect handler of "${hookName}" listener to be Function`));
-    }
-    hooks[hookName] = util.makeArray(hooks[hookName]);
-    hooks[hookName].push(func);
+bee.on = function () {
+    return event.on.apply(event, arguments);
 };
 
 bee.emit = function (name) {
-    let args = [...arguments].slice(1);
-    util.makeArray(hooks[name]).forEach((func) => func.apply(null, args));
+    return event.emit.apply(event, arguments);
 };
 
 bee.installMethods = function (methods) {
@@ -96,40 +114,6 @@ bee.installMethods = function (methods) {
     Object.keys(methods).forEach((key) =>
         setMethod(key, methods[key])
     );
-};
-
-class Chain {
-
-    constructor (item) {
-        this.beeItems = [item];
-    }
-
-    execute (dataItem, key, currentBee, currentData, data) {
-        let result = {
-            key: key
-        };
-
-        if (currentData.hasOwnProperty(key)) {
-            result.value = dataItem;
-        }
-
-        return this.beeItems.reduce((action, beeItem) => {
-            return Object.assign(
-                action,
-                executeValueScene(beeItem, action.value, action.key, currentBee, currentData, data)
-            );
-        }, result);
-    }
-
-}
-
-Chain.setMethods = function (name, method) {
-    Chain.prototype[name] = function () {
-
-        this.beeItems.push(method.apply(null, arguments));
-
-        return this;
-    };
 };
 
 bee.installValueScene = function (config) {
@@ -165,11 +149,16 @@ bee.installValueScene = function (config) {
             method = method.handler;
         }
 
-        setMethod(config.name, !canChain ? method : function () {
-            return new Chain(method.apply(null, arguments));
-        });
+        if (canChain) {
+            setMethod(config.name, function () {
+                return new Chain(method.apply(null, arguments));
+            });
 
-        Chain.setMethods(config.name, method);
+            Chain.setMethods(config.name, method);
+
+        } else {
+            setMethod(config.name, method);
+        }
     }
 
     valueSceneRegisters.push(config);
@@ -220,15 +209,6 @@ bee.installKeyScene = function (config) {
 
     keySceneRegisters.push(config);
 };
-
-function executeValueScene (beeItem, dataItem, key, currentBee, currentData, data) {
-    let register = valueSceneRegisters.filter((register) => {
-        return register.check && register.check(beeItem, dataItem);
-    })[0];
-
-    return register ?
-        register.apply(beeItem, dataItem, key, currentBee, currentData, data) : {};
-}
 
 function getAllMatchKeys (data) {
     if (!util.isPlainObject(data)) {
@@ -341,18 +321,16 @@ function processLoop (data, beeConfig) {
                             allBee.push(currentBeeValue);
                         }
 
-                        result = allBee.reduce((result, beeValue) => {
-                            let currentValue = result.hasOwnProperty('value') ? result.value : triggerDataItem;
-
-                            return Object.assign({}, result,
-                                bee.execute(beeValue, currentValue, key, currentBee, currentTriggerData, triggerData));
-                        }, result);
+                        result = bee.multiExecute(
+                            allBee, triggerDataItem, key, currentBee,
+                            currentTriggerData, triggerData, result
+                        );
 
                         processResult = processData(currentData, currentBee, key, result);
 
                     } while (processResult === true);
 
-                    value = result.hasOwnProperty('value') ? result.value : triggerDataItem;
+                    value = triggerDataItem;
 
                     /**
                      * If value or config of data has been modified,
@@ -360,7 +338,10 @@ function processLoop (data, beeConfig) {
                      */
                     if (result.hasOwnProperty('value') && result.value !== triggerDataItem ||
                         result.hasOwnProperty('beeValue') && result.beeValue !== oldBeeItem) {
-                        processLoop(value, result.beeValue);
+                        value = processLoop(
+                            result.hasOwnProperty('value') ? result.value : dataItem,
+                            result.beeValue
+                        );
                     }
 
                     return value;
@@ -370,6 +351,8 @@ function processLoop (data, beeConfig) {
     });
 
     util.loop(triggerData, triggerData);
+
+    return triggerData;
 }
 
 function processData (data, beeConfig, key, action) {
