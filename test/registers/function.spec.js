@@ -8,7 +8,7 @@ describe('[function register]', () => {
     // todo
     describe('normal function', function () {
 
-        it('function', () => {
+        it('return value', () => {
             let ori = {
                 foo: 1
             };
@@ -22,6 +22,18 @@ describe('[function register]', () => {
             check(ori, beeOptions, {
                 foo: 2
             });
+        });
+
+        it('unknown key', () => {
+            let ori = {};
+
+            let beeOptions = {
+                unknownKey () {
+                    return 'foo';
+                }
+            };
+
+            check(ori, beeOptions, {});
         });
 
     });
@@ -90,6 +102,21 @@ describe('[function register]', () => {
 
             check(ori, beeOptions, {
                 bar: 1
+            });
+        });
+
+        it('ensure', () => {
+            let ori = {};
+
+            let beeOptions = {
+                newKey () {
+                    this.$ensure();
+                    return 3;
+                }
+            };
+
+            check(ori, beeOptions, {
+                newKey: 3
             });
         });
 
