@@ -10,6 +10,8 @@ const MATCH_ID = 'key-match';
 module.exports = {
 
     keyScenes: {
+        name: 'match',
+
         check (info) {
             return util.isPlainObject(info) && info.id === MATCH_ID;
         },
@@ -27,18 +29,16 @@ module.exports = {
             });
         },
 
-        methods: {
-            match (...matches) {
-                return {
-                    id: MATCH_ID,
-                    data: matches.map((item) => {
-                        return {
-                            type: item instanceof RegExp ? 'RegExp' : 'String',
-                            value: item.toString()
-                        };
-                    })
-                };
-            }
+        method (...matches) {
+            return {
+                id: MATCH_ID,
+                data: matches.map((item) => {
+                    return {
+                        type: item instanceof RegExp ? 'RegExp' : 'String',
+                        value: item.toString()
+                    };
+                })
+            };
         }
     }
 

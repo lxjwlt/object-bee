@@ -126,18 +126,10 @@ class Chain {
 Chain.setMethods = function (name, method) {
     Chain.prototype[name] = function () {
 
-        this.beeItems.push(
-            util.isFunction(method) ? method.apply(null, arguments) : method
-        );
+        this.beeItems.push(method.apply(null, arguments));
 
         return this;
     };
-};
-
-Chain.clone = function (instance) {
-    let newInstance = new Chain();
-    newInstance.beeItems = [...instance];
-    return newInstance;
 };
 
 bee.installValueScene = function (config) {
@@ -154,12 +146,18 @@ bee.installValueScene = function (config) {
         throw(new Error('Expect config.apply to be Function'));
     }
 
-    if (config.hasOwnProperty('methods') && !util.isPlainObject(config.methods)) {
-        throw(new Error('Expect config.methods to be Object'));
+    if (config.hasOwnProperty('method') &&
+        !util.isPlainObject(config.method) && !util.isFunction(config.method)) {
+        throw(new Error('Expect config.method to be Object or function'));
     }
 
-    Object.keys(config.methods || {}).forEach((key) => {
-        let method = config.methods[key];
+    if (config.method) {
+
+        if (!config.name) {
+            throw(new Error('Expect config.name to be defined when config.method is defined.'));
+        }
+
+        let method = config.method;
         let canChain = true;
 
         if (util.isPlainObject(method)) {
@@ -167,14 +165,12 @@ bee.installValueScene = function (config) {
             method = method.handler;
         }
 
-        setMethod(key, !canChain ? method : function () {
-            return new Chain(
-                util.isFunction(method) ? method.apply(null, arguments) : method
-            );
+        setMethod(config.name, !canChain ? method : function () {
+            return new Chain(method.apply(null, arguments));
         });
 
-        Chain.setMethods(key, config.methods[key]);
-    });
+        Chain.setMethods(config.name, method);
+    }
 
     valueSceneRegisters.push(config);
 };
@@ -197,16 +193,28 @@ bee.installKeyScene = function (config) {
         throw(new Error('Expect config.match to be Function'));
     }
 
-    if (config.hasOwnProperty('methods') && !util.isPlainObject(config.methods)) {
-        throw(new Error('Expect config.methods to be Object'));
+    if (config.hasOwnProperty('method') &&
+        !util.isPlainObject(config.method) && !util.isFunction(config.method)) {
+        throw(new Error('Expect config.method to be Object or function'));
     }
 
-    for (let key of Object.keys(config.methods || {})) {
-        setMethod(key, function () {
+    if (config.method) {
+
+        if (!config.name) {
+            throw(new Error('Expect config.name to be defined when config.method is defined.'));
+        }
+
+        let method = config.method;
+
+        if (util.isPlainObject(method)) {
+            method = method.handler;
+        }
+
+        setMethod(config.name, function () {
             return MATCHER_ID + JSON.stringify({
-                index: matcherIndex++,
-                info: config.methods[key].apply(null, arguments)
-            });
+                    index: matcherIndex++,
+                    info: method.apply(null, arguments)
+                });
         });
     }
 

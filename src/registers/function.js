@@ -20,13 +20,13 @@ module.exports = function (bee) {
              * init inner method
              */
             bee.valueSceneRegisters.forEach(function (register) {
-                if (!register.name || !register.apply || !register.methods[register.name]) {
+                if (!register.method || !register.apply) {
                     return;
                 }
 
                 data['$' + register.name] = function () {
                     let outerArgs = [...args];
-                    let method = register.methods[register.name];
+                    let method = register.method;
 
                     outerArgs[0] = util.isFunction(method) ?
                         method.apply(null, arguments) : method;
@@ -54,24 +54,16 @@ module.exports = function (bee) {
         }
     });
 
-    bee.installValueScene({
-        methods: {
-            root: {
-                chain: false,
-                handler (path) {
-                    return function () {
-                        return util.path(this, path);
-                    };
-                }
-            },
-            data: {
-                chain: false,
-                handler (path) {
-                    return function () {
-                        return util.path(this.$data, path);
-                    };
-                }
-            }
+    bee.installMethods({
+        root (path) {
+            return function () {
+                return util.path(this, path);
+            };
+        },
+        data (path) {
+            return function () {
+                return util.path(this.$data, path);
+            };
         }
     });
 };

@@ -11,6 +11,8 @@ const MATCH_ID = 'glob-match';
 module.exports = {
 
     keyScenes: {
+        name: 'glob',
+
         check (info) {
             return util.isPlainObject(info) && info.id === MATCH_ID;
         },
@@ -19,13 +21,11 @@ module.exports = {
             return multimatch([key], info.data).length;
         },
 
-        methods: {
-            glob (...matches) {
-                return {
-                    id: MATCH_ID,
-                    data: matches
-                };
-            }
+        method (...matches) {
+            return {
+                id: MATCH_ID,
+                data: matches
+            };
         }
     }
 

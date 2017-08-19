@@ -9,14 +9,15 @@ const NOOP_SYMBOL = util.beeSymbol('noop symbol');
 
 module.exports = {
     valueScenes: {
+        name: 'noop',
         check (beeItem) {
             return beeItem === NOOP_SYMBOL;
         },
         apply () {
             return {};
         },
-        methods: {
-            noop: NOOP_SYMBOL
+        method () {
+            return NOOP_SYMBOL;
         }
     }
 };

@@ -21,10 +21,8 @@ module.exports = {
                 key: beeItem.name
             };
         },
-        methods: {
-            rename (name) {
-                return new RenameRegister(name);
-            }
+        method (name) {
+            return new RenameRegister(name);
         }
     }
 };

@@ -42,6 +42,7 @@ module.exports = function (bee) {
         },
         valueScenes: [
             {
+                name: 'entity',
                 check (beeItem) {
                     return beeItem instanceof EntityRegister;
                 },
@@ -50,13 +51,12 @@ module.exports = function (bee) {
                         value: beeItem.value
                     };
                 },
-                methods: {
-                    entity (value) {
-                        return new EntityRegister(value);
-                    }
+                method (value) {
+                    return new EntityRegister(value);
                 }
             },
             {
+                name: 'escape',
                 check (beeItem) {
                     return beeItem instanceof EscapeRegister;
                 },
@@ -65,12 +65,10 @@ module.exports = function (bee) {
                         beeValue: beeItem.value
                     };
                 },
-                methods: {
-                    escape: {
-                        chain: false,
-                        handler (value) {
-                            return new EscapeRegister(value);
-                        }
+                method: {
+                    chain: false,
+                    handler (value) {
+                        return new EscapeRegister(value);
                     }
                 }
             }

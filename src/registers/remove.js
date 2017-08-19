@@ -18,8 +18,8 @@ module.exports = {
                 remove: true
             };
         },
-        methods: {
-            remove: removeSymbol
+        method () {
+            return removeSymbol;
         }
     }
 };

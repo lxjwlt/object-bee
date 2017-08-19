@@ -16,10 +16,9 @@ module.exports = function (bee) {
 
     return {
         valueScenes: {
-            methods: {
-                queue: function (...actions) {
-                    return new QueueRegister(actions);
-                }
+            name: 'queue',
+            method (...actions) {
+                return new QueueRegister(actions);
             },
             check (beeItem) {
                 return beeItem instanceof QueueRegister || util.isArray(beeItem);
