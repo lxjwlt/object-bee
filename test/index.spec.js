@@ -6,8 +6,45 @@ const bee = require('../src/index');
 
 describe('object-bee', () => {
 
+    it('no enum key', function () {
+        let data = {};
+
+        Object.defineProperty(data, 'name', {
+            enumerable: false,
+            writable: true,
+            configurable: true,
+            value: 'foo'
+        });
+
+        let beeOptions = {
+            name: bee.rename('foo')
+        };
+
+        check(data, beeOptions, {
+            foo: 'foo'
+        });
+    });
+
+    it('no enum key', function () {
+        let data = Object.create(null, {
+            name: {
+                enumerable: false,
+                configurable: true,
+                value: 'foo'
+            }
+        });
+
+        let beeOptions = {
+            name: bee.rename('foo')
+        };
+
+        check(data, beeOptions, {
+            foo: 'foo'
+        });
+    });
+
     it('chaining call', function () {
-        let ori = {
+        let data = {
             a: 1
         };
 
@@ -15,7 +52,7 @@ describe('object-bee', () => {
             a: bee.rename('b').rename('cc')
         };
 
-        check(ori, beeOptions, {
+        check(data, beeOptions, {
             cc: 1
         });
     });

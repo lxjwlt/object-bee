@@ -317,7 +317,6 @@ describe('[function register]', () => {
                     };
                 }, {
                     foo () {
-                        debugger;
                         return this.$root.name === 'bar';
                     }
                 }]

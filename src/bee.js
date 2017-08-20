@@ -54,11 +54,11 @@ bee.$execute = function (beeItem, dataItem, key, currentBee, currentData, data) 
 
 bee.$multiExecute = function (beeItems, dataItem, key, currentBee, currentData, data, defaultAction) {
     return beeItems.reduce((action, beeItem) => {
-        key = action.hasOwnProperty('key') ? action.key : key;
+        key = util.hasOwnProperty(action, 'key') ? action.key : key;
 
-        dataItem = action.hasOwnProperty('value') ? action.value : dataItem;
+        dataItem = util.hasOwnProperty(action, 'value') ? action.value : dataItem;
 
-        currentBee = action.hasOwnProperty('beeValue') ? action.beeValue : currentBee;
+        currentBee = util.hasOwnProperty(action, 'beeValue') ? action.beeValue : currentBee;
 
         return Object.assign(
             action,
@@ -81,15 +81,15 @@ bee.$install = function (config) {
         throw(new Error('Expect config of register to be Object'));
     }
 
-    if (config.hasOwnProperty('before')) {
+    if (util.hasOwnProperty(config, 'before')) {
         bee.$on('before', config.before);
     }
 
-    if (config.hasOwnProperty('after')) {
+    if (util.hasOwnProperty(config, 'after')) {
         bee.$on('after', config.after);
     }
 
-    if (config.hasOwnProperty('methods')) {
+    if (util.hasOwnProperty(config, 'methods')) {
         bee.$installMethods(config.methods);
     }
 
@@ -126,15 +126,15 @@ bee.$installValueScene = function (config) {
         throw(new Error('Expect config for "valueScene" to be Object'));
     }
 
-    if (config.hasOwnProperty('check') && !util.isFunction(config.check)) {
+    if (util.hasOwnProperty(config, 'check') && !util.isFunction(config.check)) {
         throw(new Error('Expect config.check to be Function'));
     }
 
-    if (config.hasOwnProperty('apply') && !util.isFunction(config.apply)) {
+    if (util.hasOwnProperty(config, 'apply') && !util.isFunction(config.apply)) {
         throw(new Error('Expect config.apply to be Function'));
     }
 
-    if (config.hasOwnProperty('method') &&
+    if (util.hasOwnProperty(config, 'method') &&
         !util.isPlainObject(config.method) && !util.isFunction(config.method)) {
         throw(new Error('Expect config.method to be Object or function'));
     }
@@ -149,7 +149,7 @@ bee.$installValueScene = function (config) {
         let canChain = true;
 
         if (util.isPlainObject(method)) {
-            canChain = method.hasOwnProperty('chain') ? method.chain : canChain;
+            canChain = util.hasOwnProperty(method, 'chain') ? method.chain : canChain;
             method = method.handler;
         }
 
@@ -174,19 +174,19 @@ bee.$installKeyScene = function (config) {
         throw(new Error('Expect config for "keyScene" to be Object'));
     }
 
-    if (config.hasOwnProperty('check') && !util.isFunction(config.check)) {
+    if (util.hasOwnProperty(config, 'check') && !util.isFunction(config.check)) {
         throw(new Error('Expect config.check to be Function'));
     }
 
-    if (config.hasOwnProperty('apply') && !util.isFunction(config.apply)) {
+    if (util.hasOwnProperty(config, 'apply') && !util.isFunction(config.apply)) {
         throw(new Error('Expect config.apply to be Function'));
     }
 
-    if (config.hasOwnProperty('match') && !util.isFunction(config.match)) {
+    if (util.hasOwnProperty(config, 'match') && !util.isFunction(config.match)) {
         throw(new Error('Expect config.match to be Function'));
     }
 
-    if (config.hasOwnProperty('method') &&
+    if (util.hasOwnProperty(config, 'method') &&
         !util.isPlainObject(config.method) && !util.isFunction(config.method)) {
         throw(new Error('Expect config.method to be Object or function'));
     }
@@ -275,13 +275,13 @@ function processLoop (data, beeConfig, root) {
 
         for (let matcher of allMatchKeys) {
 
-            if (!matcher.defaultAction.hasOwnProperty('key')) {
+            if (!util.hasOwnProperty(matcher.defaultAction, 'key')) {
                 continue;
             }
 
             let key = matcher.defaultAction.key;
 
-            if (currentBee.hasOwnProperty(key)) {
+            if (util.hasOwnProperty(currentBee, key)) {
                 beforeResult[key] = matcher.defaultAction;
             } else {
                 processData(currentData, currentBee, key, matcher.defaultAction);
@@ -316,7 +316,7 @@ function processLoop (data, beeConfig, root) {
                     let processResult;
 
                     do {
-                        let currentBeeValue = result.hasOwnProperty('beeValue') ? result.beeValue : beeItem;
+                        let currentBeeValue = util.hasOwnProperty(result, 'beeValue') ? result.beeValue : beeItem;
 
                         let matchers = allMatchKeys.filter((item) => {
                             return item.keyRegisters.some((register) => {
@@ -347,11 +347,11 @@ function processLoop (data, beeConfig, root) {
                      * If value or config of data has been modified,
                      * we should update the detecting process.
                      */
-                    if (result.hasOwnProperty('value') && result.value !== triggerDataItem ||
-                        result.hasOwnProperty('beeValue') && result.beeValue !== oldBeeItem) {
+                    if (util.hasOwnProperty(result, 'value') && result.value !== triggerDataItem ||
+                        util.hasOwnProperty(result, 'beeValue') && result.beeValue !== oldBeeItem) {
                         value = processLoop(
-                            result.hasOwnProperty('value') ? result.value : dataItem,
-                            result.hasOwnProperty('beeValue') ? result.beeValue : beeItem,
+                            util.hasOwnProperty(result, 'value') ? result.value : dataItem,
+                            util.hasOwnProperty(result, 'beeValue') ? result.beeValue : beeItem,
                             root
                         );
                     }
@@ -377,18 +377,18 @@ function processData (data, beeConfig, key, action) {
         return;
     }
 
-    if (action.hasOwnProperty('beeValue') && action.beeValue !== beeConfig[key]) {
+    if (util.hasOwnProperty(action, 'beeValue') && action.beeValue !== beeConfig[key]) {
         beeConfig[key] = action.beeValue;
         return true;
     }
 
-    if (!action.create && (!data || !data.hasOwnProperty(key))) {
+    if (!action.create && (!data || !util.hasOwnProperty(data, key))) {
         return;
     }
 
     let currentKey = key;
 
-    if (action.hasOwnProperty('key')) {
+    if (util.hasOwnProperty(action, 'key')) {
         data[action.key] = data[key];
 
         /**
@@ -402,7 +402,7 @@ function processData (data, beeConfig, key, action) {
         currentKey = action.key;
     }
 
-    if (action.hasOwnProperty('value')) {
+    if (util.hasOwnProperty(action, 'value')) {
         data[currentKey] = action.value;
     }
 

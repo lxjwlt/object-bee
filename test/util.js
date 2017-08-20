@@ -3,7 +3,7 @@
  */
 
 const assert = require('assert');
-const cloneDeep = require('lodash.clonedeep');
+const cloneDeep = require('clone');
 const bee = require('../src/index');
 
 'use strict';
@@ -20,7 +20,9 @@ let util = {
         let result;
 
         if (methods === bee) {
-            let clone = cloneDeep(data);
+            let clone = cloneDeep(data, {
+                includeNonEnumerable: true
+            });
             result = methods.create(data, format);
             assert.deepEqual(result, expect, '[clone] expect deep equal');
             assert.deepEqual(data, clone, '[clone] can not change origin object');

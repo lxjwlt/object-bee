@@ -7,7 +7,9 @@
 const util = {
 
     copy (data) {
-        return require('lodash.clonedeep')(data);
+        return require('clone')(data, {
+            includeNonEnumerable: true
+        });
     },
 
     isRegExp (data) {
@@ -18,10 +20,7 @@ const util = {
         return typeof data === 'function';
     },
 
-    isPlainObject (data) {
-        return data && Object.prototype.toString.call(data) === '[object Object]' &&
-            Object.getPrototypeOf(data) === Object.prototype;
-    },
+    isPlainObject: require('lodash.isplainobject'),
 
     isArray (data) {
         return Object.prototype.toString.apply(data) === '[object Array]';
@@ -33,18 +32,6 @@ const util = {
 
     beeSymbol (desc) {
         return Symbol(`[object-bee] ${desc}`);
-    },
-
-    forEach (data, func) {
-        if (util.isArray(data)) {
-            data.forEach(function (item, i) {
-                func.apply(this, arguments);
-            });
-        } else if (util.isPlainObject(data)) {
-            Object.keys(data).forEach(function (key) {
-                func.call(this, data[key], key);
-            });
-        }
     },
 
     nestLoop (data, bee, outerFunc) {
@@ -60,8 +47,8 @@ const util = {
         if (util.isPlainObject(bee) && dataList.every((data) => util.isPlainObject(data))) {
             let func = outerFunc && outerFunc(...dataList, bee);
             let keySet = new Set(dataList.reduce((result, data) => {
-                return result.concat(Object.keys(data));
-            }, []).concat(Object.keys(bee)));
+                return result.concat(Object.getOwnPropertyNames(data));
+            }, []).concat(Object.getOwnPropertyNames(bee)));
 
             [...keySet].forEach(function (key) {
                 let dataValueList = dataList.map((data) => data[key]);
@@ -120,6 +107,10 @@ const util = {
         }
 
         return [data];
+    },
+
+    hasOwnProperty (obj, key) {
+        return Object.prototype.hasOwnProperty.call(obj, key);
     }
 
 };
