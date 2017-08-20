@@ -1,8 +1,9 @@
-<p alian="center">
-<img src="/icon/icon.png" align="center" />
+<p align="center">
+    <img src="/icon/icon.png" align="center" />
 </p>
 
 # object-bee
+
 object便捷工具
 
 ## Installation
@@ -16,14 +17,17 @@ npm install object-bee -D
 ```javascript
 const bee = require('object-bee');
 
-bee(data, {
-    name (value) {
-        return bee(value, {
-            age: 1
-        });
-    },
-    man: bee.escape(function () {
+let data = {
+   a: 1,
+   b: 2
+   sum: 0
+}
 
-    })
+bee(data, {
+    sum () {
+        return this.a + this.b;
+    }
 });
+
+data.sum === 3; // true
 ```
