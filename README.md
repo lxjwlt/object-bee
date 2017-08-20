@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="/icon/logo.png" align="center" />
+    <img src="/icon/logo.png" width="270" />
 </p>
 
 # object-bee
