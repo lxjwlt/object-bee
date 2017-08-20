@@ -8,7 +8,7 @@ const util = require('../util');
 
 module.exports = function (bee) {
 
-    bee.installValueScene({
+    bee.$installValueScene({
         check (beeItem) {
             return typeof beeItem === 'function';
         },
@@ -19,7 +19,7 @@ module.exports = function (bee) {
             /**
              * init inner method
              */
-            bee.valueSceneRegisters.forEach(function (register) {
+            bee.$valueSceneRegisters.forEach(function (register) {
                 if (!register.method || !register.apply) {
                     return;
                 }
@@ -54,7 +54,7 @@ module.exports = function (bee) {
         }
     });
 
-    bee.installMethods({
+    bee.$installMethods({
         root (path) {
             return function () {
                 return util.path(this, path);

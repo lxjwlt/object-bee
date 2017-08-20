@@ -1,21 +1,21 @@
 /**
- * @file object-hive entry file
+ * @file object-bee entry file
  */
 
 'use strict';
 
-const hive = require('./hive');
+const bee = require('./bee');
 
-hive.install(require('./registers/create'));
-hive.install(require('./registers/ensure'));
-hive.install(require('./registers/entity'));
-hive.install(require('./registers/function'));
-hive.install(require('./registers/glob'));
-hive.install(require('./registers/match'));
-hive.install(require('./registers/noop'));
-hive.install(require('./registers/object'));
-hive.install(require('./registers/queue'));
-hive.install(require('./registers/remove'));
-hive.install(require('./registers/rename'));
+bee.$install(require('./registers/create'));
+bee.$install(require('./registers/ensure'));
+bee.$install(require('./registers/entity'));
+bee.$install(require('./registers/function'));
+bee.$install(require('./registers/glob'));
+bee.$install(require('./registers/match'));
+bee.$install(require('./registers/noop'));
+bee.$install(require('./registers/object'));
+bee.$install(require('./registers/queue'));
+bee.$install(require('./registers/remove'));
+bee.$install(require('./registers/rename'));
 
-module.exports = hive;
+module.exports = bee;

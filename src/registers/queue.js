@@ -27,7 +27,7 @@ module.exports = function (bee) {
 
                 let queue = beeItem instanceof QueueRegister ? beeItem.queue : beeItem;
 
-                return bee.multiExecute(queue, dataItem, key, currentBee, currentData, data);
+                return bee.$multiExecute(queue, dataItem, key, currentBee, currentData, data);
             }
         }
     };

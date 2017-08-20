@@ -1,5 +1,5 @@
 /**
- * @file object-hive
+ * @file object-bee
  */
 
 'use strict';
@@ -22,20 +22,20 @@ function bee (data, beeConfig) {
 
     beeConfig = util.copy(beeConfig);
 
-    bee.emit('before', data, beeConfig);
+    bee.$emit('before', data, beeConfig);
 
     processLoop(data, beeConfig);
 
-    bee.emit('after', data, beeConfig);
+    bee.$emit('after', data, beeConfig);
 
     matcherIndex = 0;
 
     return data;
 }
 
-bee.valueSceneRegisters = valueSceneRegisters;
+bee.$valueSceneRegisters = valueSceneRegisters;
 
-bee.execute = function (beeItem, dataItem, key, currentBee, currentData, data) {
+bee.$execute = function (beeItem, dataItem, key, currentBee, currentData, data) {
     if (isCustomKey(key)) {
         return {};
     }
@@ -49,10 +49,10 @@ bee.execute = function (beeItem, dataItem, key, currentBee, currentData, data) {
             register.apply(beeItem, dataItem, key, currentBee, currentData, data) : {};
     }
 
-    return bee.multiExecute(beeItem.results, dataItem, key, currentBee, currentData, data);
+    return bee.$multiExecute(beeItem.results, dataItem, key, currentBee, currentData, data);
 };
 
-bee.multiExecute = function (beeItems, dataItem, key, currentBee, currentData, data, defaultAction) {
+bee.$multiExecute = function (beeItems, dataItem, key, currentBee, currentData, data, defaultAction) {
     return beeItems.reduce((action, beeItem) => {
         key = action.hasOwnProperty('key') ? action.key : key;
 
@@ -62,12 +62,12 @@ bee.multiExecute = function (beeItems, dataItem, key, currentBee, currentData, d
 
         return Object.assign(
             action,
-            bee.execute(beeItem, dataItem, key, currentBee, currentData, data)
+            bee.$execute(beeItem, dataItem, key, currentBee, currentData, data)
         );
     }, defaultAction || {});
 };
 
-bee.install = function (config) {
+bee.$install = function (config) {
 
     if (typeof config === 'function') {
         config = config(bee);
@@ -82,31 +82,31 @@ bee.install = function (config) {
     }
 
     if (config.hasOwnProperty('before')) {
-        bee.on('before', config.before);
+        bee.$on('before', config.before);
     }
 
     if (config.hasOwnProperty('after')) {
-        bee.on('after', config.after);
+        bee.$on('after', config.after);
     }
 
     if (config.hasOwnProperty('methods')) {
-        bee.installMethods(config.methods);
+        bee.$installMethods(config.methods);
     }
 
-    util.makeArray(config.valueScenes).forEach((item) => bee.installValueScene(item));
+    util.makeArray(config.valueScenes).forEach((item) => bee.$installValueScene(item));
 
-    util.makeArray(config.keyScenes).forEach((item) => bee.installKeyScene(item));
+    util.makeArray(config.keyScenes).forEach((item) => bee.$installKeyScene(item));
 };
 
-bee.on = function () {
+bee.$on = function () {
     return event.on.apply(event, arguments);
 };
 
-bee.emit = function (name) {
+bee.$emit = function (name) {
     return event.emit.apply(event, arguments);
 };
 
-bee.installMethods = function (methods) {
+bee.$installMethods = function (methods) {
     if (!util.isPlainObject(methods)) {
         throw(new Error('Expect arguments to be Object'));
     }
@@ -116,7 +116,7 @@ bee.installMethods = function (methods) {
     );
 };
 
-bee.installValueScene = function (config) {
+bee.$installValueScene = function (config) {
 
     if (!util.isPlainObject(config)) {
         throw(new Error('Expect config for "valueScene" to be Object'));
@@ -164,7 +164,7 @@ bee.installValueScene = function (config) {
     valueSceneRegisters.push(config);
 };
 
-bee.installKeyScene = function (config) {
+bee.$installKeyScene = function (config) {
 
     if (!util.isPlainObject(config)) {
         throw(new Error('Expect config for "keyScene" to be Object'));
@@ -321,7 +321,7 @@ function processLoop (data, beeConfig) {
                             allBee.push(currentBeeValue);
                         }
 
-                        result = bee.multiExecute(
+                        result = bee.$multiExecute(
                             allBee, triggerDataItem, key, currentBee,
                             currentTriggerData, triggerData, result
                         );
