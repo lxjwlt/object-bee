@@ -90,9 +90,15 @@ const util = {
     },
 
     path (data, path) {
+        if (!path || !(path = path.trim())) {
+            return data;
+        }
+
+        let startJoiner = path[0] === '[' ? '' : '.';
+
         let func = new Function('data', `
             try {
-                return data.${path}
+                return data${startJoiner}${path}
             } catch (e) {}
         `);
 

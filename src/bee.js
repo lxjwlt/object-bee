@@ -286,6 +286,7 @@ function processLoop (data, beeConfig, root) {
 
         return function ([dataItem, triggerDataItem], beeItem, key, [currentData, currentTriggerData], currentBee) {
             let isComputed = false;
+            let isComputing = false;
             let value;
             let oldBeeItem = currentBee[key];
 
@@ -301,7 +302,11 @@ function processLoop (data, beeConfig, root) {
                         return value;
                     }
 
-                    isComputed = true;
+                    if (isComputing) {
+                        return dataItem;
+                    }
+
+                    isComputing = true;
 
                     let result = beforeResult[key] || {};
                     let processResult;
@@ -342,10 +347,14 @@ function processLoop (data, beeConfig, root) {
                         result.hasOwnProperty('beeValue') && result.beeValue !== oldBeeItem) {
                         value = processLoop(
                             result.hasOwnProperty('value') ? result.value : dataItem,
-                            result.beeValue,
+                            result.hasOwnProperty('beeValue') ? result.beeValue : beeItem,
                             root
                         );
                     }
+
+                    isComputed = true;
+
+                    isComputing = false;
 
                     return value;
                 }

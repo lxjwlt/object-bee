@@ -15,6 +15,9 @@ module.exports = function (bee) {
         apply (beeItem, dataItem, key, currentBee, currentData, data) {
             let result = {};
             let args = [...arguments];
+            let proto = {
+                $root: data
+            };
 
             /**
              * init inner method
@@ -24,7 +27,7 @@ module.exports = function (bee) {
                     return;
                 }
 
-                currentData['$' + register.name] = function () {
+                proto['$' + register.name] = function () {
                     let outerArgs = [...args];
                     let method = register.method;
 
@@ -35,21 +38,23 @@ module.exports = function (bee) {
                 };
             });
 
-            let hasOldData = currentData.hasOwnProperty('$root');
-            let oldData = currentData.$root;
+            /**
+             * bind extra method to mediator instead of binding to "currentData",
+             * we can return "currentData" from "beeItem" function, and
+             * prevent extra method mess up our final data.
+             */
+            let mediator = Object.create(proto, Object.getOwnPropertyDescriptors(currentData));
 
-            currentData.$root = data;
-
-            let value = beeItem.call(currentData, dataItem, key);
-
-            if (hasOldData) {
-                currentData.$root = oldData;
-            } else {
-                delete currentData.$root;
-            }
+            let value = beeItem.call(mediator, dataItem, key);
 
             return Object.assign(result, {
-                value: value
+
+                /**
+                 * use real-time data, cause some other data
+                 * are maybe being compute right now.
+                 */
+                value: util.copy(value)
+
             });
         }
     });

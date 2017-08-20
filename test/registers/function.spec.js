@@ -2,10 +2,10 @@
 
 const {check} = require('../util');
 const bee = require('../../src/index');
+const assert = require('assert');
 
 describe('[function register]', () => {
 
-    // todo
     describe('normal function', function () {
 
         it('return value', () => {
@@ -22,6 +22,39 @@ describe('[function register]', () => {
             check(ori, beeOptions, {
                 foo: 2
             });
+        });
+
+
+        it('check arguments', () => {
+            let ori = {
+                foo: 1
+            };
+
+            let beeOptions = {
+                foo (value, key) {
+                    assert.equal(key, 'foo');
+                    assert.equal(value, 1);
+                    return value;
+                }
+            };
+
+            check(ori, beeOptions, {
+                foo: 1
+            });
+        });
+
+        it('check arguments in unknown key', () => {
+            let ori = {};
+
+            let beeOptions = {
+                foo (value, key) {
+                    assert.equal(key, 'foo');
+                    assert.equal(value, undefined);
+                    return value;
+                }
+            };
+
+            check(ori, beeOptions, {});
         });
 
         it('unknown key', () => {
@@ -62,7 +95,6 @@ describe('[function register]', () => {
 
     });
 
-    // todo
     describe('computed value', function () {
 
         it('computed value', () => {
@@ -89,21 +121,114 @@ describe('[function register]', () => {
             });
         });
 
-        it.skip('multi function', () => {
+        it('root data', () => {
             let ori = {
-                a: 1
+                foo: {
+                    name: 'test',
+                    bar: {
+                        info: {
+                            name: '123'
+                        }
+                    }
+                }
             };
 
             let beeOptions = {
-                a: [function () {
-                    return 123;
-                }, function () {
-                    return this.a === 123;
-                }]
+                foo: {
+                    bar: {
+                        info: {
+                            name () {
+                                return this.$root.foo.name + '!';
+                            }
+                        }
+                    }
+                }
             };
 
             check(ori, beeOptions, {
-                a: true
+                foo: {
+                    name: 'test',
+                    bar: {
+                        info: {
+                            name: 'test!'
+                        }
+                    }
+                }
+            });
+        });
+
+        it('current data', () => {
+            let ori = {
+                foo: {
+                    bar: {
+                        a: 1,
+                        b: 2
+                    }
+                }
+            };
+
+            let beeOptions = {
+                foo: {
+                    bar: {
+                        b () {
+                            return this.a + 5;
+                        }
+                    }
+                }
+            };
+
+            check(ori, beeOptions, {
+                foo: {
+                    bar: {
+                        a: 1,
+                        b: 6
+                    }
+                }
+            });
+        });
+
+        it('get later data', () => {
+            let ori = {
+                name: '',
+                info: {
+                    foo: 'bar'
+                }
+            };
+
+            let beeOptions = {
+                name () {
+                    return this.info.foo;
+                },
+                info: {
+                    foo () {
+                        return 123;
+                    }
+                }
+            };
+
+            check(ori, beeOptions, {
+                name: 123,
+                info: {
+                    foo: 123
+                }
+            });
+        });
+
+        it('removed key', () => {
+            let ori = {
+                a: 1,
+                b: 2
+            };
+
+            let beeOptions = {
+                a: bee.remove(),
+                b (value) {
+                    return this.a + value;
+                }
+            };
+
+            check(ori, beeOptions, {
+                b: 3
             });
         });
 
@@ -114,12 +239,68 @@ describe('[function register]', () => {
 
             let beeOptions = {
                 info () {
-                    return this.info === undefined;
+                    return this.info === 'foo';
                 }
             };
 
             check(ori, beeOptions, {
                 info: true
+            });
+        });
+
+        it('loop get in multi function', () => {
+            let ori = {
+                a: 1
+            };
+
+            let beeOptions = {
+                a: [function () {
+                    return 123;
+                }, function () {
+                    return this.a === 1;
+                }]
+            };
+
+            check(ori, beeOptions, {
+                a: true
+            });
+        });
+
+        it('get parent data', () => {
+            let ori = {
+                info: {
+                    foo: 1,
+                    person: {
+                        bar: 2
+                    }
+                }
+            };
+
+            let beeOptions = {
+                info: {
+                    foo () {
+                        return 3;
+                    },
+                    person: {
+                        bar () {
+                            return this.$root.info;
+                        }
+                    }
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    foo: 3,
+                    person: {
+                        bar: {
+                            foo: 3,
+                            person: {
+                                bar: 2
+                            }
+                        }
+                    }
+                }
             });
         });
 
@@ -152,7 +333,6 @@ describe('[function register]', () => {
 
     });
 
-    // todo
     describe('inner method', function () {
 
         it('rename', () => {
@@ -202,6 +382,40 @@ describe('[function register]', () => {
 
             check(ori, beeOptions, {
                 newKey: 3
+            });
+        });
+
+        it('noop', () => {
+            let ori = {
+                foo: 1
+            };
+
+            let beeOptions = {
+                foo () {
+                    this.$noop();
+                    return 3;
+                }
+            };
+
+            check(ori, beeOptions, {
+                foo: 3
+            });
+        });
+
+        it('queue', () => {
+            let ori = {
+                foo: 1
+            };
+
+            let beeOptions = {
+                foo () {
+                    this.$queue(bee.rename('name'));
+                    return 3;
+                }
+            };
+
+            check(ori, beeOptions, {
+                name: 3
             });
         });
 
@@ -309,9 +523,145 @@ describe('[function register]', () => {
             });
         });
 
+        it('empty path', function () {
+            let ori = {
+                info: {
+                    root: ''
+                }
+            };
+
+            let beeOptions = {
+                info: {
+                    root: bee.root()
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    root: {
+                        info: {
+                            root: ''
+                        }
+                    }
+                }
+            });
+        });
+
     });
 
-    // todo
-    describe('data method', function () {});
+    describe('data method', function () {
+
+        it('path of data', function () {
+            let ori = {
+                info: {
+                    a: 1,
+                    b: 2
+                }
+            };
+
+            let beeOptions = {
+                info: {
+                    b: bee.data('a')
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    a: 1,
+                    b: 1
+                }
+            });
+        });
+
+        it('path of undefined data', function () {
+            let ori = {
+                info: {
+                    name: ''
+                }
+            };
+
+            let beeOptions = {
+                info: {
+                    name: bee.data('xx.xx.xx')
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    name: undefined
+                }
+            });
+        });
+
+        it('path of array', function () {
+            let ori = {
+                info: {
+                    list: [1,2,3],
+                    number: 0
+                }
+            };
+
+            let beeOptions = {
+                info: {
+                    number: bee.data('list[1]')
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    list: [1,2,3],
+                    number: 2
+                }
+            });
+        });
+
+        it('path of object', function () {
+            let ori = {
+                info: {
+                    'test-name': 'test name',
+                    name: ''
+                }
+            };
+
+            let beeOptions = {
+                info: {
+                    name: bee.data('["test-name"]')
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    'test-name': 'test name',
+                    name: 'test name'
+                }
+            });
+        });
+
+        it('empty path', function () {
+            let ori = {
+                info: {
+                    name: 'foo',
+                    person: ''
+                }
+            };
+
+            let beeOptions = {
+                info: {
+                    person: bee.data()
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    name: 'foo',
+                    person: {
+                        name: 'foo',
+                        person: ''
+                    }
+                }
+            });
+        });
+
+    });
 
 });
