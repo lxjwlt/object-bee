@@ -36,6 +36,30 @@ describe('[function register]', () => {
             check(ori, beeOptions, {});
         });
 
+        it('child config', () => {
+            let ori = {
+                info: 'foo'
+            };
+
+            let beeOptions = {
+                info: [function () {
+                    return {
+                        foo: 1
+                    };
+                }, {
+                    foo () {
+                        return 'bar';
+                    }
+                }]
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    foo: 'bar'
+                }
+            });
+        });
+
     });
 
     // todo
@@ -62,6 +86,67 @@ describe('[function register]', () => {
                 a: 4,
                 d: 2,
                 c: 6
+            });
+        });
+
+        it.skip('multi function', () => {
+            let ori = {
+                a: 1
+            };
+
+            let beeOptions = {
+                a: [function () {
+                    return 123;
+                }, function () {
+                    return this.a === 123;
+                }]
+            };
+
+            check(ori, beeOptions, {
+                a: true
+            });
+        });
+
+        it('loop get', () => {
+            let ori = {
+                info: 'foo'
+            };
+
+            let beeOptions = {
+                info () {
+                    return this.info === undefined;
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: true
+            });
+        });
+
+        it('check root data in child config', () => {
+            let ori = {
+                name: 'bar',
+                info: 'foo'
+            };
+
+            let beeOptions = {
+                info: [function () {
+                    return {
+                        foo: 'foo'
+                    };
+                }, {
+                    foo () {
+                        debugger;
+                        return this.$root.name === 'bar';
+                    }
+                }]
+            };
+
+            check(ori, beeOptions, {
+                name: 'bar',
+                info: {
+                    foo: true
+                }
             });
         });
 

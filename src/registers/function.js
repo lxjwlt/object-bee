@@ -24,7 +24,7 @@ module.exports = function (bee) {
                     return;
                 }
 
-                data['$' + register.name] = function () {
+                currentData['$' + register.name] = function () {
                     let outerArgs = [...args];
                     let method = register.method;
 
@@ -35,17 +35,17 @@ module.exports = function (bee) {
                 };
             });
 
-            let hasOldData = data.hasOwnProperty('$data');
-            let oldData = data.$data;
+            let hasOldData = currentData.hasOwnProperty('$root');
+            let oldData = currentData.$root;
 
-            data.$data = currentData;
+            currentData.$root = data;
 
-            let value = beeItem.call(data, dataItem, key);
+            let value = beeItem.call(currentData, dataItem, key);
 
             if (hasOldData) {
-                data.$data = oldData;
+                currentData.$root = oldData;
             } else {
-                delete data.$data;
+                delete currentData.$root;
             }
 
             return Object.assign(result, {
@@ -57,12 +57,12 @@ module.exports = function (bee) {
     bee.$installMethods({
         root (path) {
             return function () {
-                return util.path(this, path);
+                return util.path(this.$root, path);
             };
         },
         data (path) {
             return function () {
-                return util.path(this.$data, path);
+                return util.path(this, path);
             };
         }
     });

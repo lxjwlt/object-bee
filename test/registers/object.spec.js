@@ -147,4 +147,34 @@ describe('[object register]', () => {
         });
     });
 
+    it('empty object', () => {
+        let ori = {
+            num: 1
+        };
+
+        let beeOptions = {
+            num: {}
+        };
+
+        check(ori, beeOptions, {
+            num: 1
+        });
+    });
+
+    it('empty object in queue', () => {
+        let ori = {
+            num: 1
+        };
+
+        let beeOptions = {
+            num: [function () {
+                return 123;
+            }, {}]
+        };
+
+        check(ori, beeOptions, {
+            num: 123
+        });
+    });
+
 });
