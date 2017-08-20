@@ -102,8 +102,12 @@ bee.$on = function () {
     return event.on.apply(event, arguments);
 };
 
-bee.$emit = function (name) {
+bee.$emit = function () {
     return event.emit.apply(event, arguments);
+};
+
+bee.$off = function () {
+    return event.off.apply(event, arguments);
 };
 
 bee.$installMethods = function (methods) {

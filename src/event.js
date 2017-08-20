@@ -19,6 +19,28 @@ class Event {
         this.events[hookName].push(func);
     }
 
+    off (hookName, func) {
+        let handlers = this.events[hookName];
+
+        if (!handlers) {
+            return false;
+        }
+
+        if (!func) {
+            delete this.events[hookName];
+            return true;
+        }
+
+        let index = handlers.indexOf(func);
+
+        if (index >= 0) {
+            handlers.splice(index, 1);
+            return true;
+        }
+
+        return false;
+    }
+
     emit (names) {
         let args = [...arguments].slice(1);
 
