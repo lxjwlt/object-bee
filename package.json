@@ -7,6 +7,8 @@
     "test": "npm run lint && mocha \"test/**/*.spec.js\"",
     "lint": "eslint '**/*.js'",
     "fix": "npm run lint -- --fix",
+    "coverage": "istanbul cover --root src ./node_modules/mocha/bin/_mocha -- \"test/**/*.spec.js\"",
+    "codecov": "codecov",
     "debug": "node --inspect-brk node_modules/mocha/bin/_mocha \"test/**/*.spec.js\" --no-timeouts"
   },
   "keywords": [],
