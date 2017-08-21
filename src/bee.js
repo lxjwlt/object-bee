@@ -17,9 +17,6 @@ const MATCHER_ID = 'bee-' + String(Math.random()).replace(/\D/, '');
 let matcherIndex = 0;
 
 function bee (data, beeConfig) {
-
-    debugger;
-
     beeConfig = util.copy(beeConfig);
 
     bee.$emit('before', data, beeConfig);
@@ -45,8 +42,8 @@ bee.$execute = function (beeItem, dataItem, key, currentBee, currentData, data) 
             return register.check && register.check(beeItem, dataItem);
         })[0];
 
-        return register ?
-            register.apply(beeItem, dataItem, key, currentBee, currentData, data) : {};
+        return register
+            ? register.apply(beeItem, dataItem, key, currentBee, currentData, data) : {};
     }
 
     return bee.$multiExecute(beeItem.results, dataItem, key, currentBee, currentData, data);
@@ -68,7 +65,6 @@ bee.$multiExecute = function (beeItems, dataItem, key, currentBee, currentData, 
 };
 
 bee.$install = function (config) {
-
     if (typeof config === 'function') {
         config = config(bee);
     }
@@ -78,7 +74,7 @@ bee.$install = function (config) {
     }
 
     if (!util.isPlainObject(config)) {
-        throw(new Error('Expect config of register to be Object'));
+        throw (new Error('Expect config of register to be Object'));
     }
 
     if (util.hasOwnProperty(config, 'before')) {
@@ -112,7 +108,7 @@ bee.$off = function () {
 
 bee.$installMethods = function (methods) {
     if (!util.isPlainObject(methods)) {
-        throw(new Error('Expect arguments to be Object'));
+        throw (new Error('Expect arguments to be Object'));
     }
 
     Object.keys(methods).forEach((key) =>
@@ -121,28 +117,26 @@ bee.$installMethods = function (methods) {
 };
 
 bee.$installValueScene = function (config) {
-
     if (!util.isPlainObject(config)) {
-        throw(new Error('Expect config for "valueScene" to be Object'));
+        throw (new Error('Expect config for "valueScene" to be Object'));
     }
 
     if (util.hasOwnProperty(config, 'check') && !util.isFunction(config.check)) {
-        throw(new Error('Expect config.check to be Function'));
+        throw (new Error('Expect config.check to be Function'));
     }
 
     if (util.hasOwnProperty(config, 'apply') && !util.isFunction(config.apply)) {
-        throw(new Error('Expect config.apply to be Function'));
+        throw (new Error('Expect config.apply to be Function'));
     }
 
     if (util.hasOwnProperty(config, 'method') &&
         !util.isPlainObject(config.method) && !util.isFunction(config.method)) {
-        throw(new Error('Expect config.method to be Object or function'));
+        throw (new Error('Expect config.method to be Object or function'));
     }
 
     if (config.method) {
-
         if (!config.name) {
-            throw(new Error('Expect config.name to be defined when config.method is defined.'));
+            throw (new Error('Expect config.name to be defined when config.method is defined.'));
         }
 
         let method = config.method;
@@ -159,7 +153,6 @@ bee.$installValueScene = function (config) {
             });
 
             Chain.setMethods(config.name, method);
-
         } else {
             setMethod(config.name, method);
         }
@@ -169,32 +162,30 @@ bee.$installValueScene = function (config) {
 };
 
 bee.$installKeyScene = function (config) {
-
     if (!util.isPlainObject(config)) {
-        throw(new Error('Expect config for "keyScene" to be Object'));
+        throw (new Error('Expect config for "keyScene" to be Object'));
     }
 
     if (util.hasOwnProperty(config, 'check') && !util.isFunction(config.check)) {
-        throw(new Error('Expect config.check to be Function'));
+        throw (new Error('Expect config.check to be Function'));
     }
 
     if (util.hasOwnProperty(config, 'apply') && !util.isFunction(config.apply)) {
-        throw(new Error('Expect config.apply to be Function'));
+        throw (new Error('Expect config.apply to be Function'));
     }
 
     if (util.hasOwnProperty(config, 'match') && !util.isFunction(config.match)) {
-        throw(new Error('Expect config.match to be Function'));
+        throw (new Error('Expect config.match to be Function'));
     }
 
     if (util.hasOwnProperty(config, 'method') &&
         !util.isPlainObject(config.method) && !util.isFunction(config.method)) {
-        throw(new Error('Expect config.method to be Object or function'));
+        throw (new Error('Expect config.method to be Object or function'));
     }
 
     if (config.method) {
-
         if (!config.name) {
-            throw(new Error('Expect config.name to be defined when config.method is defined.'));
+            throw (new Error('Expect config.name to be defined when config.method is defined.'));
         }
 
         let method = config.method;
@@ -205,9 +196,9 @@ bee.$installKeyScene = function (config) {
 
         setMethod(config.name, function () {
             return MATCHER_ID + JSON.stringify({
-                    index: matcherIndex++,
-                    info: method.apply(null, arguments)
-                });
+                index: matcherIndex++,
+                info: method.apply(null, arguments)
+            });
         });
     }
 
@@ -249,14 +240,14 @@ function isCustomKey (key) {
 
 function parseKeyInfo (key) {
     if (key.indexOf(MATCHER_ID) !== 0) {
-        throw(new Error(`${key} isn't a custom key of object-bee.`));
+        throw (new Error(`${key} isn't a custom key of object-bee.`));
     }
     return JSON.parse(key.slice(MATCHER_ID.length));
 }
 
 function setMethod (name, method) {
     if (bee[name]) {
-        throw(new Error(`"${name}" has been registered`));
+        throw (new Error(`"${name}" has been registered`));
     }
 
     bee[name] = method;
@@ -267,14 +258,11 @@ function processLoop (data, beeConfig, root) {
 
     root = root || triggerData;
 
-    debugger;
-
     util.nestLoop(data, triggerData, beeConfig, (currentData, currentTriggerData, currentBee) => {
         let allMatchKeys = getAllMatchKeys(currentBee);
         let beforeResult = {};
 
         for (let matcher of allMatchKeys) {
-
             if (!util.hasOwnProperty(matcher.defaultAction, 'key')) {
                 continue;
             }
@@ -301,7 +289,6 @@ function processLoop (data, beeConfig, root) {
             Object.defineProperty(currentTriggerData, key, {
                 enumerable: true,
                 get () {
-
                     if (isComputed) {
                         return value;
                     }
@@ -338,7 +325,6 @@ function processLoop (data, beeConfig, root) {
                         );
 
                         processResult = processData(currentData, currentBee, key, result);
-
                     } while (processResult === true);
 
                     value = triggerDataItem;
@@ -347,8 +333,8 @@ function processLoop (data, beeConfig, root) {
                      * If value or config of data has been modified,
                      * we should update the detecting process.
                      */
-                    if (util.hasOwnProperty(result, 'value') && result.value !== triggerDataItem ||
-                        util.hasOwnProperty(result, 'beeValue') && result.beeValue !== oldBeeItem) {
+                    if ((util.hasOwnProperty(result, 'value') && result.value !== triggerDataItem) ||
+                        (util.hasOwnProperty(result, 'beeValue') && result.beeValue !== oldBeeItem)) {
                         value = processLoop(
                             util.hasOwnProperty(result, 'value') ? result.value : dataItem,
                             util.hasOwnProperty(result, 'beeValue') ? result.beeValue : beeItem,
@@ -372,7 +358,6 @@ function processLoop (data, beeConfig, root) {
 }
 
 function processData (data, beeConfig, key, action) {
-
     if (!util.isPlainObject(action)) {
         return;
     }

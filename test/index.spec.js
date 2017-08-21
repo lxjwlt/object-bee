@@ -5,7 +5,6 @@ const {check} = require('./util');
 const bee = require('../src/index');
 
 describe('object-bee', () => {
-
     it('no enum key', function () {
         let data = {};
 
@@ -58,7 +57,6 @@ describe('object-bee', () => {
     });
 
     describe('event', () => {
-
         it('before event', function (done) {
             function test () {
                 done();
@@ -98,7 +96,5 @@ describe('object-bee', () => {
             bee.$emit('xx', 1, 2, 3);
             bee.$off('xxx', test);
         });
-
     });
-
 });

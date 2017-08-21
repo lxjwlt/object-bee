@@ -4,7 +4,6 @@ const {check} = require('../util');
 const bee = require('../../src/index');
 
 describe('[noop register]', () => {
-
     it('normal', () => {
         let ori = {
             foo: 'bar'
@@ -132,5 +131,4 @@ describe('[noop register]', () => {
 
         check(ori, beeOptions, {});
     });
-
 });

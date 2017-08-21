@@ -5,14 +5,13 @@
 const util = require('./util');
 
 class Event {
-
     constructor () {
         this.events = {};
     }
 
     on (hookName, func) {
         if (!util.isFunction(func)) {
-            throw(new Error(`Expect handler of "${hookName}" listener to be Function`));
+            throw (new Error(`Expect handler of "${hookName}" listener to be Function`));
         }
 
         this.events[hookName] = util.makeArray(this.events[hookName]);
@@ -49,9 +48,7 @@ class Event {
         for (let name of names) {
             util.makeArray(this.events[name]).forEach((func) => func.apply(null, args));
         }
-
     }
-
 }
 
 module.exports = Event;

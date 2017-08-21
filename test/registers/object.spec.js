@@ -4,7 +4,6 @@ const {check} = require('../util');
 const bee = require('../../src/index');
 
 describe('[object register]', () => {
-
     it('object in queue', function () {
         let ori = {
             info: {
@@ -176,5 +175,4 @@ describe('[object register]', () => {
             num: 123
         });
     });
-
 });

@@ -4,7 +4,6 @@ const {check} = require('../util');
 const bee = require('../../src/index');
 
 describe('[match register]', () => {
-
     it('multi type match', function () {
         let ori = {
             foo: 1,
@@ -26,7 +25,6 @@ describe('[match register]', () => {
     });
 
     describe('string match', function () {
-
         it('normal', () => {
             let ori = {
                 name: null,
@@ -141,11 +139,9 @@ describe('[match register]', () => {
                 }
             });
         });
-
     });
 
     describe('regExp match', function () {
-
         it('normal', () => {
             let ori = {
                 abc12345: 1,
@@ -305,9 +301,5 @@ describe('[match register]', () => {
                 bar: 123
             });
         });
-
     });
-
-
-
 });

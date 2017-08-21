@@ -13,7 +13,6 @@ class QueueRegister {
 }
 
 module.exports = function (bee) {
-
     return {
         valueScenes: {
             name: 'queue',
@@ -24,12 +23,10 @@ module.exports = function (bee) {
                 return beeItem instanceof QueueRegister || util.isArray(beeItem);
             },
             apply (beeItem, dataItem, key, currentBee, currentData, data) {
-
                 let queue = beeItem instanceof QueueRegister ? beeItem.queue : beeItem;
 
                 return bee.$multiExecute(queue, dataItem, key, currentBee, currentData, data);
             }
         }
     };
-
 };

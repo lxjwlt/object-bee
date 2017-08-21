@@ -83,17 +83,18 @@ const util = {
 
         let startJoiner = path[0] === '[' ? '' : '.';
 
+        /* eslint-disable no-new-func */
         let func = new Function('data', `
             try {
                 return data${startJoiner}${path}
             } catch (e) {}
         `);
+        /* eslint-enable no-new-func */
 
         return func(data);
     },
 
     makeArray (data) {
-
         if (util.isArray(data)) {
             return data;
         }

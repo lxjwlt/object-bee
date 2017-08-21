@@ -4,7 +4,6 @@ const {check} = require('../util');
 const bee = require('../../src/index');
 
 describe('[queue register]', () => {
-
     it('queue method', () => {
         let ori = {
             name: 1
@@ -12,7 +11,7 @@ describe('[queue register]', () => {
 
         let beeOptions = {
             name: bee.queue(bee.rename('info'), () => {
-                return 123
+                return 123;
             })
         };
 
@@ -28,7 +27,7 @@ describe('[queue register]', () => {
 
         let beeOptions = {
             name: bee.queue([bee.rename('info'), () => {
-                return 123
+                return 123;
             }])
         };
 
@@ -44,7 +43,7 @@ describe('[queue register]', () => {
 
         let beeOptions = {
             name: [bee.rename('info'), () => {
-                return 123
+                return 123;
             }]
         };
 
@@ -86,7 +85,6 @@ describe('[queue register]', () => {
             foo: 'foo!'
         });
     });
-
 
     it('in deep', () => {
         let ori = {
@@ -141,5 +139,4 @@ describe('[queue register]', () => {
             foo: []
         });
     });
-
 });

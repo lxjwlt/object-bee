@@ -3,7 +3,6 @@
  */
 
 class Chain {
-
     constructor (defaultResult) {
         this.results = [];
 
@@ -11,12 +10,10 @@ class Chain {
             this.results.push(defaultResult);
         }
     }
-
 }
 
 Chain.setMethods = function (name, method) {
     Chain.prototype[name] = function () {
-
         this.results.push(method.apply(null, arguments));
 
         return this;

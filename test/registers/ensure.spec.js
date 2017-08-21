@@ -4,9 +4,7 @@ const {check} = require('../util');
 const bee = require('../../src/index');
 
 describe('[register] ensure', () => {
-
     describe('ensure method', function () {
-
         it('normal', () => {
             let ori = {};
 
@@ -150,11 +148,9 @@ describe('[register] ensure', () => {
                 newKey: undefined
             });
         });
-
     });
 
     describe('keep method', function () {
-
         it('normal', function () {
             let ori = {};
 
@@ -252,6 +248,5 @@ describe('[register] ensure', () => {
                 bar: 3
             });
         });
-
     });
 });

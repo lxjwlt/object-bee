@@ -7,19 +7,15 @@
 const util = require('../util');
 
 class EntityRegister {
-
     constructor (value) {
         this.value = value;
     }
-
 }
 
 class EscapeRegister {
-
     constructor (value) {
         this.value = value;
     }
-
 }
 
 module.exports = function (bee) {
@@ -33,8 +29,8 @@ module.exports = function (bee) {
                         return;
                     }
 
-                    currentActualConfig[key] = configItem instanceof EscapeRegister ?
-                        configItem.value : bee.entity(configItem);
+                    currentActualConfig[key] = configItem instanceof EscapeRegister
+                        ? configItem.value : bee.entity(configItem);
                 });
 
                 return bee(data, actualConfig);

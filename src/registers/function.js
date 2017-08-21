@@ -7,7 +7,6 @@
 const util = require('../util');
 
 module.exports = function (bee) {
-
     bee.$installValueScene({
         check (beeItem) {
             return typeof beeItem === 'function';
@@ -31,8 +30,8 @@ module.exports = function (bee) {
                     let outerArgs = [...args];
                     let method = register.method;
 
-                    outerArgs[0] = util.isFunction(method) ?
-                        method.apply(null, arguments) : method;
+                    outerArgs[0] = util.isFunction(method)
+                        ? method.apply(null, arguments) : method;
 
                     Object.assign(result, register.apply.apply(register.apply, outerArgs));
                 };

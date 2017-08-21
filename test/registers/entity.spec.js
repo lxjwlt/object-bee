@@ -4,9 +4,7 @@ const {check} = require('../util');
 const bee = require('../../src/index');
 
 describe('[entity register]', () => {
-
     describe('entity method', function () {
-
         it('normal', () => {
             let ori = {
                 name: null,
@@ -146,13 +144,10 @@ describe('[entity register]', () => {
             check(ori, beeOptions, {
                 foo: testFunc
             });
-
         });
-
     });
 
     describe('entity all method', function () {
-
         it('entity all values', function () {
             let ori = {
                 a: 1,
@@ -167,14 +162,14 @@ describe('[entity register]', () => {
             };
 
             let beeOptions = {
-                a: [1,2,3],
+                a: [1, 2, 3],
                 info: {
                     c: func
                 }
             };
 
             check(bee.entityAll, ori, beeOptions, {
-                a: [1,2,3],
+                a: [1, 2, 3],
                 info: {
                     b: 2,
                     c: func
@@ -273,7 +268,5 @@ describe('[entity register]', () => {
                 letter: 1
             });
         });
-
     });
-
 });

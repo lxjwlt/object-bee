@@ -2,11 +2,11 @@
  * @file utility for test
  */
 
+'use strict';
+
 const assert = require('assert');
 const cloneDeep = require('clone');
 const bee = require('../src/index');
-
-'use strict';
 
 let util = {
     check (methods, data, format, expect) {

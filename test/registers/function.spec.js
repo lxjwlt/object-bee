@@ -5,9 +5,7 @@ const bee = require('../../src/index');
 const assert = require('assert');
 
 describe('[function register]', () => {
-
     describe('normal function', function () {
-
         it('return value', () => {
             let ori = {
                 foo: 1
@@ -23,7 +21,6 @@ describe('[function register]', () => {
                 foo: 2
             });
         });
-
 
         it('check arguments', () => {
             let ori = {
@@ -92,11 +89,9 @@ describe('[function register]', () => {
                 }
             });
         });
-
     });
 
     describe('computed value', function () {
-
         it('computed value', () => {
             let ori = {
                 a: 1,
@@ -329,11 +324,9 @@ describe('[function register]', () => {
                 }
             });
         });
-
     });
 
     describe('inner method', function () {
-
         it('rename', () => {
             let ori = {
                 foo: 'bar'
@@ -417,11 +410,9 @@ describe('[function register]', () => {
                 name: 3
             });
         });
-
     });
 
     describe('root method', function () {
-
         it('path of data', function () {
             let ori = {
                 info: {
@@ -485,7 +476,7 @@ describe('[function register]', () => {
         it('path of array', function () {
             let ori = {
                 info: {
-                    list: [1,2,3]
+                    list: [1, 2, 3]
                 },
                 name: ''
             };
@@ -496,7 +487,7 @@ describe('[function register]', () => {
 
             check(ori, beeOptions, {
                 info: {
-                    list: [1,2,3]
+                    list: [1, 2, 3]
                 },
                 name: 3
             });
@@ -545,11 +536,9 @@ describe('[function register]', () => {
                 }
             });
         });
-
     });
 
     describe('data method', function () {
-
         it('path of data', function () {
             let ori = {
                 info: {
@@ -595,7 +584,7 @@ describe('[function register]', () => {
         it('path of array', function () {
             let ori = {
                 info: {
-                    list: [1,2,3],
+                    list: [1, 2, 3],
                     number: 0
                 }
             };
@@ -608,7 +597,7 @@ describe('[function register]', () => {
 
             check(ori, beeOptions, {
                 info: {
-                    list: [1,2,3],
+                    list: [1, 2, 3],
                     number: 2
                 }
             });
@@ -660,7 +649,5 @@ describe('[function register]', () => {
                 }
             });
         });
-
     });
-
 });

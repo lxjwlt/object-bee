@@ -4,7 +4,6 @@ const {check} = require('../util');
 const bee = require('../../src/index');
 
 describe('[remove register]', () => {
-
     it('normal', () => {
         let ori = {
             name: null,
@@ -90,5 +89,4 @@ describe('[remove register]', () => {
 
         check(ori, beeOptions, {});
     });
-
 });

@@ -4,7 +4,6 @@ const {check} = require('../util');
 const bee = require('../../src/index');
 
 describe('[rename register]', () => {
-
     it('normal', () => {
         let ori = {
             name: null,
@@ -112,5 +111,4 @@ describe('[rename register]', () => {
 
         check(ori, beeOptions, {});
     });
-
 });
