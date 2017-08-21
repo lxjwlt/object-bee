@@ -42,7 +42,7 @@ module.exports = function (bee) {
              * we can return "currentData" from "beeItem" function, and
              * prevent extra method mess up our final data.
              */
-            let mediator = Object.create(proto, Object.getOwnPropertyDescriptors(currentData));
+            let mediator = Object.create(proto, util.getOwnPropertyDescriptors(currentData));
 
             let value = beeItem.call(mediator, dataItem, key);
 

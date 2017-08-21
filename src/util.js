@@ -112,6 +112,18 @@ const util = {
 
     hasOwnProperty (obj, key) {
         return Object.prototype.hasOwnProperty.call(obj, key);
+    },
+
+    getOwnPropertyDescriptors (obj) {
+        return Object.getOwnPropertyNames(obj).reduce((map, key) => {
+            let descriptor = Object.getOwnPropertyDescriptor(obj, key);
+
+            if (typeof descriptor !== 'undefined') {
+                map[key] = descriptor;
+            }
+
+            return map;
+        }, {});
     }
 
 };
