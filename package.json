@@ -1,7 +1,7 @@
 {
   "name": "object-bee",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lightweight, flexible library for manipulating plain-object data in JavaScript.",
   "main": "src/index.js",
   "scripts": {
     "test": "npm run lint && mocha \"test/**/*.spec.js\"",
@@ -11,9 +11,16 @@
     "codecov": "codecov",
     "debug": "node --inspect-brk node_modules/mocha/bin/_mocha \"test/**/*.spec.js\" --no-timeouts"
   },
-  "keywords": [],
+  "keywords": [
+      "object",
+      "data",
+      "manipulate"
+  ],
+  "files": [
+    "src"
+  ],
   "author": "lxjwlt",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "eslint": "^4.5.0",
     "eslint-config-standard": "^10.2.1",
@@ -27,5 +34,12 @@
     "clone": "^2.1.1",
     "lodash.isplainobject": "^4.0.6",
     "multimatch": "^2.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/lxjwlt/object-bee/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lxjwlt/object-bee.git"
   }
 }
