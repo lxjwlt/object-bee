@@ -4,7 +4,8 @@
   "description": "Lightweight, flexible library for manipulating plain-object data in JavaScript.",
   "main": "src/index.js",
   "scripts": {
-    "test": "npm run lint && mocha \"test/**/*.spec.js\"",
+    "unit": "mocha \"test/**/*.spec.js\"",
+    "test": "npm run lint && npm run unit",
     "lint": "eslint '**/*.js'",
     "fix": "npm run lint -- --fix",
     "coverage": "istanbul cover --root src ./node_modules/mocha/bin/_mocha -- \"test/**/*.spec.js\"",
