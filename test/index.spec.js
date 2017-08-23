@@ -19,9 +19,10 @@ describe('object-bee', () => {
             name: bee.rename('foo')
         };
 
-        check(data, beeOptions, {
-            foo: 'foo'
-        });
+        bee(data, beeOptions);
+
+        assert.strictEqual(data.foo, 'foo');
+        assert.strictEqual(data.name, undefined);
     });
 
     it('no enum key', function () {
@@ -37,9 +38,10 @@ describe('object-bee', () => {
             name: bee.rename('foo')
         };
 
-        check(data, beeOptions, {
-            foo: 'foo'
-        });
+        bee(data, beeOptions);
+
+        assert.strictEqual(data.foo, 'foo');
+        assert.strictEqual(data.name, undefined);
     });
 
     it('chaining call', function () {
