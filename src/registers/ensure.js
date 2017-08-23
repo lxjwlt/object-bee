@@ -14,10 +14,9 @@ module.exports = {
         check (beeItem) {
             return beeItem === ENSURE_SYMBOL;
         },
-        apply (beeItem, dataItem, key) {
+        apply () {
             return {
-                create: true,
-                key: key
+                create: true
             };
         },
         method () {

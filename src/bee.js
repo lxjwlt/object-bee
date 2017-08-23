@@ -374,17 +374,28 @@ function processData (data, beeConfig, key, action) {
     let currentKey = key;
 
     if (util.hasOwnProperty(action, 'key')) {
-        data[action.key] = data[key];
+
+        let descriptor = Object.getOwnPropertyDescriptor(data, key) || {
+                configurable: true,
+                enumerable: true,
+                writable: true,
+                value: data[key]
+            };
 
         /**
-         * it mean to be "rename" when the action.key is
+         * It mean to be "rename" when the action.key is
          * different from original key.
          */
         if (action.key !== key) {
             delete data[key];
         }
 
+        Object.defineProperty(data, action.key, descriptor);
+
         currentKey = action.key;
+
+    } else if (action.create) {
+        data[key] = data[key];
     }
 
     if (util.hasOwnProperty(action, 'value')) {
