@@ -107,11 +107,38 @@ bee(data, {
 data.detail.sum === 3; // true
 ```
 
-## action
+## Actions
 
-- create
-- ensure
-- entity
-- glob
+object-bee provide several shorthand to simplify the usage of function. There are 3 types of actions, use in value place, key place, or normal place.
+
+### In value place
+
+- `#remove`: remove current key from data, unless applying `#ensure` at the same time.
+
+    ```javascript
+    bee(data, {
+        unnecessaryKey: bee.remove()
+    });
+    ```
+
+- `#ensure`: ensure the key exist no matter whether it is undefined or being removed
+
+    ```javascript
+    bee({}, {
+        newKey: bee.ensure()
+    }); // return { newKey: undefined }
+
+    bee({}, {
+        newKey: bee.ensure().remove() // #ensure has higher priority
+    }); // return { newKey: undefined }
+    ```
+
+- `#rename`: rename the key
+
+    ```javascript
+    bee(data, {
+        bar: bee.rename('foo')
+    });
+    ```
 
 (To be continued)
