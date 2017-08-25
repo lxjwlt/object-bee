@@ -40,7 +40,7 @@ function fixData (data) {
 }
 ```
 
-The code becomes more meanful and readable.
+The code becomes more meaningful and readable.
 
 ## Installation
 
@@ -60,10 +60,15 @@ Context provide those features as below：
 - `this.$root`: a reference to root data
 
     ```javascript
-    bee(data, {
+    let data = {
         name: 'object-bee',
         detail: {
-            bar: 'woo',
+            bar: 'woo'
+        }
+    };
+
+    bee(data, {
+        detail: {
             foo () {
                 this.bar === 'woo'; // true
                 this.$root.name === 'object-bee'; // true
@@ -87,7 +92,7 @@ Context provide those features as below：
     });
     ```
 
-The return value of handler would replace the origin value of data.
+The return value of handler would replace the original value of data.
 
 ```javascript
 const bee = require('object-bee');
@@ -113,7 +118,7 @@ object-bee provide several shorthand to simplify the usage of function. There ar
 
 ### In value place
 
-- `#remove`: remove current key from data, unless applying `#ensure` at the same time.
+- `#remove`: remove current key from data.
 
     ```javascript
     bee(data, {
@@ -121,16 +126,18 @@ object-bee provide several shorthand to simplify the usage of function. There ar
     });
     ```
 
-- `#ensure`: ensure the key exist no matter whether it is undefined or being removed
+- `#ensure`: ensure the key exist no matter whether it is undefined or being removed.
 
     ```javascript
     bee({}, {
         newKey: bee.ensure()
-    }); // return { newKey: undefined }
+    });
+    // => { newKey: undefined }
 
     bee({}, {
         newKey: bee.ensure().remove() // #ensure has higher priority
-    }); // return { newKey: undefined }
+    });
+    // => { newKey: undefined }
     ```
 
 - `#rename`: rename the key
@@ -141,4 +148,99 @@ object-bee provide several shorthand to simplify the usage of function. There ar
     });
     ```
 
-(To be continued)
+- `#noop`: no-operation function used for placeholder.
+
+### In key place
+
+- `#keep`: same as `#ensure`, except it is used in computed key
+
+    ```javascript
+    bee({}, {
+        [bee.keep('newKey')] () {
+            return 'bar';
+        }
+    });
+    // => { newKey: 'bar' }
+
+    bee({}, {
+        [bee.keep('newKey')]: bee.remove() // #keep has higher priority
+    });
+    // => { newKey: undefined }
+    ```
+
+- `#match`: match key by RegExp and String. It would apply **default** action to corresponding data of matching key.
+
+    ```javascript
+    bee({
+        num1: 1,
+        num2: 2
+    }, {
+        [bee.match(/^num\d$/)] () {
+            return 0;
+        }
+    });
+    // => { num1: 0, num2: 0 }
+    ```
+
+    > **default** action provided by `#match` has lowest priority than action of certain key.
+
+- `#glob`: like `#match` method, except it matches keys by glob, more detail in [multimatch](https://github.com/sindresorhus/multimatch)
+
+    ```javascript
+    bee({
+        letterA: '',
+        letterB: ''
+    }, {
+        [bee.glob('letter*')] () {
+            return 'Z';
+        }
+    });
+    // => { letterA: 'Z', letterB: 'Z' }
+    ```
+
+    > **default** action provided by `#glob` has lowest priority than action of certain key.
+
+## Combination
+
+Combination of actions can be chaining call or in queue:
+
+```javascript
+// in queue
+bee(data, {
+    foo: [bee.remove(), bee.ensure(), bee.remove()]
+});
+
+// chaining call
+bee(data, {
+    foo: bee.remove().ensure().remove()
+});
+```
+
+Combination of actions and function can be in queue, or apply action inner function:
+
+```javascript
+// in queue
+bee({}, {
+    foo: [bee.ensure(), function () {
+        return 'bar';
+    }]
+});
+
+// in function
+bee({}, {
+    foo () {
+        this.$ensure();
+        return 'bar';
+    }
+});
+```
+
+Combination of actions and config:
+
+```javascript
+bee(data, {
+    detail: [bee.rename(), {
+        foo: bee.ensure()
+    }]
+});
+```
