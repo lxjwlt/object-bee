@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="/icon/logo.png" width="270" />
+    <img src="/icon/logo.png" width="200" />
 </p>
 
 object-bee.js is a lightweight, flexible library for manipulating plain-object data in JavaScript.
