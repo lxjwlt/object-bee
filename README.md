@@ -2,6 +2,18 @@
     <img src="/icon/logo.png" width="270" />
 </p>
 
+<p align="center">
+    <a href="https://www.npmjs.com/package/object-bee">
+        <img src="https://img.shields.io/npm/v/object-bee.svg" />
+    </a>
+    <a href="https://travis-ci.org/lxjwlt/object-bee">
+        <img src="https://img.shields.io/travis/lxjwlt/object-bee/dev.svg" />
+    </a>
+    <a href="https://codecov.io/gh/lxjwlt/object-bee/branch/dev">
+        <img src="https://img.shields.io/codecov/c/github/lxjwlt/object-bee/dev.svg" />
+    </a>
+</p>
+
 object-bee.js is a lightweight, flexible library for manipulating plain-object data in JavaScript.
 
 ## why?
