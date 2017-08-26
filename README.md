@@ -57,7 +57,7 @@ The code becomes more meaningful and readable.
 ## Installation
 
 ```
-npm install object-bee -D
+npm install object-bee -S
 ```
 
 ## Usage
@@ -90,9 +90,9 @@ Context provide those features as below：
     })
     ```
 
-- `this.$remove()`: support to remove data, see [action.remove]() below.
-- `this.$rename(newName)`: support to rename, see [action.rename]() below.
-- `this.$ensure()`: ensure current key to exist, see [action.ensure]() below.
+- `this.$remove()`: support to remove data, see [action.remove](#actions) below.
+- `this.$rename(newName)`: support to rename, see [action.rename](#actions) below.
+- `this.$ensure()`: ensure current key to exist, see [action.ensure](#actions) below.
 
     ```javascript
     bee(data, {
@@ -211,6 +211,15 @@ object-bee provide several shorthand to simplify the usage of function. There ar
     ```
 
     > **default** action provided by `#glob` has lowest priority than action of certain key.
+
+### normal action
+
+- `#create`: by this method, object-bee would clone a new data, so original data would not be modified.
+
+    ```javascript
+    let newData = bee(data, {});
+    newData !== data; // true
+    ```
 
 ## Combination
 
