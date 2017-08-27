@@ -412,6 +412,109 @@ describe('[function register]', () => {
         });
     });
 
+    /**
+     * todo unify error
+     * chrome 60+ wouldn't report error，even if object can't not be set some key
+     */
+    describe('data can\'t be modified in function', function () {
+        it('value', function () {
+            let ori = {
+                info: {
+                    name: 'foo',
+                    foo: 'bar'
+                }
+            };
+
+            let beeOptions = {
+                info (value) {
+                    value.name = 'bar';
+                    return value;
+                }
+            };
+
+            assert.throws(function () {
+                check(ori, beeOptions, {
+                    info: {
+                        name: 'foo',
+                        foo: 'bar'
+                    }
+                });
+            }, function (err) {
+                assert.strictEqual(
+                    err.toString(),
+                    `TypeError: Cannot assign to read only property 'name' of object '#<Object>'`
+                );
+                return true;
+            });
+        });
+
+        it('current data', function () {
+            let ori = {
+                info: {
+                    name: 'foo',
+                    foo: 'bar'
+                }
+            };
+
+            let beeOptions = {
+                info: {
+                    foo (value) {
+                        this.name = 'bar';
+                        return value;
+                    }
+                }
+            };
+
+            assert.throws(function () {
+                check(ori, beeOptions, {
+                    info: {
+                        name: 'foo',
+                        foo: 'bar'
+                    }
+                });
+            }, function (err) {
+                assert.strictEqual(
+                    err.toString(),
+                    'TypeError: Cannot set property name of #<Object> which has only a getter'
+                );
+                return true;
+            });
+        });
+
+        it('root data', function () {
+            let data = {
+                bar: 'foo',
+                info: {
+                    foo: 'foo'
+                }
+            };
+
+            let beeOptions = {
+                info: {
+                    foo (value) {
+                        this.$root.bar = 'bar';
+                        return value;
+                    }
+                }
+            };
+
+            assert.throws(function () {
+                check(data, beeOptions, {
+                    name: 'bar',
+                    info: {
+                        foo: 'foo'
+                    }
+                });
+            }, function (err) {
+                assert.strictEqual(
+                    err.toString(),
+                    'TypeError: Cannot set property bar of #<Object> which has only a getter'
+                );
+                return true;
+            });
+        });
+    });
+
     describe('root method', function () {
         it('path of data', function () {
             let ori = {

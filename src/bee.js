@@ -258,6 +258,15 @@ function processLoop (data, beeConfig, root) {
 
     root = root || triggerData;
 
+    util.loop(data, triggerData, (dataItem, triggerDataItem, key, currentData, currentTriggerData) => {
+        Object.defineProperty(currentTriggerData, key, {
+            configurable: true,
+            enumerable: true,
+            writable: false,
+            value: triggerDataItem
+        });
+    });
+
     util.nestLoop(data, triggerData, beeConfig, (currentData, currentTriggerData, currentBee) => {
         let allMatchKeys = getAllMatchKeys(currentBee);
         let beforeResult = {};
