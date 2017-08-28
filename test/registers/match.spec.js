@@ -2,6 +2,7 @@
 
 const {check} = require('../util');
 const bee = require('../../src/index');
+const assert = require('assert');
 
 describe('[match register]', () => {
     it('multi type match', function () {
@@ -21,6 +22,23 @@ describe('[match register]', () => {
             foo: '1!?',
             bar: '2!?',
             1: '3!?'
+        });
+    });
+
+    it('match and function', function () {
+        let ori = {
+            foo: 1
+        };
+
+        let beeOptions = {
+            [bee.match('foo')]: (value, key) => {
+                assert.strictEqual(value, 1);
+                assert.strictEqual(key, 'foo');
+            }
+        };
+
+        check(ori, beeOptions, {
+            foo: 1
         });
     });
 
