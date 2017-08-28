@@ -14,9 +14,7 @@ module.exports = function (bee) {
         apply (beeItem, dataItem, key, currentBee, currentData, data) {
             let result = {};
             let args = [...arguments];
-            let proto = {
-                $root: data
-            };
+            let proto = {};
 
             /**
              * init inner method
@@ -37,6 +35,10 @@ module.exports = function (bee) {
                 };
             });
 
+            proto.$root = data;
+
+            const $UNDEFINED = proto.$UNDEFINED = util.beeSymbol('function return undefined');
+
             /**
              * bind extra method to mediator instead of binding to "currentData",
              * we can return "currentData" from "beeItem" function, and
@@ -46,27 +48,33 @@ module.exports = function (bee) {
 
             let value = beeItem.call(mediator, dataItem, key);
 
-            return Object.assign(result, {
+            if (!util.isUndefined(value)) {
+                Object.assign(result, {
 
-                /**
-                 * use real-time data, cause some other data
-                 * are maybe being compute right now.
-                 */
-                value: util.copy(value)
+                    /**
+                     * use real-time data, cause some other data
+                     * are maybe being compute right now.
+                     */
+                    value: value === $UNDEFINED ? util.undefined : util.copy(value)
 
-            });
+                });
+            }
+
+            return result;
         }
     });
 
     bee.$installMethods({
         root (path) {
             return function () {
-                return util.path(this.$root, path);
+                let value = util.path(this.$root, path);
+                return util.isUndefined(value) ? this.$UNDEFINED : value;
             };
         },
         data (path) {
             return function () {
-                return util.path(this, path);
+                let value = util.path(this, path);
+                return util.isUndefined(value) ? this.$UNDEFINED : value;
             };
         }
     });

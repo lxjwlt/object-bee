@@ -89,6 +89,69 @@ describe('[function register]', () => {
                 }
             });
         });
+
+        it('no modify', function () {
+            let ori = {
+                info: 'foo'
+            };
+
+            let beeOptions = {
+                info () {}
+            };
+
+            check(ori, beeOptions, {
+                info: 'foo'
+            });
+        });
+
+        it('only action', function () {
+            let ori = {
+                info: 'foo'
+            };
+
+            let beeOptions = {
+                info () {
+                    this.$rename('foo');
+                }
+            };
+
+            check(ori, beeOptions, {
+                foo: 'foo'
+            });
+        });
+
+        it('return undefined', function () {
+            let ori = {
+                info: 'foo'
+            };
+
+            let beeOptions = {
+                info () {
+                    return this.$UNDEFINED;
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: undefined
+            });
+        });
+
+        it('return undefined and action', function () {
+            let ori = {
+                info: 'foo'
+            };
+
+            let beeOptions = {
+                info () {
+                    this.$rename('foo');
+                    return this.$UNDEFINED;
+                }
+            };
+
+            check(ori, beeOptions, {
+                foo: undefined
+            });
+        });
     });
 
     describe('computed value', function () {

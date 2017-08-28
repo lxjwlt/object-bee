@@ -64,7 +64,25 @@ npm install object-bee -S
 
 Using function to manipulate data can contain more complex logic.
 
-As object-bee iterating over all of key / value pairs, Handler function accepts each `value` and `key` as arguments, like `function (value, key) {}`.
+As object-bee iterating over all of key / value pairs, Handler function accepts each `value` and `key` as arguments, like `function (value, key) {}`, and the return value would replace the original value of data.
+
+```javascript
+const bee = require('object-bee');
+
+data = {
+    a: 1,
+    b: 2,
+    sum: -1
+};
+
+bee(data, {
+    sum () {
+        return this.a + this.b;
+    }
+});
+
+data.detail.sum === 3; // true
+```
 
 Context provide those features as below：
 
@@ -90,6 +108,27 @@ Context provide those features as below：
     })
     ```
 
+- `this.$UNDEFINED`: `undefined` returned by function will be ignore, If you want replace the original value with `undefined`, you should return `this.$UNDEFINED` instead, for examples:
+
+    ```javascript
+    let data = {
+        foo: 1,
+        bar: 2
+    };
+
+    bee(data, {
+
+        // no modify
+        foo () {},
+
+        // return 'this.$UNDEFINED' explicitly to assign undefined to data.bar
+        bar () {
+            return this.$UNDEFINED;
+        }
+    })
+    // => { foo: 1, bar: undefined }
+    ```
+
 - `this.$remove()`: support to remove data, see [action.remove](#actions) below.
 - `this.$rename(newName)`: support to rename, see [action.rename](#actions) below.
 - `this.$ensure()`: ensure current key to exist, see [action.ensure](#actions) below.
@@ -103,26 +142,6 @@ Context provide those features as below：
         }
     });
     ```
-
-The return value of handler would replace the original value of data.
-
-```javascript
-const bee = require('object-bee');
-
-data = {
-    a: 1,
-    b: 2,
-    sum: -1
-};
-
-bee(data, {
-    sum () {
-        return this.a + this.b;
-    }
-});
-
-data.detail.sum === 3; // true
-```
 
 ## Actions
 
