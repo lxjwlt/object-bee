@@ -179,6 +179,35 @@ object-bee provide several shorthand to simplify the usage of function. There ar
     });
     ```
 
+- `#root`: get value by path string from **root** data.
+
+- `#data`: get value by path string from **current** data:
+
+    ```javascript
+    let data = {
+        info: {
+            detail: {
+                name: 'object-bee',
+            },
+            foo: '',
+            bar: ''
+        }
+    };
+
+    bee(data, {
+        foo: bee.root('info.detail.name'),
+        bar: bee.data('detail.name')
+    });
+    ```
+
+    Valid paths for `#data` and `#root` can be:
+
+    ```
+    path
+    path.path.path
+    list[2].path.path[0]
+    ```
+
 - `#noop`: no-operation function used for placeholder.
 
 ### In key place
