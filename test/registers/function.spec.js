@@ -387,6 +387,25 @@ describe('[function register]', () => {
                 }
             });
         });
+
+        it('no data', () => {
+            let ori = {};
+
+            let beeOptions = {
+                info () {
+                    return this.foo.bar;
+                }
+            };
+
+            assert.throws(function () {
+
+                check(ori, beeOptions, {});
+
+            }, function (err) {
+                assert.strictEqual(err.toString(), `TypeError: Cannot read property 'bar' of undefined`);
+                return true;
+            });
+        });
     });
 
     describe('inner method', function () {
