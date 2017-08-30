@@ -398,9 +398,7 @@ describe('[function register]', () => {
             };
 
             assert.throws(function () {
-
                 check(ori, beeOptions, {});
-
             }, function (err) {
                 assert.strictEqual(err.toString(), `TypeError: Cannot read property 'bar' of undefined`);
                 return true;

@@ -12,6 +12,7 @@ bee.$install(require('./registers/entity'));
 bee.$install(require('./registers/function'));
 bee.$install(require('./registers/glob'));
 bee.$install(require('./registers/match'));
+bee.$install(require('./registers/mirror'));
 bee.$install(require('./registers/noop'));
 bee.$install(require('./registers/object'));
 bee.$install(require('./registers/queue'));

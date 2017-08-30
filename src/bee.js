@@ -32,7 +32,7 @@ function bee (data, beeConfig) {
 
 bee.$valueSceneRegisters = valueSceneRegisters;
 
-bee.$execute = function (beeItem, dataItem, key, currentBee, currentData, data) {
+bee.$execute = function (beeItem, dataItem, key, currentBee, currentData, data, beeConfig) {
     if (isCustomKey(key)) {
         return {};
     }
@@ -43,13 +43,13 @@ bee.$execute = function (beeItem, dataItem, key, currentBee, currentData, data) 
         })[0];
 
         return register
-            ? register.apply(beeItem, dataItem, key, currentBee, currentData, data) : {};
+            ? register.apply(beeItem, dataItem, key, currentBee, currentData, data, beeConfig) : {};
     }
 
-    return bee.$multiExecute(beeItem.results, dataItem, key, currentBee, currentData, data);
+    return bee.$multiExecute(beeItem.results, dataItem, key, currentBee, currentData, data, beeConfig);
 };
 
-bee.$multiExecute = function (beeItems, dataItem, key, currentBee, currentData, data, defaultAction) {
+bee.$multiExecute = function (beeItems, dataItem, key, currentBee, currentData, data, beeConfig, defaultAction) {
     return beeItems.reduce((action, beeItem) => {
         key = util.hasOwnProperty(action, 'key') ? action.key : key;
 
@@ -59,7 +59,7 @@ bee.$multiExecute = function (beeItems, dataItem, key, currentBee, currentData, 
 
         return Object.assign(
             action,
-            bee.$execute(beeItem, dataItem, key, currentBee, currentData, data)
+            bee.$execute(beeItem, dataItem, key, currentBee, currentData, data, beeConfig)
         );
     }, defaultAction || {});
 };
@@ -330,7 +330,7 @@ function processLoop (data, beeConfig, root) {
 
                         result = bee.$multiExecute(
                             allBee, triggerDataItem, key, currentBee,
-                            currentTriggerData, root, result
+                            currentTriggerData, root, beeConfig, result
                         );
 
                         processResult = processData(currentData, currentBee, key, result);

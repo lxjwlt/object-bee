@@ -76,6 +76,12 @@ const util = {
         util.nestLoop.apply(null, args);
     },
 
+    loopObject (data, func) {
+        util.loop(data, data, function ([value], value2, key, [currentData]) {
+            func(value, key, currentData, data);
+        });
+    },
+
     path (data, path) {
         if (!path || !(path = path.trim())) {
             return data;
