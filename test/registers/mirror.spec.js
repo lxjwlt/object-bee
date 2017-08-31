@@ -272,6 +272,49 @@ describe('[mirror register]', () => {
         });
     });
 
+    it('path mirror with rename', () => {
+        let ori = {
+            count: 1,
+            data: {
+                name: 'foo',
+                children: {
+                    name: 'bar',
+                    children: {
+                        name: 'test',
+                        children: {
+                            name: 'end'
+                        }
+                    }
+                }
+            }
+        };
+
+        let beeOptions = {
+            data: {
+                name () {
+                    return 'foo';
+                },
+                children: [bee.mirror('data'), bee.rename('nodes')]
+            }
+        };
+
+        check(ori, beeOptions, {
+            count: 1,
+            data: {
+                name: 'foo',
+                nodes: {
+                    name: 'foo',
+                    nodes: {
+                        name: 'foo',
+                        nodes: {
+                            name: 'foo'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
     it('rename', () => {
         let ori = {
             name: 'foo',
@@ -300,6 +343,58 @@ describe('[mirror register]', () => {
                     children: {
                         foo: 'end'
                     }
+                }
+            }
+        });
+    });
+
+    it('mirror with remove', () => {
+        let ori = {
+            name: 'foo',
+            children: {
+                name: 'bar',
+                children: {
+                    name: 'test',
+                    children: {
+                        name: 'end'
+                    }
+                }
+            }
+        };
+
+        let beeOptions = {
+            name: bee.rename('foo'),
+            children: [bee.mirror(), bee.remove()]
+        };
+
+        check(ori, beeOptions, {
+            foo: 'foo'
+        });
+    });
+
+    it('remove', () => {
+        let ori = {
+            name: 'foo',
+            children: {
+                name: 'bar',
+                children: {
+                    name: 'test',
+                    children: {
+                        name: 'end'
+                    }
+                }
+            }
+        };
+
+        let beeOptions = {
+            name: bee.remove(),
+            children: bee.mirror()
+        };
+
+        check(ori, beeOptions, {
+            children: {
+                children: {
+                    children: {}
                 }
             }
         });
