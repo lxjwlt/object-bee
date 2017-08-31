@@ -490,6 +490,43 @@ describe('[function register]', () => {
                 name: 3
             });
         });
+
+        it('mirror', () => {
+            let ori = {
+                name: 'foo',
+                children: {
+                    name: 'bar',
+                    children: {
+                        name: 'test',
+                        children: {
+                            name: 'end'
+                        }
+                    }
+                }
+            };
+
+            let beeOptions = {
+                name () {
+                    return 'foo';
+                },
+                children () {
+                    this.$mirror();
+                }
+            };
+
+            check(ori, beeOptions, {
+                name: 'foo',
+                children: {
+                    name: 'foo',
+                    children: {
+                        name: 'foo',
+                        children: {
+                            name: 'foo'
+                        }
+                    }
+                }
+            });
+        });
     });
 
     /**

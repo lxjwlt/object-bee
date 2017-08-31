@@ -132,6 +132,7 @@ Context provide those features as below：
 - `this.$remove()`: support to remove data, see [action.remove](#actions) below.
 - `this.$rename(newName)`: support to rename, see [action.rename](#actions) below.
 - `this.$ensure()`: ensure current key to exist, see [action.ensure](#actions) below.
+- `this.$mirror([path])`: reuse config, see [action.mirror](#actions) below.
 
     ```javascript
     bee(data, {
@@ -139,6 +140,7 @@ Context provide those features as below：
             this.$rename('bar');
             this.$remove();
             this.$ensure();
+            this.$mirror();
         }
     });
     ```
@@ -207,6 +209,29 @@ object-bee provide several shorthand to simplify the usage of function. There ar
     path.path.path
     list[2].path.path[0]
     ```
+
+- `#mirror([path])`: reuse config for recursive data, such as tree data, of which nodes have similar data structure. At this case, we can reuse config:
+
+    ```javascript
+    let treeData = {
+        name: 'root',
+        child: {
+            name: 'node',
+            child: {
+                name: 'leaf'
+            }
+        }
+    };
+
+    bee(treeData, {
+        name () {
+            return 'foo';
+        }
+        child: bee.mirror()
+    });
+    ```
+
+    `#mirror` can accept a `path` to specify target config.
 
 - `#noop`: no-operation function used for placeholder.
 
