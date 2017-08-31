@@ -22,10 +22,10 @@ module.exports = function (bee) {
             check (beeItem) {
                 return beeItem instanceof QueueRegister || util.isArray(beeItem);
             },
-            apply (beeItem, dataItem, key, currentBee, currentData, data) {
+            apply (beeItem, dataItem, key, currentBee, currentData, data, beeConfig) {
                 let queue = beeItem instanceof QueueRegister ? beeItem.queue : beeItem;
 
-                return bee.$multiExecute(queue, dataItem, key, currentBee, currentData, data);
+                return bee.$multiExecute(queue, dataItem, key, currentBee, currentData, data, beeConfig);
             }
         }
     };

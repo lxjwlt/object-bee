@@ -253,10 +253,12 @@ function setMethod (name, method) {
     bee[name] = method;
 }
 
-function processLoop (data, beeConfig, root) {
+function processLoop (data, beeConfig, root, rootConfig) {
     let triggerData = util.copy(data);
 
     root = root || triggerData;
+
+    rootConfig = rootConfig || beeConfig;
 
     util.loop(data, triggerData, (dataItem, triggerDataItem, key, currentData, currentTriggerData) => {
         Object.defineProperty(currentTriggerData, key, {
@@ -330,7 +332,7 @@ function processLoop (data, beeConfig, root) {
 
                         result = bee.$multiExecute(
                             allBee, triggerDataItem, key, currentBee,
-                            currentTriggerData, root, beeConfig, result
+                            currentTriggerData, root, rootConfig, result
                         );
 
                         processResult = processData(currentData, currentBee, key, result);
@@ -347,7 +349,7 @@ function processLoop (data, beeConfig, root) {
                         value = processLoop(
                             util.hasOwnProperty(result, 'value') ? result.value : dataItem,
                             util.hasOwnProperty(result, 'beeValue') ? result.beeValue : beeItem,
-                            root
+                            root, rootConfig
                         );
                     }
 
