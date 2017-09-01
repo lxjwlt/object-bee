@@ -549,6 +549,33 @@ describe('[function register]', () => {
                 }
             });
         });
+
+        it('multi config', () => {
+            let ori = {
+                info: {
+                    name: 'foo'
+                }
+            };
+
+            let beeOptions = {
+                info () {
+                    this.$config({
+                        name: bee.rename('foo')
+                    });
+
+                    this.$config({
+                        newKey: bee.ensure()
+                    });
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    foo: 'foo',
+                    newKey: undefined
+                }
+            });
+        });
     });
 
     /**

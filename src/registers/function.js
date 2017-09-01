@@ -12,8 +12,7 @@ module.exports = function (bee) {
             return typeof beeItem === 'function';
         },
         apply (beeItem, dataItem, key, currentBee, currentData, data) {
-            let result = {};
-            let args = [...arguments];
+            let methodResults = [];
             let proto = {};
 
             /**
@@ -25,13 +24,12 @@ module.exports = function (bee) {
                 }
 
                 proto['$' + register.name] = function () {
-                    let outerArgs = [...args];
                     let method = register.method;
 
-                    outerArgs[0] = util.isFunction(method)
+                    let methodResult = util.isFunction(method)
                         ? method.apply(null, arguments) : method;
 
-                    Object.assign(result, register.apply.apply(register.apply, outerArgs));
+                    methodResults.push(methodResult);
                 };
             });
 
@@ -47,6 +45,8 @@ module.exports = function (bee) {
             let mediator = Object.create(proto, util.getOwnPropertyDescriptors(currentData));
 
             let value = beeItem.call(mediator, dataItem, key);
+
+            let result = bee.$multiExecute(methodResults, ...[...arguments].slice(1));
 
             if (!util.isUndefined(value)) {
                 Object.assign(result, {

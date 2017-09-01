@@ -400,34 +400,41 @@ describe('[mirror register]', () => {
         });
     });
 
-    it.skip('override config', () => {
+    it('override config', () => {
         let ori = {
+            name: 'foo',
             count: 1,
-            nodes: {
+            child: {
+                name: 'foo',
                 count: 2,
-                nodes: {
+                child: {
+                    name: 'foo',
                     count: 3
                 }
             }
         };
 
         let beeOptions = {
-            info: {
-                name () {
-                    return 'foo';
-                }
+            count () {
+                return 4;
             },
-            child: bee.mirror('info')
+            name: bee.rename('foo'),
+            child: [bee.mirror(), {
+                count () {
+                    return 12;
+                }
+            }]
         };
 
         check(ori, beeOptions, {
-            info: {
-                name: 'foo'
-            },
+            foo: 'foo',
+            count: 4,
             child: {
-                name: 'foo',
-                chile: {
-                    name: ''
+                foo: 'foo',
+                count: 12,
+                child: {
+                    foo: 'foo',
+                    count: 12
                 }
             }
         });
