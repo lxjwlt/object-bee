@@ -22,6 +22,8 @@ const util = {
 
     isPlainObject: require('lodash.isplainobject'),
 
+    isEqualWith: require('lodash.isequalwith'),
+
     isArray (data) {
         return Object.prototype.toString.apply(data) === '[object Array]';
     },

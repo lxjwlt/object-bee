@@ -57,10 +57,13 @@ bee.$multiExecute = function (beeItems, dataItem, key, currentBee, currentData, 
 
         currentBee = util.hasOwnProperty(action, 'beeValue') ? action.beeValue : currentBee;
 
-        return Object.assign(
-            action,
-            bee.$execute(beeItem, dataItem, key, currentBee, currentData, data, beeConfig)
-        );
+        let newAction = bee.$execute(beeItem, dataItem, key, currentBee, currentData, data, beeConfig);
+
+        if (util.hasOwnProperty(newAction, 'beeValue')) {
+            newAction.beeValue = mergeBeeValue(action.beeValue, newAction.beeValue);
+        }
+
+        return Object.assign(action, newAction);
     }, defaultAction || {});
 };
 
@@ -373,8 +376,8 @@ function processData (data, beeConfig, key, action) {
         return;
     }
 
-    if (util.hasOwnProperty(action, 'beeValue') && action.beeValue !== beeConfig[key]) {
-        beeConfig[key] = action.beeValue;
+    if (util.hasOwnProperty(action, 'beeValue') && !util.isEqualWith(action.beeValue, beeConfig[key])) {
+        beeConfig[key] = mergeBeeValue(beeConfig[key], action.beeValue);
         return true;
     }
 
@@ -413,6 +416,14 @@ function processData (data, beeConfig, key, action) {
 
     if (action.remove && !action.create) {
         delete data[currentKey];
+    }
+}
+
+function mergeBeeValue (oldValue, newValue) {
+    if (util.isPlainObject(oldValue) && util.isPlainObject(newValue)) {
+        return Object.assign({}, oldValue, newValue);
+    } else {
+        return newValue;
     }
 }
 

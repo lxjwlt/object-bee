@@ -193,9 +193,9 @@ object-bee provide several shorthand to simplify the usage of function. There ar
     });
     ```
 
-- `#root`: get value by path string from **root** data.
+- `#root`: get value by path string related to **root** data.
 
-- `#data`: get value by path string from **current** data:
+- `#data`: get value by path string related to **current** data:
 
     ```javascript
     let data = {

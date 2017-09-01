@@ -82,13 +82,12 @@ describe('[object register]', () => {
 
         check(ori, beeOptions, {
             name: {
-                first: 'a',
                 last: 1
             }
         });
     });
 
-    it('multi override apply', () => {
+    it('multi apply', () => {
         let ori = {
             name: {
                 first: 'a',
@@ -98,7 +97,8 @@ describe('[object register]', () => {
 
         let beeOptions = {
             name: [{
-                first: bee.rename('a')
+                first: bee.rename('a'),
+                last: bee.rename('b')
             }, {
                 first () {
                     return 1;
@@ -109,7 +109,7 @@ describe('[object register]', () => {
         check(ori, beeOptions, {
             name: {
                 first: 1,
-                last: 'b'
+                b: 'b'
             }
         });
     });
