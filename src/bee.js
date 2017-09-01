@@ -376,7 +376,7 @@ function processData (data, beeConfig, key, action) {
         return;
     }
 
-    if (util.hasOwnProperty(action, 'beeValue') && !util.isEqualWith(action.beeValue, beeConfig[key])) {
+    if (util.hasOwnProperty(action, 'beeValue') && !util.isEqualObject(action.beeValue, beeConfig[key])) {
         beeConfig[key] = mergeBeeValue(beeConfig[key], action.beeValue);
         return true;
     }

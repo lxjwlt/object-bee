@@ -22,7 +22,25 @@ const util = {
 
     isPlainObject: require('lodash.isplainobject'),
 
-    isEqualWith: require('lodash.isequalwith'),
+    isEqualObject (dataA, dataB) {
+        if (!util.isPlainObject(dataA) || !util.isPlainObject(dataB)) {
+            return dataA === dataB;
+        }
+
+        let keys = Object.keys(dataA);
+
+        if (keys.length !== Object.keys(dataB).length) {
+            return;
+        }
+
+        for (let key of keys) {
+            if (dataA[key] !== dataB[key]) {
+                return false;
+            }
+        }
+
+        return true;
+    },
 
     isArray (data) {
         return Object.prototype.toString.apply(data) === '[object Array]';
