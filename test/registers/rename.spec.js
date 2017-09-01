@@ -2,6 +2,7 @@
 
 const {check} = require('../util');
 const bee = require('../../src/index');
+const assert = require('assert');
 
 describe('[rename register]', () => {
     it('normal', () => {
@@ -110,5 +111,35 @@ describe('[rename register]', () => {
         };
 
         check(ori, beeOptions, {});
+    });
+
+    it('inherit descriptor', () => {
+        let ori = {};
+        let value = 1;
+        let setFunc = function (val) {
+            value = val;
+        };
+        let getFunc = function () {
+            return value;
+        };
+
+        let descriptor = {
+            enumerable: false,
+            configurable: true,
+            set: setFunc,
+            get: getFunc
+        };
+
+        Object.defineProperty(ori, 'num', descriptor);
+
+        bee(ori, {
+            num: bee.rename('foo')
+        });
+
+        assert.strictEqual(ori.foo, 1);
+
+        assert.strictEqual(ori.num, undefined);
+
+        assert.deepStrictEqual(Object.getOwnPropertyDescriptor(ori, 'foo'), descriptor);
     });
 });
