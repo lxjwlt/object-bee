@@ -8,6 +8,7 @@ const util = require('../util');
 
 module.exports = {
     valueScenes: {
+        name: 'config',
         check (beeItem) {
             return util.isPlainObject(beeItem);
         },
@@ -15,6 +16,9 @@ module.exports = {
             return {
                 beeValue: beeItem
             };
+        },
+        method (config) {
+            return config;
         }
     }
 };

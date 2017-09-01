@@ -129,6 +129,18 @@ Context provide those features as below：
     // => { foo: 1, bar: undefined }
     ```
 
+- `this.$config`: specify config inner function:
+
+    ```javascript
+    bee(data, {
+        info () {
+            this.$config({
+                name: bee.rename('foo')
+            });
+        }
+    });
+    ```
+
 - `this.$remove()`: support to remove data, see [action.remove](#actions) below.
 - `this.$rename(newName)`: support to rename, see [action.rename](#actions) below.
 - `this.$ensure()`: ensure current key to exist, see [action.ensure](#actions) below.

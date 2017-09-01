@@ -527,6 +527,28 @@ describe('[function register]', () => {
                 }
             });
         });
+
+        it('config', () => {
+            let ori = {
+                info: {
+                    name: 'foo'
+                }
+            };
+
+            let beeOptions = {
+                info () {
+                    this.$config({
+                        name: bee.rename('foo')
+                    });
+                }
+            };
+
+            check(ori, beeOptions, {
+                info: {
+                    foo: 'foo'
+                }
+            });
+        });
     });
 
     /**

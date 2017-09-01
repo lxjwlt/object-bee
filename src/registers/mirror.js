@@ -1,5 +1,5 @@
 /**
- * @file mirror
+ * @file reuse config
  */
 
 'use strict';
