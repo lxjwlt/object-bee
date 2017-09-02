@@ -16,7 +16,7 @@
 
 object-bee.js is a lightweight, flexible library for manipulating plain-object data in JavaScript.
 
-## why?
+## Why?
 
 Manipulating data may need a lot of conditional judgment in usual, and it would bring a great costs of maintenance to the our project, as below:
 
@@ -297,7 +297,7 @@ object-bee provide several shorthand to simplify the usage of function. There ar
 
     > **default** action provided by `#glob` has lowest priority than action of certain key.
 
-### normal action
+### Normal action
 
 - `#create`: by this method, object-bee would clone a new data, so original data would not be modified.
 
