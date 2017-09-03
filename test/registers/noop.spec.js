@@ -84,7 +84,7 @@ describe('[noop register]', () => {
         };
 
         let beeOptions = {
-            name: [bee.rename('foo'), bee.noop()]
+            name: bee.queue(bee.rename('foo'), bee.noop())
         };
 
         check(ori, beeOptions, {
@@ -126,7 +126,7 @@ describe('[noop register]', () => {
         };
 
         let beeOptions = {
-            num: [bee.remove(), bee.noop()]
+            num: bee.queue(bee.remove(), bee.noop())
         };
 
         check(ori, beeOptions, {});

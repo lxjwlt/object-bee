@@ -310,9 +310,9 @@ describe('[match register]', () => {
 
             let beeOptions = {
                 [bee.match(/name/)]: bee.rename('foo'),
-                name: [bee.rename('bar'), () => {
+                name: bee.queue(bee.rename('bar'), () => {
                     return 123;
-                }]
+                })
             };
 
             check(ori, beeOptions, {

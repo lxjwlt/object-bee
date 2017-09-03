@@ -255,7 +255,7 @@ describe('[mirror register]', () => {
             name () {
                 return 'foo';
             },
-            children: [bee.mirror(), bee.rename('nodes')]
+            children: bee.queue(bee.mirror(), bee.rename('nodes'))
         };
 
         check(ori, beeOptions, {
@@ -294,7 +294,7 @@ describe('[mirror register]', () => {
                 name () {
                     return 'foo';
                 },
-                children: [bee.mirror('data'), bee.rename('nodes')]
+                children: bee.queue(bee.mirror('data'), bee.rename('nodes'))
             }
         };
 
@@ -364,7 +364,7 @@ describe('[mirror register]', () => {
 
         let beeOptions = {
             name: bee.rename('foo'),
-            children: [bee.mirror(), bee.remove()]
+            children: bee.queue(bee.mirror(), bee.remove())
         };
 
         check(ori, beeOptions, {
@@ -419,11 +419,11 @@ describe('[mirror register]', () => {
                 return 4;
             },
             name: bee.rename('foo'),
-            child: [bee.mirror(), {
+            child: bee.queue(bee.mirror(), {
                 count () {
                     return 12;
                 }
-            }]
+            })
         };
 
         check(ori, beeOptions, {

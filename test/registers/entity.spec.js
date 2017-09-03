@@ -82,7 +82,7 @@ describe('[entity register]', () => {
             };
 
             let beeOptions = {
-                name: [bee.entity('a'), bee.entity('b'), bee.entity('c')]
+                name: bee.queue(bee.entity('a'), bee.entity('b'), bee.entity('c'))
             };
 
             check(ori, beeOptions, {

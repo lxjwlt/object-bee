@@ -12,11 +12,11 @@ describe('[object register]', () => {
         };
 
         let beeOptions = {
-            info: [bee.rename('person'), {
+            info: bee.queue(bee.rename('person'), {
                 name: () => {
                     return 'bee';
                 }
-            }]
+            })
         };
 
         check(ori, beeOptions, {
@@ -34,11 +34,11 @@ describe('[object register]', () => {
         };
 
         let beeOptions = {
-            info: [bee.remove(), {
+            info: bee.queue(bee.remove(), {
                 name: () => {
                     return 'bee';
                 }
-            }]
+            })
         };
 
         check(ori, beeOptions, {});
@@ -71,13 +71,13 @@ describe('[object register]', () => {
         };
 
         let beeOptions = {
-            name: [{
+            name: bee.queue({
                 first: bee.remove()
             }, {
                 last () {
                     return 1;
                 }
-            }]
+            })
         };
 
         check(ori, beeOptions, {
@@ -96,14 +96,14 @@ describe('[object register]', () => {
         };
 
         let beeOptions = {
-            name: [{
+            name: bee.queue({
                 first: bee.rename('a'),
                 last: bee.rename('b')
             }, {
                 first () {
                     return 1;
                 }
-            }]
+            })
         };
 
         check(ori, beeOptions, {
@@ -166,9 +166,9 @@ describe('[object register]', () => {
         };
 
         let beeOptions = {
-            num: [function () {
+            num: bee.queue(function () {
                 return 123;
-            }, {}]
+            }, {})
         };
 
         check(ori, beeOptions, {

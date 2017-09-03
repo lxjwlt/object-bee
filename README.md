@@ -308,45 +308,44 @@ object-bee provide several shorthand to simplify the usage of function. There ar
 
 ## Combination
 
-Combination of actions can be chaining call or in queue:
+All kinds of actions support to chain:
 
 ```javascript
-// in queue
 bee(data, {
-    foo: [bee.remove(), bee.ensure(), bee.remove()]
-});
-
-// chaining call
-bee(data, {
-    foo: bee.remove().ensure().remove()
+    foo: bee.remove().ensure().rename('bar')
 });
 ```
 
-Combination of actions and function can be in queue, or apply action inner function:
+As all actions has its corresponding method inner function , it is recommend to use function to deal with more complex logic:
 
 ```javascript
-// in queue
-bee({}, {
-    foo: [bee.ensure(), function () {
-        return 'bar';
-    }]
-});
-
-// in function
-bee({}, {
+bee(data, {
     foo () {
         this.$ensure();
-        return 'bar';
+        this.$rename('bar');
+
+        if (...) {
+            this.$remove();
+        }
     }
 });
 ```
 
-Combination of actions and config:
+Applying actions and setting config at the same time:
 
 ```javascript
+let data = {
+    detail: {}
+};
+
 bee(data, {
-    detail: [bee.rename(), {
-        foo: bee.ensure()
-    }]
+    detail () {
+        this.$rename('info');
+
+        this.$config({
+            foo: bee.ensure()
+        });
+    }
 });
+// => { info: { foo: undefined } }
 ```

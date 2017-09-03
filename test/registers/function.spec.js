@@ -72,7 +72,7 @@ describe('[function register]', () => {
             };
 
             let beeOptions = {
-                info: [function () {
+                info: bee.queue(function () {
                     return {
                         foo: 1
                     };
@@ -80,7 +80,7 @@ describe('[function register]', () => {
                     foo () {
                         return 'bar';
                     }
-                }]
+                })
             };
 
             check(ori, beeOptions, {
@@ -312,11 +312,11 @@ describe('[function register]', () => {
             };
 
             let beeOptions = {
-                a: [function () {
+                a: bee.queue(function () {
                     return 123;
                 }, function () {
                     return this.a === 1;
-                }]
+                })
             };
 
             check(ori, beeOptions, {
@@ -369,7 +369,7 @@ describe('[function register]', () => {
             };
 
             let beeOptions = {
-                info: [function () {
+                info: bee.queue(function () {
                     return {
                         foo: 'foo'
                     };
@@ -377,7 +377,7 @@ describe('[function register]', () => {
                     foo () {
                         return this.$root.name === 'bar';
                     }
-                }]
+                })
             };
 
             check(ori, beeOptions, {

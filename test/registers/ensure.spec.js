@@ -71,7 +71,7 @@ describe('[register] ensure', () => {
 
             let beeOptions = {
                 name: [],
-                detail: [bee.ensure(), bee.ensure(), bee.ensure()]
+                detail: bee.queue(bee.ensure(), bee.ensure(), bee.ensure())
             };
 
             check(ori, beeOptions, {
@@ -86,7 +86,7 @@ describe('[register] ensure', () => {
             };
 
             let beeOptions = {
-                name: [bee.ensure(), bee.ensure(), bee.ensure()]
+                name: bee.queue(bee.ensure(), bee.ensure(), bee.ensure())
             };
 
             check(ori, beeOptions, {
@@ -127,9 +127,9 @@ describe('[register] ensure', () => {
             let ori = {};
 
             let beeOptions = {
-                newKey: [bee.ensure(), () => {
+                newKey: bee.queue(bee.ensure(), () => {
                     return 12;
-                }]
+                })
             };
 
             check(ori, beeOptions, {
@@ -141,7 +141,7 @@ describe('[register] ensure', () => {
             let ori = {};
 
             let beeOptions = {
-                newKey: [bee.remove(), bee.ensure()]
+                newKey: bee.queue(bee.remove(), bee.ensure())
             };
 
             check(ori, beeOptions, {

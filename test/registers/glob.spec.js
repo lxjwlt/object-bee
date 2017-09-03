@@ -145,9 +145,9 @@ describe('[glob register]', () => {
 
         let beeOptions = {
             [bee.glob('**')]: bee.rename('c'),
-            foo: [bee.rename('b'), () => {
+            foo: bee.queue(bee.rename('b'), () => {
                 return 123;
-            }]
+            })
         };
 
         check(ori, beeOptions, {
@@ -163,9 +163,9 @@ describe('[glob register]', () => {
 
         let beeOptions = {
             [bee.match(/name/)]: bee.rename('foo'),
-            name: [bee.rename('bar'), () => {
+            name: bee.queue(bee.rename('bar'), () => {
                 return 123;
-            }]
+            })
         };
 
         check(ori, beeOptions, {

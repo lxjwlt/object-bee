@@ -72,7 +72,7 @@ describe('[remove register]', () => {
         };
 
         let beeOptions = {
-            name: [bee.remove(), bee.remove(), bee.remove()]
+            name: bee.remove().remove().remove()
         };
 
         check(ori, beeOptions, {});

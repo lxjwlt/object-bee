@@ -20,31 +20,15 @@ describe('[queue register]', () => {
         });
     });
 
-    it('queue accept array', () => {
-        let ori = {
-            name: 1
-        };
-
-        let beeOptions = {
-            name: bee.queue([bee.rename('info'), () => {
-                return 123;
-            }])
-        };
-
-        check(ori, beeOptions, {
-            info: 123
-        });
-    });
-
     it('array queue', () => {
         let ori = {
             name: 1
         };
 
         let beeOptions = {
-            name: [bee.rename('info'), () => {
+            name: bee.queue(bee.rename('info'), () => {
                 return 123;
-            }]
+            })
         };
 
         check(ori, beeOptions, {
@@ -58,11 +42,11 @@ describe('[queue register]', () => {
         };
 
         let beeOptions = {
-            name: [(value) => {
+            name: bee.queue((value) => {
                 return value + 1;
             }, (value) => {
                 return value + 1;
-            }]
+            })
         };
 
         check(ori, beeOptions, {
@@ -76,9 +60,9 @@ describe('[queue register]', () => {
         };
 
         let beeOptions = {
-            name: [bee.rename('foo'), (value, key) => {
+            name: bee.queue(bee.rename('foo'), (value, key) => {
                 return key + '!';
-            }]
+            })
         };
 
         check(ori, beeOptions, {
@@ -101,7 +85,7 @@ describe('[queue register]', () => {
             node: {
                 info: {
                     data: {
-                        name: [bee.rename('value'), bee.remove()]
+                        name: bee.queue(bee.rename('value'), bee.remove())
                     }
                 }
             }
@@ -120,7 +104,7 @@ describe('[queue register]', () => {
         let ori = {};
 
         let beeOptions = {
-            unknownKey: [bee.rename('info')]
+            unknownKey: bee.queue(bee.rename('info'))
         };
 
         check(ori, beeOptions, {});

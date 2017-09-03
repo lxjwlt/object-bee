@@ -79,7 +79,7 @@ describe('[rename register]', () => {
         };
 
         let beeOptions = {
-            name: [bee.rename('a'), bee.rename('b'), bee.rename('c')]
+            name: bee.rename('a').rename('b').rename('c')
         };
 
         check(ori, beeOptions, {
@@ -107,7 +107,7 @@ describe('[rename register]', () => {
         };
 
         let beeOptions = {
-            num: [bee.remove(), bee.rename('b')]
+            num: bee.remove().rename('b')
         };
 
         check(ori, beeOptions, {});
