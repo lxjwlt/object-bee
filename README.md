@@ -349,3 +349,26 @@ bee(data, {
 });
 // => { info: { foo: undefined } }
 ```
+
+The code above may be suspected of messing up structure. If we want to keep the structure readable, we can use `bee.CONFIG` in computed key and assign action to it:
+
+```javascript
+bee(data, {
+    detail: {
+        [bee.CONFIG]: bee.rename('info'),
+        foo: bee.ensure();
+    }
+});
+
+// or function
+bee(data, {
+    detail: {
+        [bee.CONFIG] () {
+            this.$rename('info')
+        },
+        foo: bee.ensure();
+    }
+});
+```
+
+This code do same thing as last code.

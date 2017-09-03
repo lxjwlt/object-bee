@@ -20,6 +20,10 @@ const util = {
         return typeof data === 'function';
     },
 
+    isSymbol (data) {
+        return typeof data === 'symbol';
+    },
+
     isPlainObject: require('lodash.isplainobject'),
 
     isEqualObject (dataA, dataB) {

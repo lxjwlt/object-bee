@@ -175,4 +175,44 @@ describe('[object register]', () => {
             num: 123
         });
     });
+
+    describe('bee.CONFIG', function () {
+        it('normal', () => {
+            let ori = {
+                info: {}
+            };
+
+            let beeOptions = {
+                info: {
+                    [bee.CONFIG]: bee.rename('bar'),
+                    newKey: bee.ensure()
+                }
+            };
+
+            check(ori, beeOptions, {
+                bar: {
+                    newKey: undefined
+                }
+            });
+        });
+
+        it('function', () => {
+            let ori = {
+                info: {}
+            };
+
+            let beeOptions = {
+                info: {
+                    [bee.CONFIG] () {
+                        this.$rename('bar');
+                        return 12;
+                    }
+                }
+            };
+
+            check(ori, beeOptions, {
+                bar: 12
+            });
+        });
+    });
 });
