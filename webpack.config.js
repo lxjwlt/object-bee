@@ -24,6 +24,7 @@ module.exports = function (env) {
             rules: [
                 {
                     test: /\.js$/,
+                    exclude: /(node_modules)/,
                     use: {
                         loader: 'babel-loader',
                         options: {
@@ -31,15 +32,14 @@ module.exports = function (env) {
                                 targets: {
                                     'ie': 9
                                 }
-                            }]]
+                            }]],
+                            plugins: ['transform-runtime']
                         }
                     }
                 }
             ]
         },
         plugins: plugins,
-        node: {
-            Buffer: false
-        }
+        node: false
     };
 };

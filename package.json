@@ -2,7 +2,7 @@
   "name": "object-bee",
   "version": "1.0.0",
   "description": "Lightweight, flexible library for manipulating plain-object data in JavaScript.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "unit": "mocha \"test/**/*.spec.js\"",
     "test": "npm run lint && npm run unit",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "codecov": "^2.3.0",
     "eslint": "^4.5.0",
@@ -40,6 +41,7 @@
     "webpack": "^3.5.5"
   },
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "clone": "^2.1.1",
     "is-plain-obj": "^1.1.0",
     "multimatch": "^2.1.0"
