@@ -10,7 +10,8 @@
     "fix": "npm run lint -- --fix",
     "coverage": "istanbul cover --root src ./node_modules/mocha/bin/_mocha -- \"test/**/*.spec.js\"",
     "codecov": "codecov",
-    "debug": "node --inspect-brk node_modules/mocha/bin/_mocha \"test/**/*.spec.js\" --no-timeouts"
+    "debug": "node --inspect-brk node_modules/mocha/bin/_mocha \"test/**/*.spec.js\" --no-timeouts",
+    "build": "webpack --config webpack.config.js"
   },
   "keywords": [
     "object",
@@ -23,6 +24,9 @@
   "author": "lxjwlt",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
     "codecov": "^2.3.0",
     "eslint": "^4.5.0",
     "eslint-config-standard": "^10.2.1",
@@ -31,7 +35,9 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "istanbul": "^0.4.5",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "uglify-js": "^3.0.28",
+    "webpack": "^3.5.5"
   },
   "dependencies": {
     "clone": "^2.1.1",
