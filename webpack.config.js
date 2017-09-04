@@ -37,6 +37,9 @@ module.exports = function (env) {
                 }
             ]
         },
-        plugins: plugins
+        plugins: plugins,
+        node: {
+            Buffer: false
+        }
     };
 };

@@ -24,7 +24,7 @@ const util = {
         return typeof data === 'symbol';
     },
 
-    isPlainObject: require('lodash.isplainobject'),
+    isPlainObject: require('is-plain-obj'),
 
     isEqualObject (dataA, dataB) {
         if (!util.isPlainObject(dataA) || !util.isPlainObject(dataB)) {
