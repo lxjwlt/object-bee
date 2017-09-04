@@ -11,7 +11,7 @@
     "coverage": "istanbul cover --root src ./node_modules/mocha/bin/_mocha -- \"test/**/*.spec.js\"",
     "codecov": "codecov",
     "debug": "node --inspect-brk node_modules/mocha/bin/_mocha \"test/**/*.spec.js\" --no-timeouts",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack && webpack --env=min"
   },
   "keywords": [
     "object",
