@@ -4,14 +4,15 @@
   "description": "Lightweight, flexible library for manipulating plain-object data in JavaScript.",
   "main": "dist/index.js",
   "scripts": {
-    "unit": "mocha \"test/**/*.spec.js\"",
     "test": "npm run lint && npm run unit",
     "lint": "eslint '**/*.js'",
     "fix": "npm run lint -- --fix",
-    "coverage": "istanbul cover --root src ./node_modules/mocha/bin/_mocha -- \"test/**/*.spec.js\"",
+    "dev": "karma start test/karma.dev.config.js",
+    "unit": "mocha-webpack --webpack-config webpack.config.js \"test/**/*.spec.js\"",
+    "coverage": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run unit",
     "codecov": "codecov",
-    "debug": "node --inspect-brk node_modules/mocha/bin/_mocha \"test/**/*.spec.js\" --no-timeouts",
-    "build": "webpack && webpack --env=min"
+    "build": "webpack && cross-env NODE_ENV=min webpack",
+    "sauce": "karma start test/karma.sauce.config.js"
   },
   "keywords": [
     "object",
@@ -29,6 +30,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "codecov": "^2.3.0",
+    "cross-env": "^5.0.5",
     "eslint": "^4.5.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
@@ -36,7 +38,17 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "istanbul": "^0.4.5",
+    "istanbul-instrumenter-loader": "^3.0.0",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-mocha": "^1.3.0",
+    "karma-mocha-reporter": "^2.2.4",
+    "karma-sauce-launcher": "^1.2.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^2.0.4",
     "mocha": "^3.4.2",
+    "mocha-webpack": "^1.0.0-rc.1",
+    "nyc": "^11.2.1",
     "uglify-js": "^3.0.28",
     "webpack": "^3.5.5"
   },
@@ -52,5 +64,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/lxjwlt/object-bee.git"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js"
+    ],
+    "instrument": false,
+    "sourceMap": false
   }
 }

@@ -1,21 +1,23 @@
 const path = require('path');
 const webpack = require('webpack');
 const pkg = require('./package.json');
+const isCoverage = process.env.NODE_ENV === 'coverage';
+const isMin = process.env.NODE_ENV === 'min';
 
-module.exports = function (env) {
+module.exports = function () {
     let plugins = [
         new webpack.BannerPlugin({
             banner: [
                 `${pkg.name} v${pkg.version}`,
                 `(c) 2017-present ${pkg.author}`,
                 `Released under the ${pkg.license} license`,
-                `${pkg.repository.url}`,
+                `${pkg.repository.url}`
             ].join('\n'),
             entryOnly: true
         })
     ];
 
-    if (env === 'min') {
+    if (isMin) {
         plugins.push(
             new webpack.optimize.UglifyJsPlugin({
                 comments: new RegExp(`${pkg.name}\\sv\\d+\\.\\d+\\.\\d+`)
@@ -23,16 +25,21 @@ module.exports = function (env) {
         );
     }
 
-    return {
+    let config = {
         entry: './src/index.js',
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: env === 'min' ? 'index.min.js' : 'index.js',
+            filename: isMin ? 'index.min.js' : 'index.js',
             library: 'bee',
             libraryTarget: 'umd'
         },
         module: {
-            rules: [
+            rules: [].concat(
+                isCoverage ? {
+                    test: /\.js$/,
+                    include: path.resolve('src'),
+                    loader: 'istanbul-instrumenter-loader'
+                } : [],
                 {
                     test: /\.js$/,
                     exclude: /(node_modules)/,
@@ -48,9 +55,17 @@ module.exports = function (env) {
                         }
                     }
                 }
-            ]
+            )
         },
         plugins: plugins,
-        node: false
+        node: {
+            Buffer: false
+        }
     };
+
+    if (isCoverage) {
+        config.devtool = 'inline-cheap-module-source-map';
+    }
+
+    return config;
 };
