@@ -2,7 +2,7 @@
   "name": "object-bee",
   "version": "1.0.0",
   "description": "Lightweight, flexible library for manipulating plain-object data in JavaScript.",
-  "main": "dist/index.js",
+  "main": "dist/object-bee.js",
   "scripts": {
     "test": "npm run lint && npm run unit",
     "lint": "eslint '**/*.js'",

@@ -29,7 +29,7 @@ module.exports = function () {
         entry: './src/index.js',
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: isMin ? 'index.min.js' : 'index.js',
+            filename: isMin ? `${pkg.name}.min.js` : `${pkg.name}.js`,
             library: 'bee',
             libraryTarget: 'umd'
         },
