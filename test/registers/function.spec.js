@@ -388,7 +388,7 @@ describe('[function register]', () => {
             });
         });
 
-        it('no data', () => {
+        it.skip('no data', () => {
             let ori = {};
 
             let beeOptions = {
@@ -582,7 +582,7 @@ describe('[function register]', () => {
      * todo unify error
      * chrome 60+ wouldn't report error，even if object can't not be set some key
      */
-    describe('data can\'t be modified in function', function () {
+    describe.skip('data can\'t be modified in function', function () {
         it('value', function () {
             let ori = {
                 info: {
