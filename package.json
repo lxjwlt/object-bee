@@ -20,6 +20,7 @@
     "manipulate"
   ],
   "files": [
+    "dist",
     "src"
   ],
   "author": "lxjwlt",

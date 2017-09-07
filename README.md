@@ -14,6 +14,10 @@
     </a>
 </p>
 
+<p align="center">
+    <a href="https://saucelabs.com/u/js-object-bee"><img src="https://saucelabs.com/browser-matrix/js-object-bee.svg" alt="Browser Matrix"></a>
+</p>
+
 object-bee.js is a lightweight, flexible library for manipulating plain-object data in JavaScript.
 
 ## Why?
