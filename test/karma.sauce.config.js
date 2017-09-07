@@ -46,6 +46,11 @@ const customLaunchers = {
 };
 
 module.exports = function (config) {
+    if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
+        console.log('Make sure the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables are set.');
+        process.exit(1);
+    }
+
     let sauceConfig = Object.assign({}, baseConfig, {
         singleRun: true,
         browsers: Object.keys(customLaunchers),
@@ -53,9 +58,11 @@ module.exports = function (config) {
         reporters: ['dots', 'saucelabs'],
         sauceLabs: {
             testName: 'object-bee.js unit tests',
-            recordScreenshots: false
+            recordScreenshots: false,
+            tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
+            startConnect: false
         },
-        build: process.env.TRAVIS_BUILD_NUMBER || Date.now(),
+        build: process.env.TRAVIS_JOB_ID || Date.now(),
         captureTimeout: 300000,
         browserNoActivityTimeout: 300000,
         plugins: baseConfig.plugins.concat([
