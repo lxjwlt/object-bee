@@ -5,14 +5,15 @@
 'use strict';
 
 const util = require('../util');
-const ENSURE_SYMBOL = util.beeSymbol('ensure symbol');
 const MATCH_ID = '_ensure_key_';
+
+function EnsureClass () {}
 
 module.exports = {
     valueScenes: {
         name: 'ensure',
         check (beeItem) {
-            return beeItem === ENSURE_SYMBOL;
+            return beeItem instanceof EnsureClass;
         },
         apply () {
             return {
@@ -20,7 +21,7 @@ module.exports = {
             };
         },
         method () {
-            return ENSURE_SYMBOL;
+            return new EnsureClass();
         }
     },
     keyScenes: {

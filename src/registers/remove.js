@@ -4,14 +4,13 @@
 
 'use strict';
 
-const util = require('../util');
-const removeSymbol = util.beeSymbol('remove data by specific key');
+function RemoveClass () {}
 
 module.exports = {
     valueScenes: {
         name: 'remove',
         check (beeItem) {
-            return beeItem === removeSymbol;
+            return beeItem instanceof RemoveClass;
         },
         apply () {
             return {
@@ -19,7 +18,7 @@ module.exports = {
             };
         },
         method () {
-            return removeSymbol;
+            return new RemoveClass();
         }
     }
 };

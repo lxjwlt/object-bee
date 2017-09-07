@@ -400,7 +400,7 @@ describe('[function register]', () => {
             assert.throws(function () {
                 check(ori, beeOptions, {});
             }, function (err) {
-                assert.strictEqual(err.toString(), `TypeError: Cannot read property 'bar' of undefined`);
+                assert.ok(err instanceof TypeError);
                 return true;
             });
         });
@@ -606,10 +606,7 @@ describe('[function register]', () => {
                     }
                 });
             }, function (err) {
-                assert.strictEqual(
-                    err.toString(),
-                    `TypeError: Cannot assign to read only property 'name' of object '#<Object>'`
-                );
+                assert.ok(err instanceof TypeError);
                 return true;
             });
         });
@@ -639,10 +636,7 @@ describe('[function register]', () => {
                     }
                 });
             }, function (err) {
-                assert.strictEqual(
-                    err.toString(),
-                    'TypeError: Cannot set property name of #<Object> which has only a getter'
-                );
+                assert.ok(err instanceof TypeError);
                 return true;
             });
         });
@@ -672,10 +666,7 @@ describe('[function register]', () => {
                     }
                 });
             }, function (err) {
-                assert.strictEqual(
-                    err.toString(),
-                    'TypeError: Cannot set property bar of #<Object> which has only a getter'
-                );
+                assert.ok(err instanceof TypeError);
                 return true;
             });
         });
