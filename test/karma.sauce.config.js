@@ -59,6 +59,11 @@ module.exports = function (config) {
         sauceLabs: {
             testName: 'object-bee.js unit tests',
             recordScreenshots: false,
+
+            /**
+             * BUG: Failed to start Sauce Connect
+             * see https://github.com/karma-runner/karma-sauce-launcher/issues/73
+             */
             tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
             startConnect: false
         },
