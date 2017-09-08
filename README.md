@@ -293,7 +293,7 @@ object-bee provide several shorthand to simplify the usage of function. There ar
 
     > **default** action provided by `#match` has lowest priority than action of certain key.
 
-- `#glob`: like `#match` method, except it matches keys by glob, more detail in [multimatch](https://github.com/sindresorhus/multimatch)
+- `#glob`: like `#match` method, except it matches keys by wildcard characters
 
     ```javascript
     bee({
