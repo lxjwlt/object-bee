@@ -2,7 +2,7 @@
  * @file Event
  */
 
-const util = require('./util');
+const util = require('../util');
 
 class Event {
     constructor () {

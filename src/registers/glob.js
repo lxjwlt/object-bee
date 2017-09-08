@@ -4,7 +4,7 @@
 
 'use strict';
 
-const multimatch = require('multimatch');
+const glob = require('../lib/glob');
 const util = require('../util');
 const MATCH_ID = 'glob-match';
 
@@ -18,7 +18,7 @@ module.exports = {
         },
 
         match (key, info) {
-            return multimatch([key], info.data).length;
+            return info.data.some(pattern => glob(key, pattern));
         },
 
         method (...matches) {

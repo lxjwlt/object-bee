@@ -5,8 +5,8 @@
 'use strict';
 
 const util = require('./util');
-const Chain = require('./chain');
-const event = new (require('./event'))();
+const Chain = require('./lib/chain');
+const event = new (require('./lib/event'))();
 
 const valueSceneRegisters = [];
 

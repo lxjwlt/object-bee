@@ -56,8 +56,8 @@
   "dependencies": {
     "babel-runtime": "^6.26.0",
     "clone": "^2.1.1",
-    "is-plain-obj": "^1.1.0",
-    "multimatch": "^2.1.0"
+    "escape-string-regexp": "^1.0.5",
+    "is-plain-obj": "^1.1.0"
   },
   "bugs": {
     "url": "https://github.com/lxjwlt/object-bee/issues"
