@@ -60,9 +60,17 @@ The code becomes more meaningful and readable.
 
 ## Installation
 
-```
-npm install object-bee -S
-```
+- **NPM** install
+
+    ```
+    npm install object-bee -S
+    ```
+
+- **CDN** provided by [unpkg](https://unpkg.com/):
+
+    ```html
+    <script src="https://unpkg.com/object-bee/dist/object-bee.min.js"></script>
+    ```
 
 ## Usage
 
