@@ -63,7 +63,7 @@ bee.$multiExecute = function (beeItems, dataItem, key, currentBee, currentData, 
             newAction.beeValue = mergeBeeValue(action.beeValue, newAction.beeValue);
         }
 
-        return Object.assign(action, newAction);
+        return util.assign(action, newAction);
     }, defaultAction || {});
 };
 
@@ -226,7 +226,7 @@ function getAllMatchKeys (data) {
                 keyRegisters: keyRegisters,
                 bee: data[key],
                 defaultAction: keyRegisters.reduce((result, register) => {
-                    return Object.assign(
+                    return util.assign(
                         result,
                         register.apply && register.apply(info.info)
                     );
@@ -421,7 +421,7 @@ function processData (data, beeConfig, key, action) {
 
 function mergeBeeValue (oldValue, newValue) {
     if (util.isPlainObject(oldValue) && util.isPlainObject(newValue)) {
-        return Object.assign({}, oldValue, newValue);
+        return util.assign({}, oldValue, newValue);
     } else {
         return newValue;
     }

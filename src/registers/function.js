@@ -49,7 +49,7 @@ module.exports = function (bee) {
             let result = bee.$multiExecute(methodResults, ...[...arguments].slice(1));
 
             if (!util.isUndefined(value)) {
-                Object.assign(result, {
+                util.assign(result, {
 
                     /**
                      * use real-time data, cause some other data

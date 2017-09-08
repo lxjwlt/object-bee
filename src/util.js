@@ -55,7 +55,7 @@ const util = {
     },
 
     beeSymbol (desc) {
-        return Symbol(`[object-bee] ${desc}`);
+        return `[object-bee] ${desc} ${Date.now()} ${Math.random()}`;
     },
 
     nestLoop (data, bee, outerFunc) {
@@ -70,11 +70,17 @@ const util = {
 
         if (util.isPlainObject(bee) && dataList.every((data) => util.isPlainObject(data))) {
             let func = outerFunc && outerFunc(...dataList, bee);
-            let keySet = new Set(dataList.reduce((result, data) => {
-                return result.concat(Object.getOwnPropertyNames(data));
-            }, []).concat(Object.getOwnPropertyNames(bee)));
 
-            [...keySet].forEach(function (key) {
+            let keys = dataList.reduce((result, data) => {
+                return result.concat(Object.getOwnPropertyNames(data));
+            }, []).concat(Object.getOwnPropertyNames(bee));
+
+            let keyMap = keys.reduce((map, key) => {
+                map[key] = true;
+                return map;
+            }, {});
+
+            Object.keys(keyMap).forEach(function (key) {
                 let dataValueList = dataList.map((data) => data[key]);
 
                 if (func) {
@@ -154,7 +160,9 @@ const util = {
 
             return map;
         }, {});
-    }
+    },
+
+    assign: require('object-assign')
 
 };
 

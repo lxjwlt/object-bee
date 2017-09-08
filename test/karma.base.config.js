@@ -1,5 +1,5 @@
 let webpackConfig = Object.assign({}, require('../webpack.config')(), {
-    devtool: '#inline-source-map'
+    devtool: 'inline-source-map'
 });
 
 module.exports = {

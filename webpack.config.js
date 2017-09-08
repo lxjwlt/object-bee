@@ -49,9 +49,9 @@ module.exports = function () {
                             presets: [['env', {
                                 targets: {
                                     'ie': 9
-                                }
-                            }]],
-                            plugins: ['transform-runtime']
+                                },
+                                loose: true
+                            }]]
                         }
                     }
                 }
@@ -59,7 +59,9 @@ module.exports = function () {
         },
         plugins: plugins,
         node: {
-            Buffer: false
+            Buffer: false,
+            process: false,
+            setImmediate: false
         }
     };
 
